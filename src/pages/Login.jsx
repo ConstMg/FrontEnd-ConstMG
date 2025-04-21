@@ -35,7 +35,7 @@ const Login = () => {
                     <img className="h-full" src={gambarBangunan} alt="gambar bangunan" />
                     <p className="absolute w-full left-1/2 transform -translate-x-1/2 top-0 p-2 text-5xl text-white font-bold">Make Your Dream House Come True.</p>
                 </div>
-                <div className="form bg-white w-2/3 flex flex-col justify-between items-center p-8">
+                <div className="form bg-white w-2/3 flex flex-col justify-between items-center px-8 py-20">
                     <p className="text-amber-300 text-2xl font-bold">PT Murgung Nusa Parama</p>
                     <p className="text-2xl font-medium">Welcome Back👋</p>
                     <form action="" className="flex flex-col justify-center items-center gap-4 w-3/4" onSubmit={handleSubmit}>
@@ -61,10 +61,6 @@ const Login = () => {
                                 required/>
                         </div>
                         <input className="w-3/4 rounded-full bg-amber-300 text-white font-bold p-2" type="submit" value="Sign In" />
-                        <p>
-                            Don’t have an account yet?{" "}
-                            <Link to="/signup" className="text-blue-500">Sign Up</Link>
-                        </p>
                     </form>
                 </div>
             </div>
