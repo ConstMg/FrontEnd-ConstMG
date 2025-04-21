@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './pages/Login'
-import SignUp from './pages/SignUP'
+import Home from './pages/Home'
 import './App.css'
 
 function App() {
@@ -11,9 +11,8 @@ function App() {
     // </div>
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} /> // buat route awal-awal, pertama kali buka web
+        <Route path="/" element={<Home />} /> // buat route awal-awal, pertama kali buka web
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </Router>
   )
