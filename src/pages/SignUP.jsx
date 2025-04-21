@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./../components/Navbar";
 import "./../tailwind.css";
 
+
 const SignUP = () => {
     const navigate= useNavigate();
     const [confirmPass, setConfirmPass] = useState("");
