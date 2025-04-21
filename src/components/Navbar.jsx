@@ -8,14 +8,14 @@ library.add(faCartShopping, faClockRotateLeft, faUser);
 
 function Navbar() {
     return (
-        <nav className="navbar w-full fixed top-0 flex flex-row justify-between items-center p-4 text-2xl">
+        <nav className="navbar w-full fixed top-0 flex flex-row justify-between items-center p-4 text-2xl z-10">
             <div className="left">
                 <h1>PT MURGUNG</h1>
             </div>
             <div className="mid">
                 <ul className="flex flex-row justify-between items-center gap-4">
                     <li>Home</li>
-                    <li>Product</li>
+                    <li>Project</li>
                     <li>About</li>
                     <li>Contact</li>
                 </ul>
