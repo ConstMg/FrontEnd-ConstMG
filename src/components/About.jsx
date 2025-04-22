@@ -17,13 +17,11 @@ const About = () => {
               </div>
             </div>
             <div className="w-[900px] px-2.5 left-0 top-[104px] absolute inline-flex flex-col justify-start items-center">
-              <div className="text-center justify-center text-color-grey-46 text-base font-normal font-['Poppins'] leading-normal">
-                We takes pride in its successful our project portfolio, with
-                each project reflecting their our commitment to quality,
-                timeliness,
-                <br />
-                and client satisfaction. Here are some notable projects they
-                have we completed.
+              <div className="text-center justify-center text-gray-400 font-normal font-['Poppins'] leading-normal">
+                We take pride in our successful project portfolio, with each
+                project reflecting our commitment to quality, timeliness, and
+                client satisfaction. Here are some notable projects we have
+                completed.
               </div>
             </div>
             <div className="w-52 h-6 px-4 left-[349.67px] top-[-0.50px] absolute" />
