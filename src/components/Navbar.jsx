@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCartShopping, faClockRotateLeft, faUser } from '@fortawesome/free-solid-svg-icons';
 import {Link} from "react-scroll";
+import { NavLink } from "react-router-dom";
+
 
 // Add icons to the library
 library.add(faCartShopping, faClockRotateLeft, faUser);
@@ -26,7 +28,7 @@ function Navbar() {
                 <FontAwesomeIcon icon="fa-clock-rotate-left" />
                 <FontAwesomeIcon icon="fa-user" />
                 <p>Register</p>
-                <p>Login</p>
+                <NavLink to="/login">Login</NavLink>
             </div>
         </nav>
     );
