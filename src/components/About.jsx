@@ -18,7 +18,7 @@ const About = () => {
         className="about min-h-screen bg-white-100 flex justify-center items-center"
         id="about"
       >
-        <div className="w-wrap max-w-[1320px] px-2 py-10 md:py-10 inline-flex flex-col justify-center items-center gap-0 md:gap-12 pb-20">
+        <div className="w-full px-2 py-10 md:py-10 inline-flex flex-col justify-center items-center gap-0 md:gap-12 pb-20">
           {/* Header Section - Made responsive */}
           <div className="w-full max-w-[900px] px-4 md:px-6 relative">
             <div className="w-full text-center mb-4">
@@ -37,7 +37,7 @@ const About = () => {
           </div>
 
           {/* Gallery Section */}
-          <div className="flex flex-col items-start gap-3 md:gap-6 w-full">
+          <div className="flex flex-col items-center justify-center gap-3 md:gap-6 w-full">
             {/* Display gallery when an image is selected */}
             {activeIndex !== null && (
               <ImageGallery
@@ -53,7 +53,7 @@ const About = () => {
                 <div
                   key={i}
                   onClick={() => setActiveIndex(i)}
-                  className="w-[calc(50%-8px)] sm:w-[calc(33.333%-16px)] md:w-auto"
+                  className="md:w-auto"
                 >
                   <ImageCard imagePath={img} variant={i + 1} />
                 </div>

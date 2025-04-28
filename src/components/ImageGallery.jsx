@@ -17,7 +17,7 @@ export default function ImageGallery({ images, initialIndex, onClose }) {
       }}
       className="fixed inset-0 backdrop-blur-sm bg-black/30 z-10 flex flex-col items-center justify-center p-6"
     >
-      <div className="relative w-[940px] h-[560px] mb-4 flex items-center justify-center">
+      <div className="relative md:w-[810px] h-[430px] mb-4 flex items-center justify-center">
         {/* Tombol kiri */}
         <button
           onClick={(e) => {
@@ -65,5 +65,4 @@ export default function ImageGallery({ images, initialIndex, onClose }) {
       </div>
     </div>
   );
-
 }
