@@ -7,10 +7,10 @@ const ImageCard = ({ imagePath, variant }) => {
         <div
           data-:hover="false"
           data-variant={variant}
-          className="self-stretch relative rounded-[10px] flex flex-col justify-center items-center overflow-hidden"
+          className="self-stretch relative rounded-[10px] flex flex-col justify-center items-center overflow-hidden group"
         >
           <img
-            className="w-96 h-60 max-w-96 relative rounded-[10px]"
+            className="w-96 h-60 max-w-96 relative rounded-[10px] transition-transform duration-300 ease-in-out transform group-hover:scale-110"
             src={imagePath}
             alt={`image-${variant}`}
           />

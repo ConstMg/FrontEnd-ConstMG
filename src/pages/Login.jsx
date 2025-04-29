@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import gambarBangunan from "./../assets/const.png";
 import { Link } from "react-router-dom";
 import Navbar from "./../components/Navbar";
@@ -9,11 +9,9 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log("Email:", email);
-        console.log("Password:", password);
         
         if (password.length < 8) {
             alert("Password must be at least 8 characters long.");
@@ -24,8 +22,23 @@ const Login = () => {
             alert("Password must contain at least one uppercase letter.");
             return;
         }
-        navigate("/dashboard") // dashboard belum ada jadi masih kosong
+
+        // Set session storage when login is successful
+        sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("userEmail", email);
+        
+        // Navigate to home page
+        navigate("/");
     };
+
+    // Check if user is already logged in
+    useEffect(() => {
+        const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+        if (isLoggedIn) {
+            navigate("/");
+            sessionStorage.setItem("isLoggedIn", "false");
+        }
+    }, [navigate]);
 
     return (
         <div className="relative h-dvh flex flex-col justify-center items-center">

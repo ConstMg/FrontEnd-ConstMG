@@ -31,23 +31,23 @@ function Navbar() {
     };
 
     return (
-        <nav className="navbar w-full fixed top-0 flex flex-row justify-between items-center p-4 text-3xl font-bold z-10 bg-gradient-to-b from-slate-200/70 to-slate-50/45">
+        <nav className="navbar w-full fixed top-0 flex flex-row justify-between items-center p-4 text-2xl font-bold z-10 bg-gradient-to-b from-slate-200/70 to-slate-50/45">
             <div className="left">
-                <h1 className="text-amber-400">PT MURGUNG</h1>
+                <Link to="main" className="text-amber-400 hover:cursor-pointer">PT MURGUNG</Link>
             </div>
             {location.pathname !== "/login" && (
                 <div className="mid font-normal">
                     <ul className="flex flex-row justify-between items-center gap-4">
-                        <Link to="main" className="hover:cursor-pointer">
+                        <Link to="main" className="hover:cursor-pointer hover:font-bold">
                             Home
                         </Link>
-                        <Link to="project" className="hover:cursor-pointer">
+                        <Link to="project" className="hover:cursor-pointer hover:font-bold">
                             Project
                         </Link>
-                        <Link to="about" className="hover:cursor-pointer">
+                        <Link to="about" className="hover:cursor-pointer hover:font-bold">
                             About
                         </Link>
-                        <Link to="contact" className="hover:cursor-pointer">
+                        <Link to="contact" className="hover:cursor-pointer hover:font-bold">
                             Contact
                         </Link>
                     </ul>
