@@ -25,10 +25,12 @@ const Login = () => {
 
         // Set session storage when login is successful
         sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("userRole", "karyawan");
         sessionStorage.setItem("userEmail", email);
         
         // Navigate to home page
-        navigate("/");
+        sessionStorage.getItem("userRole") === "admin" ? navigate("/admin") :  navigate("/presensi");
+        // navigate("/");
     };
 
     // Check if user is already logged in
