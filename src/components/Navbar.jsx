@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
 import { NavLink, useLocation } from "react-router-dom";
-import Logo from "../assets/logo.svg";
+import Logo from "../../public/logo.svg";
 
 // Add icons to the library
 library.add(faCartShopping, faClockRotateLeft, faUser);
