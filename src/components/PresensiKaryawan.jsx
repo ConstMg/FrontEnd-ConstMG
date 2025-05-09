@@ -5,6 +5,7 @@ const PresensiKaryawan = () => {
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [submitted, setSubmitted] = useState(false); // NEW
   const today = new Date().toISOString().split("T")[0];
+  const [statusPresensi, setStatusPresensi] = useState("");
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -63,11 +64,22 @@ const PresensiKaryawan = () => {
                 placeholder="Name"
                 className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
-              <input
+              <select
+                value={statusPresensi}
+                onChange={(e) => setStatusPresensi(e.target.value)}
+                className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              >
+                <option value="">Pilih Status</option>
+                <option value="Hadir">Hadir</option>
+                <option value="Izin">Izin</option>
+                <option value="Sakit">Sakit</option>
+                <option value="Alpa">Alpa</option>
+              </select>
+              {/* <input
                 type="date"
                 className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 defaultValue={today}
-              />
+              /> */}
               <input
                 type="text"
                 value={
