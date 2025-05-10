@@ -1,11 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import "./../tailwind.css";
 import Check from "../assets/check.svg";
+import { useNavigate } from "react-router-dom";
+
 const PresensiKaryawan = () => {
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [submitted, setSubmitted] = useState(false); // NEW
   const today = new Date().toISOString().split("T")[0];
+  const navigate = useNavigate();
   const [statusPresensi, setStatusPresensi] = useState("");
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const userRole = localStorage.getItem("userRole");
+
+    if (!isLoggedIn) {
+      navigate("/");
+    }
+  }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {

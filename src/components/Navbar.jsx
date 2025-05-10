@@ -16,7 +16,7 @@ library.add(faCartShopping, faClockRotateLeft, faUser);
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
-
+  const hideMidOn = ["/login", "/presensi", "/admin"];
   useEffect(() => {
     // Check if user is logged in when component mounts
     const loggedInStatus = localStorage.getItem("isLoggedIn");
@@ -28,6 +28,10 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userName");
+
     setIsLoggedIn(false);
   };
 
@@ -38,7 +42,7 @@ function Navbar() {
           <img src={Logo} alt="Logo" className="w-30" />
         </Link>
       </div>
-      {location.pathname !== "/login" && (
+      {!hideMidOn.includes(location.pathname) && (
         <div className="mid font-normal">
           <ul className="flex flex-row justify-between items-center gap-4">
             <Link to="main" className="hover:cursor-pointer hover:font-bold">
@@ -56,6 +60,7 @@ function Navbar() {
           </ul>
         </div>
       )}
+
       <div className="right flex flex-row justify-between items-center gap-4">
         {location.pathname !== "/login" ? (
           !isLoggedIn ? (

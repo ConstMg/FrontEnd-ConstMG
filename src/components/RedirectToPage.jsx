@@ -6,11 +6,11 @@ const RedirectToPage = () => {
   const role = localStorage.getItem("userRole");
   if (isLoggedIn === "true" && role === "karyawan") {
     return <Navigate to="/presensi" replace />;
-  }else if (isLoggedIn === "true" && role === "admin") {
-    return <Navigate to="/admin" replace />;
+  } else if (isLoggedIn === "true" && role === "admin") {
+    return <Navigate to="/presensi" replace />;
   }
 
-  return <Navigate to="/" replace />;
+  return <Navigate to="/main" replace />;
 };
 
 export default RedirectToPage;

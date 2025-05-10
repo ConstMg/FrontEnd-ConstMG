@@ -6,13 +6,14 @@ import Presensi from "./pages/Presensi";
 import "./App.css";
 import RedirectToPage from "./components/RedirectToPage";
 function App() {
+  
   return (
     <Router>
       <Routes>
         {/* Redirect handler saat pertama buka web */}
-        <Route path="/" element={<MainPage />} />
-        <Route path="/redirect" element={<RedirectToPage />} />
-
+        <Route path="/" element={<RedirectToPage />} />
+        {/* <Route path="/redirect" element={<RedirectToPage />} /> */}
+        <Route path="/main" element={<MainPage />} />
         <Route path="/admin" element={<MainPage />} />
         <Route path="/presensi" element={<Presensi />} />
         <Route path="/login" element={<Login />} />

@@ -8,31 +8,81 @@ import "./../tailwind.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const userRole = localStorage.getItem("userRole");
+
+    if (isLoggedIn === "true" && userRole) {
+      // Arahkan user berdasarkan role
+      if (userRole === "admin") {
+        navigate("/presensi");
+      } else {
+        navigate("/presensi");
+      }
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (password.length < 8) {
-      alert("Password must be at least 8 characters long.");
-      return;
+    // if (password.length < 8) {
+    //   alert("Password must be at least 8 characters long.");
+    //   return;
+    // }
+
+    // if (!/[A-Z]/.test(password)) {
+    //   alert("Password must contain at least one uppercase letter.");
+    //   return;
+    // }
+    setIsLoading(true); // mulai loading
+    try {
+      const response = await fetch(
+        "https://backend-constmg-production.up.railway.app/api/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // jika login gagal
+        alert(data.message || "Login failed");
+        setIsLoading(false);
+        return;
+      }
+
+      // jika login berhasil
+      // contoh response: { token: "...", role: "karyawan", email: "..." }
+      // localStorage.setItem("token", data.token);
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userRole", data.karyawan.role);
+      localStorage.setItem("userId", data.karyawan.id);
+      localStorage.setItem("userName", data.karyawan.nama);
+      localStorage.setItem("isLoggedIn", "true");
+      if (data.message === "Login karyawan berhasil.") {
+        alert(data.message);
+      }
+      // arahkan sesuai role
+      data.karyawan.role === "admin"
+        ? navigate("/admin")
+        : navigate("/presensi");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("An error occurred during login");
+      setIsLoading(false);
     }
-
-    if (!/[A-Z]/.test(password)) {
-      alert("Password must contain at least one uppercase letter.");
-      return;
-    }
-
-    // Set session storage when login is successful
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("userRole", "karyawan");
-    localStorage.setItem("userEmail", email);
-
-    // Navigate to home page
-    localStorage.getItem("userRole") === "admin"
-      ? navigate("/admin")
-      : navigate("/presensi");
-    // navigate("/");
   };
 
   return (
@@ -85,9 +135,14 @@ const Login = () => {
             </div>
 
             <input
-              className="w-5/6 md:w-3/4 rounded-full bg-amber-300 text-white font-bold p-2 mt-2 cursor-pointer transition hover:bg-amber-400"
+              className={`w-5/6 md:w-3/4 rounded-full ${
+                isLoading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-amber-300 hover:bg-amber-400"
+              } text-white font-bold p-2 mt-2 transition`}
               type="submit"
-              value="Sign In"
+              value={isLoading ? "Loading..." : "Sign In"}
+              disabled={isLoading}
             />
           </form>
         </div>
