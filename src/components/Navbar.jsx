@@ -5,20 +5,23 @@ import {
   faCartShopping,
   faClockRotateLeft,
   faUser,
+  faBars,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
 import { NavLink, useLocation } from "react-router-dom";
 import Logo from "../../public/logo.svg";
 
 // Add icons to the library
-library.add(faCartShopping, faClockRotateLeft, faUser);
+library.add(faCartShopping, faClockRotateLeft, faUser, faBars, faXmark);
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const hideMidOn = ["/login", "/presensi", "/admin"];
+
   useEffect(() => {
-    // Check if user is logged in when component mounts
     const loggedInStatus = localStorage.getItem("isLoggedIn");
     if (loggedInStatus) {
       setIsLoggedIn(JSON.parse(loggedInStatus));
@@ -26,24 +29,27 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-
+    localStorage.clear();
     setIsLoggedIn(false);
+    setMenuOpen(false);
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
   };
 
   return (
-    <nav className="navbar w-full fixed top-0 flex flex-row justify-between items-center p-4 text-2xl font-bold z-10 bg-gradient-to-b from-slate-200/70 to-slate-50/45">
+    <nav className="navbar w-full fixed top-0 flex justify-between items-center p-4 text-2xl font-bold z-10 bg-gradient-to-b from-slate-200/70 to-slate-50/45">
+      {/* Logo */}
       <div className="left">
-        <Link to="main" className="text-amber-400 hover:cursor-pointer">
+        <NavLink to="/main" className="text-amber-400 hover:cursor-pointer">
           <img src={Logo} alt="Logo" className="w-30" />
-        </Link>
+        </NavLink>
       </div>
+
+      {/* Desktop menu */}
       {!hideMidOn.includes(location.pathname) && (
-        <div className="mid font-normal">
+        <div className="mid font-normal hidden md:block">
           <ul className="flex flex-row justify-between items-center gap-4">
             <Link to="main" className="hover:cursor-pointer hover:font-bold">
               Home
@@ -61,7 +67,17 @@ function Navbar() {
         </div>
       )}
 
-      <div className="right flex flex-row justify-between items-center gap-4">
+      {/* Mobile hamburger icon */}
+      {!hideMidOn.includes(location.pathname) && (
+        <div className="md:hidden">
+          <button onClick={toggleMenu} aria-label="Toggle menu">
+            <FontAwesomeIcon icon={menuOpen ? faXmark : faBars} />
+          </button>
+        </div>
+      )}
+
+      {/* Right section */}
+      <div className="right hidden md:flex flex-row justify-between items-center gap-4">
         {location.pathname !== "/login" ? (
           !isLoggedIn ? (
             <NavLink to="/login" className="hover:cursor-pointer">
@@ -71,7 +87,7 @@ function Navbar() {
             <NavLink
               to="/login"
               onClick={handleLogout}
-              className="hover:cursor-pointer"
+              className="flex md:flex hover:cursor-pointer"
             >
               Logout
             </NavLink>
@@ -86,6 +102,80 @@ function Navbar() {
           </NavLink>
         )}
       </div>
+
+      {/* Mobile menu dropdown */}
+      {menuOpen && (
+        <div
+          className={`fixed top-0 right-0 h-full w-3/4 max-w-xs bg-white shadow-lg px-6 py-8 z-50 transform transition-transform duration-300 ease-in-out ${
+            menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <ul className="flex flex-col gap-4">
+            {!hideMidOn.includes(location.pathname) ? (
+              <>
+                <Link
+                  to="main"
+                  onClick={() => setMenuOpen(false)}
+                  className="hover:font-bold cursor-pointer"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="project"
+                  onClick={() => setMenuOpen(false)}
+                  className="hover:font-bold cursor-pointer"
+                >
+                  Project
+                </Link>
+                <Link
+                  to="about"
+                  onClick={() => setMenuOpen(false)}
+                  className="hover:font-bold cursor-pointer"
+                >
+                  About
+                </Link>
+                <Link
+                  to="contact"
+                  onClick={() => setMenuOpen(false)}
+                  className="hover:font-bold cursor-pointer"
+                >
+                  Contact
+                </Link>
+              </>
+            ) : (
+              <NavLink
+                to="/"
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
+                className="hover:font-bold cursor-pointer"
+              >
+                Home
+              </NavLink>
+            )}
+
+            {location.pathname !== "/login" &&
+              (!isLoggedIn ? (
+                <NavLink
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="hover:font-bold"
+                >
+                  Login
+                </NavLink>
+              ) : (
+                <NavLink
+                  to="/login"
+                  onClick={handleLogout}
+                  className="hover:font-bold"
+                >
+                  Logout
+                </NavLink>
+              ))}
+          </ul>
+        </div>
+      )}
     </nav>
   );
 }

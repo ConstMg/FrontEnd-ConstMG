@@ -111,7 +111,7 @@ const PresensiKaryawan = () => {
                 onClick={() => setSubmitted(true)} // 👈 Ganti ke tampilan sukses
                 className="bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded-md font-semibold transition w-full"
               >
-                Present
+                Presence
               </button>
             </>
           ) : (
