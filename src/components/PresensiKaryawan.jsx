@@ -2,13 +2,44 @@ import React, { use, useEffect, useState } from "react";
 import "./../tailwind.css";
 import Check from "../assets/check.svg";
 import { useNavigate } from "react-router-dom";
+import { useKaryawan } from "../hooks/UseKaryawan";
 
 const PresensiKaryawan = () => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [submitted, setSubmitted] = useState(false); // NEW
   const today = new Date().toISOString().split("T")[0];
   const navigate = useNavigate();
   const [statusPresensi, setStatusPresensi] = useState("");
+  const { handlePresensiMasuk, loading, error } = useKaryawan();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const latitude = location.lat;
+    const longitude = location.lng;
+    const status_presensi = statusPresensi;
+    const deskripsi = description;
+    const nama = name;
+    try {
+      const response = await handlePresensiMasuk(
+        nama,
+        status_presensi,
+        latitude,
+        longitude,
+        deskripsi
+      );
+
+      if (response) {
+        // ✅ respons dari API sukses, tampilkan success UI
+        setSubmitted(true);
+      } // Set submitted to true after successful submission
+    } catch (error) {
+      console.error("Error during presensi:", error);
+      // alert("Gagal melakukan presensi. Silakan coba lagi.");
+    }
+  };
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
@@ -74,6 +105,8 @@ const PresensiKaryawan = () => {
               <input
                 type="text"
                 placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
               <select
@@ -103,15 +136,18 @@ const PresensiKaryawan = () => {
                 className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-700"
               />
               <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description"
                 rows="3"
                 className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
               />
               <button
-                onClick={() => setSubmitted(true)} // 👈 Ganti ke tampilan sukses
+                onClick={handleSubmit}
+                disabled={loading}
                 className="bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded-md font-semibold transition w-full"
               >
-                Presence
+                {loading ? "Submitting..." : "Presence"}
               </button>
             </>
           ) : (

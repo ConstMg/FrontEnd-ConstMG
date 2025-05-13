@@ -11,31 +11,25 @@ import {
 import { Link } from "react-scroll";
 import { NavLink, useLocation } from "react-router-dom";
 import Logo from "../../public/logo.svg";
+import { useAuth } from "../hooks/useAuth";
 
 // Add icons to the library
 library.add(faCartShopping, faClockRotateLeft, faUser, faBars, faXmark);
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const hideMidOn = ["/login", "/presensi", "/admin"];
 
-  useEffect(() => {
-    const loggedInStatus = localStorage.getItem("isLoggedIn");
-    if (loggedInStatus) {
-      setIsLoggedIn(JSON.parse(loggedInStatus));
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.clear();
-    setIsLoggedIn(false);
-    setMenuOpen(false);
-  };
-
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setMenuOpen(false);
   };
 
   return (
@@ -85,7 +79,7 @@ function Navbar() {
             </NavLink>
           ) : (
             <NavLink
-              to="/login"
+              // to="/login"
               onClick={handleLogout}
               className="flex md:flex hover:cursor-pointer"
             >
@@ -95,7 +89,7 @@ function Navbar() {
         ) : (
           <NavLink
             to="/"
-            onClick={handleLogout}
+            // onClick={handleLogout}
             className="hover:cursor-pointer"
           >
             Home
@@ -145,10 +139,10 @@ function Navbar() {
             ) : (
               <NavLink
                 to="/"
-                onClick={() => {
-                  handleLogout();
-                  setMenuOpen(false);
-                }}
+                // onClick={() => {
+                //   handleLogout();
+                //   setMenuOpen(false);
+                // }}
                 className="hover:font-bold cursor-pointer"
               >
                 Home
@@ -166,7 +160,7 @@ function Navbar() {
                 </NavLink>
               ) : (
                 <NavLink
-                  to="/login"
+                  // to="/login"
                   onClick={handleLogout}
                   className="hover:font-bold"
                 >

@@ -4,85 +4,17 @@ import { Link } from "react-router-dom";
 import Navbar from "./../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import "./../tailwind.css";
+import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const { isLoading, handleLogin } = useAuth();
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const userRole = localStorage.getItem("userRole");
-
-    if (isLoggedIn === "true" && userRole) {
-      // Arahkan user berdasarkan role
-      if (userRole === "admin") {
-        navigate("/presensi");
-      } else {
-        navigate("/presensi");
-      }
-    }
-  }, []);
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    // if (password.length < 8) {
-    //   alert("Password must be at least 8 characters long.");
-    //   return;
-    // }
-
-    // if (!/[A-Z]/.test(password)) {
-    //   alert("Password must contain at least one uppercase letter.");
-    //   return;
-    // }
-    setIsLoading(true); // mulai loading
-    try {
-      const response = await fetch(
-        "https://backend-constmg-production.up.railway.app/api/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        // jika login gagal
-        alert(data.message || "Login failed");
-        setIsLoading(false);
-        return;
-      }
-
-      // jika login berhasil
-      // contoh response: { token: "...", role: "karyawan", email: "..." }
-      // localStorage.setItem("token", data.token);
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userRole", data.karyawan.role);
-      localStorage.setItem("userId", data.karyawan.id);
-      localStorage.setItem("userName", data.karyawan.nama);
-      localStorage.setItem("isLoggedIn", "true");
-      if (data.message === "Login karyawan berhasil.") {
-        alert(data.message);
-      }
-      // arahkan sesuai role
-      data.karyawan.role === "admin"
-        ? navigate("/admin")
-        : navigate("/presensi");
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("An error occurred during login");
-      setIsLoading(false);
-    }
+    handleLogin(email, password);
   };
 
   return (
@@ -120,18 +52,25 @@ const Login = () => {
               />
             </div>
 
-            <div className="w-5/6 md:w-3/4 flex flex-col items-start">
-              <label htmlFor="password" className="text-sm md:text-base">
+            <div className="w-5/6 md:w-3/4 flex flex-col items-start relative">
+              <label htmlFor="password" className="text-sm md:text-base mb-1">
                 Password
               </label>
               <input
-                className="w-full border-2 border-gray-300 rounded-full p-2"
-                type="password"
+                className="w-full border-2 border-gray-300 rounded-full p-2 pr-16"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-4 top-9 text-sm text-blue-500 focus:outline-none"
+              >
+                {showPassword ? "Hide Password" : "Show Password"}
+              </button>
             </div>
 
             <input
