@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser, logoutUser } from "../services/AuthServices";
 import { saveUserToLocalStorage } from "../utils/utils";
 import { toast } from "react-toastify";
+
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // perlu di sini, bukan dalam login
@@ -47,11 +48,18 @@ export function useAuth() {
   };
 
   const logout = async () => {
+    const toastId = toast.loading("Mohon tunggu sebentar..."); // simpan toast ID
     setIsLoading(true);
     const email = localStorage.getItem("userEmail");
 
     if (!email) {
-      alert("Email not found in localStorage");
+      // toast("Email not found in localStorage");
+      toast.update(toastId, {
+        render: "Email not found in localStorage",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
       setIsLoading(false);
       return;
     }
@@ -61,14 +69,21 @@ export function useAuth() {
 
       // Jika sukses, ambil dan tampilkan pesan
       if (response?.message) {
-        alert(response.message);
-      } else {
-        alert("Logout berhasil.");
+        // alert(response.message);
+
+        toast.update(toastId, {
+          render:"Berhasil Logout!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
       }
 
       localStorage.clear();
       setIsLoggedIn(false);
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error) {
       // Tangani error dari API
       let errorMessage = "Terjadi kesalahan saat logout.";
@@ -79,7 +94,12 @@ export function useAuth() {
         errorMessage = error.message;
       }
 
-      alert(errorMessage);
+      toast.update(toastId, {
+        render: errorMessage || "Email not found in localStorage",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
     } finally {
       setIsLoading(false);
     }

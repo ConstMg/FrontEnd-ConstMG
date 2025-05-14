@@ -71,15 +71,16 @@ const PresensiKaryawan = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-6xl flex gap-6">
+    <div className="min-h-screen flex items-center justify-center pt-20 bg-gray-100">
+      {/* <ToastContainer position="bottom-right" autoClose={3000} /> */}
+      <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-6xl flex flex-col lg:flex-row gap-6 items-center">
         {/* Map Section */}
-        <div className="w-1/2 rounded-xl overflow-hidden">
+        <div className="w-full lg:w-1/2 md:w-7/8 rounded-xl overflow-hidden">
           {location.lat && location.lng ? (
             <iframe
               src={`https://maps.google.com/maps?q=${location.lat},${location.lng}&z=15&output=embed`}
               width="100%"
-              height="450"
+              height="470"
               allowFullScreen=""
               loading="lazy"
               //   style={{ border: 2 }}
@@ -96,7 +97,7 @@ const PresensiKaryawan = () => {
         {/* Right Section */}
         <div
           style={{ backgroundColor: "#F3F3F9" }}
-          className="w-1/2 p-6 flex flex-col justify-center items-center gap-6 shadow-sm rounded-[30px] overflow-hidden"
+          className="w-full lg:w-1/2 md:w-7/8 p-6 flex flex-col justify-center items-center gap-6 shadow-sm rounded-[30px] overflow-hidden"
         >
           {/* ✅ Tampilkan form atau tampilan sukses */}
           {!submitted ? (
@@ -151,7 +152,6 @@ const PresensiKaryawan = () => {
               >
                 {loading ? "Submitting..." : "Presence"}
               </button>
-              <ToastContainer position="bottom-right" autoClose={3000} />
             </>
           ) : (
             <>

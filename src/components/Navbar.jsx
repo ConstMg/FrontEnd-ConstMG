@@ -22,6 +22,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const hideMidOn = ["/login", "/presensi", "/admin"];
+  const user = localStorage.getItem("userRole");
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -57,6 +58,14 @@ function Navbar() {
             <Link to="contact" className="hover:cursor-pointer hover:font-bold">
               Contact
             </Link>
+            {isLoggedIn && user === "karyawan" && (
+              <NavLink
+                to="/presensi"
+                className="hover:cursor-pointer hover:font-bold"
+              >
+                Presensi
+              </NavLink>
+            )}
           </ul>
         </div>
       )}
@@ -135,6 +144,14 @@ function Navbar() {
                 >
                   Contact
                 </Link>
+                {isLoggedIn && user === "karyawan" && (
+                  <NavLink
+                    to="/presensi"
+                    className="hover:cursor-pointer hover:font-bold"
+                  >
+                    Presensi
+                  </NavLink>
+                )}
               </>
             ) : (
               <NavLink
