@@ -5,7 +5,7 @@ import Navbar from "./../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import "./../tailwind.css";
 import { useAuth } from "../hooks/useAuth";
-
+import { ToastContainer } from "react-toastify";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +22,7 @@ const Login = () => {
       <Navbar />
       <div className="container w-3/4 h-6/10 flex flex-row justify-center rounded-4xl">
         <div className="image relative w-1/3 md:block hidden">
+          <ToastContainer position="top-right" autoClose={3000} />
           <img className="h-full" src={gambarBangunan} alt="gambar bangunan" />
           <p className="absolute w-full left-1/2 transform -translate-x-1/2 top-0 p-2 text-5xl text-white font-bold">
             Make Your Dream House Come True.

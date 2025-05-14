@@ -3,6 +3,7 @@ import "./../tailwind.css";
 import Check from "../assets/check.svg";
 import { useNavigate } from "react-router-dom";
 import { useKaryawan } from "../hooks/UseKaryawan";
+import { ToastContainer } from "react-toastify";
 
 const PresensiKaryawan = () => {
   const [name, setName] = useState("");
@@ -14,6 +15,7 @@ const PresensiKaryawan = () => {
   const navigate = useNavigate();
   const [statusPresensi, setStatusPresensi] = useState("");
   const { handlePresensiMasuk, loading, error } = useKaryawan();
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ const PresensiKaryawan = () => {
         longitude,
         deskripsi
       );
-
+      setMessage(response.message);
       if (response) {
         // ✅ respons dari API sukses, tampilkan success UI
         setSubmitted(true);
@@ -149,6 +151,7 @@ const PresensiKaryawan = () => {
               >
                 {loading ? "Submitting..." : "Presence"}
               </button>
+              <ToastContainer position="bottom-right" autoClose={3000} />
             </>
           ) : (
             <>
@@ -158,7 +161,7 @@ const PresensiKaryawan = () => {
                   <img src={Check} alt="Check" className="w-20 h-20" />
                 </div>
                 <p className="text-lg font-semibold text-yellow-400">
-                  Successfully attended
+                  {message || "Presensi berhasil!"}
                 </p>
                 <button
                   onClick={() => setSubmitted(false)} // 👈 Kembali ke form

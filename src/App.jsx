@@ -4,9 +4,10 @@ import Contact from "./components/Contact";
 import MainPage from "./pages/MainPage";
 import Presensi from "./pages/Presensi";
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
+
 import RedirectToPage from "./components/RedirectToPage";
 function App() {
-  
   return (
     <Router>
       <Routes>

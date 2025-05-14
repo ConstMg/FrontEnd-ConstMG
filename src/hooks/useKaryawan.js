@@ -1,8 +1,9 @@
-import { presensiMasuk, presensiKeluar } from "../services/KaryawanServices";
+import { presensi } from "../services/KaryawanServices";
 import { useState } from "react";
-
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 export function useKaryawan() {
-  const [karyawan, setKaryawan] = useState(null);
+  // const [karyawan, setKaryawan] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -14,41 +15,43 @@ export function useKaryawan() {
     deskripsi
   ) => {
     if (!nama || !status_presensi) {
-      alert("Mohon lengkapi nama dan status presensi.");
+      toast.warn("Mohon lengkapi nama dan status presensi.");
       return;
     }
 
     setLoading(true);
+    const toastId = toast.loading("Mohon tunggu sebentar..."); // simpan toast ID
 
     try {
-      const response = await presensiMasuk(
+      const response = await presensi(
         nama,
         status_presensi,
         latitude,
         longitude,
         deskripsi
       );
-      alert(response.message);
+
+      toast.update(toastId, {
+        render: response.message || "Presensi berhasil!",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+
       return response;
-      //   setKaryawan(response.data);
     } catch (error) {
-      alert(error.message || "Terjadi kesalahan saat presensi.");
+      setError(error);
+
+      toast.update(toastId, {
+        render: error.message || "Terjadi kesalahan saat presensi.",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const handlePresensiKeluar = async (nama, latitude, longitude) => {
-    setLoading(true);
-    try {
-      const response = await presensiKeluar(nama, latitude, longitude);
-      setKaryawan(response.data);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { karyawan, loading, error, handlePresensiMasuk };
+  return { loading, error, handlePresensiMasuk };
 }

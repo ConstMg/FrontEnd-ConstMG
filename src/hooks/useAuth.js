@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, logoutUser } from "../services/AuthServices";
 import { saveUserToLocalStorage } from "../utils/utils";
-
+import { toast } from "react-toastify";
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // perlu di sini, bukan dalam login
@@ -19,20 +19,28 @@ export function useAuth() {
     setIsLoading(true);
     try {
       const data = await loginUser(email, password);
-      alert(data.message);
+      // alert(data.message);
+      if (data.message) {
+        toast.success(data.message);
+      } else {
+        toast.error("Login gagal.");
+      }
       saveUserToLocalStorage(data, email);
 
       // Simpan status login di localStorage
       localStorage.setItem("isLoggedIn", true);
       setIsLoggedIn(true);
 
-      if (data.karyawan?.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/presensi");
-      }
+      setTimeout(() => {
+        if (data.karyawan?.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/presensi");
+        }
+      }, 2000);
     } catch (error) {
-      alert(error.message);
+      // alert(error.message);
+      toast.error(error.message || "Terjadi kesalahan saat login.");
     } finally {
       setIsLoading(false);
     }
