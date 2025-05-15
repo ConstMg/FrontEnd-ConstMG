@@ -58,7 +58,7 @@ function Navbar() {
             <Link to="contact" className="hover:cursor-pointer hover:font-bold">
               Contact
             </Link>
-            {isLoggedIn && user === "karyawan" && (
+            {isLoggedIn && (user === "karyawan" || user === "admin") && (
               <NavLink
                 to="/presensi"
                 className="hover:cursor-pointer hover:font-bold"
@@ -87,13 +87,24 @@ function Navbar() {
               Login
             </NavLink>
           ) : (
-            <NavLink
-              // to="/login"
-              onClick={handleLogout}
-              className="flex md:flex hover:cursor-pointer"
-            >
-              Logout
-            </NavLink>
+            <>
+            {isLoggedIn && user === "admin" && (
+              <NavLink
+                to="/admin"
+                className="hover:cursor-pointer hover:font-bold"
+              >
+                Dashboard
+              </NavLink>
+            )}
+              <NavLink
+                // to="/login"
+                onClick={handleLogout}
+                className="flex md:flex hover:cursor-pointer"
+              >
+                Logout
+              </NavLink>
+            </>
+            
           )
         ) : (
           <NavLink
