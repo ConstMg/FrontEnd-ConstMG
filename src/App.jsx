@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Contact from "./components/Contact";
+import Admin from "./pages/Admin";
 import MainPage from "./pages/MainPage";
 import Presensi from "./pages/Presensi";
 import "./App.css";
@@ -30,7 +31,7 @@ function App() {
         <Route path="/" element={<RedirectToPage />} />
         {/* <Route path="/redirect" element={<RedirectToPage />} /> */}
         <Route path="/main" element={<MainPage />} />
-        <Route path="/admin" element={<MainPage />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="/presensi" element={<Presensi />} />
         <Route path="/login" element={<Login />} />
         {/* <Route path="/contact" element={<Contact/>}/> */}
