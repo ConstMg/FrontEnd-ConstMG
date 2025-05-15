@@ -6,7 +6,7 @@ import { useKaryawan } from "../hooks/UseKaryawan";
 import { ToastContainer } from "react-toastify";
 
 const PresensiKaryawan = () => {
-  const [name, setName] = useState("");
+  const name = localStorage.getItem("userName");
   const [description, setDescription] = useState("");
 
   const [location, setLocation] = useState({ lat: null, lng: null });
@@ -109,7 +109,7 @@ const PresensiKaryawan = () => {
                 type="text"
                 placeholder="Name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                readOnly
                 className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
               <select
