@@ -20,7 +20,7 @@ export function useAuth() {
     setIsLoading(true);
     try {
       const data = await loginUser(email, password);
-      // alert(data.message);
+      // console.log(data);
       if (data.message) {
         toast.success(data.message);
       } else {
@@ -34,7 +34,7 @@ export function useAuth() {
 
       setTimeout(() => {
         if (data.karyawan?.role === "admin") {
-          navigate("/admin");
+          navigate("/");
         } else {
           navigate("/presensi");
         }

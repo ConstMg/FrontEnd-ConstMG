@@ -15,3 +15,7 @@ export const presensi = async (
     deskripsi,
   });
 };
+
+export const getKaryawan = async () => {
+  return await apiClient("karyawan", "GET");
+};
