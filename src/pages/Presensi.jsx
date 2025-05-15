@@ -8,6 +8,8 @@ import "./../tailwind.css";
 import PresensiKaryawan from "../components/PresensiKaryawan";
 
 const Presensi = () => {
+  
+
   return (
     <>
       <Navbar />
