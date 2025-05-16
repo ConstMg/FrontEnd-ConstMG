@@ -1,4 +1,9 @@
-import { getProject, deleteProject } from "../services/ProjectService";
+import {
+    getProject,
+    deleteProject,
+    addProject,
+    updateProject
+} from "../services/ProjectService";
 import { useState, useCallback } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
@@ -12,7 +17,7 @@ export function useProject() {
         setLoading(true);
 
         try {
-            const response = await getProject();
+            const response = await getProject(localStorage.getItem("userRole"));
             setProjectData(response.data);
             return response.data;
         } catch (error) {
@@ -35,7 +40,7 @@ export function useProject() {
         const toastId = toast.loading("Menghapus project...");
 
         try {
-            await deleteProject(id);
+            await deleteProject(id, localStorage.getItem("userRole"));
             setProjectData((prevData) =>
                 prevData.filter((project) => project.id !== id)
             );
@@ -50,7 +55,8 @@ export function useProject() {
             setError(error);
             toast.update(toastId, {
                 render:
-                    error.message || "Terjadi kesalahan saat menghapus project.",
+                    error.message ||
+                    "Terjadi kesalahan saat menghapus project.",
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,
@@ -61,5 +67,90 @@ export function useProject() {
         }
     };
 
-    return { projectData, loading, error, fetchProjectData, handleDeleteProject };
+    const handleUpdateProject = async (id, nama, deskripsi) => {
+        setLoading(true);
+        const toastId = toast.loading("Memperbarui project...");
+
+        try {
+            await updateProject(
+                id,
+                nama,
+                deskripsi,
+                localStorage.getItem("userRole")
+            );
+            setProjectData((prevData) =>
+                prevData.map((project) =>
+                    project.id === id
+                        ? { ...project, nama, deskripsi }
+                        : project
+                )
+            );
+            toast.update(toastId, {
+                render: "Project berhasil diperbarui!",
+                type: "success",
+                isLoading: false,
+                autoClose: 3000,
+            });
+            return true;
+        } catch (error) {
+            setError(error);
+            toast.update(toastId, {
+                render:
+                    error.message ||
+                    "Terjadi kesalahan saat memperbarui project.",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+            });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddProject = async (nama, deskripsi) => {
+        setLoading(true);
+        const toastId = toast.loading("Memperbarui project...");
+
+        try {
+            await addProject(nama, deskripsi, localStorage.getItem("userRole"));
+            setProjectData((prevData) =>
+                prevData.map((project) =>
+                    project.nama_project === nama
+                        ? { ...project, nama, deskripsi }
+                        : project
+                )
+            );
+            toast.update(toastId, {
+                render: "Project berhasil ditambahkan",
+                type: "success",
+                isLoading: false,
+                autoClose: 3000,
+            });
+            return true;
+        } catch (error) {
+            setError(error);
+            toast.update(toastId, {
+                render:
+                    error.message ||
+                    "Terjadi kesalahan saat menambahkan project.",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+            });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return {
+        projectData,
+        loading,
+        error,
+        fetchProjectData,
+        handleDeleteProject,
+        handleAddProject,
+        handleUpdateProject,
+    };
 }

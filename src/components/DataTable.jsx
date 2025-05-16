@@ -311,20 +311,20 @@ const DataTable = ({
                                                 alt="Delete"
                                                 className={`cursor-pointer w-5 h-5 ${
                                                     deleting &&
-                                                    deleteId === project.id
+                                                    deleteId === project.project_id
                                                         ? "opacity-50"
                                                         : "hover:scale-110"
                                                 }`}
                                                 onClick={() =>
                                                     confirmDelete(
-                                                        project.id,
+                                                        project.project_id,
                                                         "proyek",
                                                         project.project_name
                                                     )
                                                 }
                                                 disabled={
                                                     deleting &&
-                                                    deleteId === project.id
+                                                    deleteId === project.project_id
                                                 }
                                             />
                                         </div>

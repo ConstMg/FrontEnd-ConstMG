@@ -65,7 +65,7 @@ export function useKaryawan() {
         setLoading(true);
 
         try {
-            const response = await getKaryawan();
+            const response = await getKaryawan(localStorage.getItem("userRole"));
             const data = Array.isArray(response)
                 ? response
                 : response.data || [];
@@ -94,7 +94,7 @@ export function useKaryawan() {
         const toastId = toast.loading("Menghapus data karyawan...");
 
         try {
-            await deleteKaryawan(id);
+            await deleteKaryawan(id, localStorage.getItem("userRole"));
             setKaryawanData((prevData) =>
                 prevData.filter((karyawan) => karyawan.id !== id)
             );
@@ -142,7 +142,8 @@ export function useKaryawan() {
                 divisi,
                 penempatan,
                 email,
-                password
+                password,
+                localStorage.getItem("userRole")
             );
             setKaryawanData((prevData) => [...prevData, response.data]);
             toast.update(toastId, {
@@ -177,7 +178,8 @@ export function useKaryawan() {
         divisi,
         penempatan,
         email,
-        password
+        password, 
+        role = localStorage.getItem("userRole")
     ) => {
         setLoading(true);
         const toastId = toast.loading("Menambahkan data karyawan...");
@@ -192,7 +194,8 @@ export function useKaryawan() {
                 divisi,
                 penempatan,
                 email,
-                password
+                password,
+                role
             );
             setKaryawanData((prevData) => [...prevData, response.data]);
             toast.update(toastId, {

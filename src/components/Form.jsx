@@ -14,7 +14,11 @@ const Form = ({
         handleAddKaryawan,
         loading: karyawanLoading,
     } = useKaryawan();
-    const { handleAddProject, loading: projectLoading } = useProject();
+    const {
+        handleAddProject,
+        handleUpdateProject,
+        loading: projectLoading,
+    } = useProject();
 
     // Combined config with karyawan and project variants
     const config = {
@@ -66,8 +70,6 @@ const Form = ({
               }
             : {
                   project_name: "",
-                  tanggal: new Date().toISOString().split("T")[0],
-                  lokasi: "",
                   deskripsi: "",
                   status: "Ongoing",
               }
@@ -85,9 +87,6 @@ const Form = ({
         "Engginering",
         "Commercial",
     ];
-
-    // Project status options
-    const statusOptions = ["Ongoing", "Completed", "Canceled", "On Hold"];
 
     const [error, setError] = useState(null);
 
@@ -108,10 +107,6 @@ const Form = ({
             } else {
                 setFormData({
                     project_name: initialData.project_name || "",
-                    tanggal:
-                        initialData.tanggal ||
-                        new Date().toISOString().split("T")[0],
-                    lokasi: initialData.lokasi || "",
                     deskripsi: initialData.deskripsi || "",
                     status: initialData.status || "Ongoing",
                 });
@@ -149,17 +144,14 @@ const Form = ({
                     // Handle project add
                     await handleAddProject(
                         formData.project_name,
-                        formData.tanggal,
-                        formData.lokasi,
-                        formData.deskripsi,
-                        formData.status
+                        formData.deskripsi
                     );
                 }
-            } else if (variant === "update" && initialData?.id) {
+            } else if (variant === "update" && (initialData?.id || initialData?.project_id)) {
                 if (itemType === "karyawan") {
                     // Handle karyawan update if available
                     if (typeof handleUpdateKaryawan === "function") {
-                        console.log("Updating karyawan with ID:", formData.nik);
+                        console.log("Updating karyawan with ID:", initialData);
                         await handleUpdateKaryawan(
                             initialData.id,
                             formData.nama,
@@ -173,9 +165,13 @@ const Form = ({
                         );
                     }
                 } else {
-                    // Handle project update if available
+                    console.log("Updating project with ID:", initialData);
                     if (typeof handleUpdateProject === "function") {
-                        await handleUpdateProject(initialData.id, formData);
+                        await handleUpdateProject(
+                            initialData.project_id,
+                            formData.project_name,
+                            formData.deskripsi
+                        );
                     }
                 }
             }
@@ -247,7 +243,7 @@ const Form = ({
                     required
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
                 >
-                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Laki-Laki">Laki-laki</option>
                     <option value="Perempuan">Perempuan</option>
                 </select>
             </div>
@@ -391,29 +387,6 @@ const Form = ({
                     rows="3"
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
                 />
-            </div>
-
-            <div>
-                <label
-                    htmlFor="status"
-                    className="block text-sm font-medium text-gray-700"
-                >
-                    Status
-                </label>
-                <select
-                    id="status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                >
-                    {statusOptions.map((status) => (
-                        <option key={status} value={status}>
-                            {status}
-                        </option>
-                    ))}
-                </select>
             </div>
         </>
     );
