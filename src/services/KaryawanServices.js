@@ -19,3 +19,7 @@ export const presensi = async (
 export const getKaryawan = async () => {
   return await apiClient("karyawan", "GET");
 };
+
+export const deleteKaryawan = async (id) => {
+  return await apiClient(`admin/karyawan/${id}`, "DELETE");
+};
