@@ -4,12 +4,14 @@ import deleteIcon from "../assets/delete.svg";
 import { useProject } from "../hooks/useProject";
 import { useKaryawan } from "../hooks/UseKaryawan";
 import ConfirmationCard from "./confirmationCard";
+import ImageFolder from "../components/ImageFolder";
 
 const DataTable = ({
     variant = "karyawan",
     data = [],
     isLoading = false,
     refreshData,
+    onEdit, // Add this prop to receive the edit function from parent
 }) => {
     const [deleting, setDeleting] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
@@ -20,15 +22,22 @@ const DataTable = ({
     const { handleDeleteKaryawan } = useKaryawan();
 
     // Function to show delete confirmation
-    const confirmDelete = (id, type, name) => {
-        setItemToDelete({ id, type, name });
+    const confirmDelete = (id, itemType, name) => {
+        setItemToDelete({ id, type: itemType, name });
         setShowConfirmation(true);
     };
 
-    // Function to handle delete confirmation
+    // Function to handle edit button click
+    const handleEdit = (item) => {
+        if (onEdit) {
+            onEdit(item, variant);
+        }
+    };
+
+    // Handle delete confirmation
     const handleDeleteConfirm = async () => {
         if (!itemToDelete) return;
-
+        
         setDeleting(true);
         setDeleteId(itemToDelete.id);
         
@@ -39,12 +48,11 @@ const DataTable = ({
                 await handleDeleteProject(itemToDelete.id);
             }
             
-            // Refresh data after successful deletion
             if (refreshData) {
                 await refreshData();
             }
         } catch (error) {
-            console.error(`Error deleting ${itemToDelete.nama}:`, error);
+            console.error(`Error deleting ${itemToDelete.type}:`, error);
         } finally {
             setDeleting(false);
             setDeleteId(null);
@@ -67,141 +75,149 @@ const DataTable = ({
         );
     }
 
-    return (
-        <div className="h-full w-full relative">
-            {/* Confirmation Modal */}
-            {showConfirmation && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <ConfirmationCard 
-                        variant="delete"
-                        itemType={itemToDelete?.type}
-                        itemname={itemToDelete?.name}
-                        onConfirm={handleDeleteConfirm}
-                        onCancel={handleDeleteCancel}
-                    />
-                </div>
-            )}
-            
-            {/* Karyawan Table */}
-            {variant === "karyawan" && (
-                <div className="h-full w-full overflow-auto">
-                    <table className="min-w-full bg-white rounded-lg shadow-md">
-                        {/* Table header */}
-                        <thead className="bg-gray-50 text-gray-600 sticky top-0 z-10">
-                            <tr>
-                                <th className="py-2 px-2 text-left">No.</th>
-                                <th className="py-2 px-2 text-left">Nama</th>
-                                <th className="py-2 px-2 text-left">NIK</th>
-                                <th className="py-2 px-2 text-left">Jenis Kelamin</th>
-                                <th className="py-2 px-2 text-left">Divisi</th>
-                                <th className="py-2 px-2 text-left">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-gray-700">
-                            {data && data.length > 0 ? (
-                                data.map((karyawan, index) => (
-                                    <tr
-                                        key={karyawan.id}
-                                        className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-                                    >
-                                        <td className="py-2 px-2 border-b">{index + 1}</td>
-                                        <td className="py-2 px-2 border-b">{karyawan.nama}</td>
-                                        <td className="py-2 px-2 border-b">{karyawan.nik}</td>
-                                        <td className="py-2 px-2 border-b">{karyawan.jk}</td>
-                                        <td className="py-2 px-2 border-b">{karyawan.divisi}</td>
-                                        <td className="py-2 px-2 border-b">
-                                            <div className="flex gap-3 items-center">
-                                                <img
-                                                    src={editIcon}
-                                                    alt="Edit"
-                                                    className="cursor-pointer w-5 h-5"
-                                                />
-                                                <img
-                                                    src={deleteIcon}
-                                                    alt="Delete"
-                                                    className={`cursor-pointer w-5 h-5 ${
-                                                        deleting && deleteId === karyawan.id 
-                                                            ? "opacity-50" 
-                                                            : "hover:scale-110"
-                                                    }`}
-                                                    onClick={() => confirmDelete(karyawan.id, "karyawan",karyawan.nama)}
-                                                />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="6" className="py-4 text-center text-gray-500">
-                                        Tidak ada data karyawan
+    // Modify the karyawan table render to include the edit button:
+    if (variant === "karyawan") {
+        return (
+            <div className="h-full w-full overflow-auto relative">
+                {/* Confirmation modal */}
+                {showConfirmation && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <ConfirmationCard 
+                            variant="delete"
+                            itemname={itemToDelete?.name || "item"}
+                            onConfirm={handleDeleteConfirm}
+                            onCancel={() => setShowConfirmation(false)}
+                        />
+                    </div>
+                )}
+                
+                <table className="min-w-full bg-white rounded-lg shadow-md">
+                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-10">
+                        <tr>
+                            <th className="py-2 px-2 text-left">No.</th>
+                            <th className="py-2 px-2 text-left">Nama</th>
+                            <th className="py-2 px-2 text-left">NIK</th>
+                            <th className="py-2 px-2 text-left">Jenis Kelamin</th>
+                            <th className="py-2 px-2 text-left">Divisi</th>
+                            <th className="py-2 px-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-700">
+                        {data && data.length > 0 ? (
+                            data.map((karyawan, index) => (
+                                <tr key={karyawan.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                                    <td className="py-2 px-2 border-b">{index + 1}</td>
+                                    <td className="py-2 px-2 border-b">{karyawan.nama}</td>
+                                    <td className="py-2 px-2 border-b">{karyawan.nik}</td>
+                                    <td className="py-2 px-2 border-b">{karyawan.jk}</td>
+                                    <td className="py-2 px-2 border-b">{karyawan.divisi}</td>
+                                    <td className="py-2 px-2 border-b">
+                                        <div className="flex gap-3 items-center">
+                                            <img
+                                                src={editIcon}
+                                                alt="Edit"
+                                                className="cursor-pointer w-5 h-5 hover:scale-110"
+                                                onClick={() => handleEdit(karyawan)}
+                                            />
+                                            <img
+                                                src={deleteIcon}
+                                                alt="Delete"
+                                                className={`cursor-pointer w-5 h-5 ${
+                                                    deleting && deleteId === karyawan.id 
+                                                        ? "opacity-50" 
+                                                        : "hover:scale-110"
+                                                }`}
+                                                onClick={() => confirmDelete(karyawan.id, "karyawan", karyawan.nama)}
+                                                disabled={deleting && deleteId === karyawan.id}
+                                            />
+                                        </div>
                                     </td>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-            
-            {/* Project Table */}
-            {variant === "proyek" && (
-                <div className="h-full w-full overflow-auto">
-                    <table className="min-w-full bg-white rounded-lg shadow-md">
-                        <thead className="bg-gray-50 text-gray-600 sticky top-0 z-10">
+                            ))
+                        ) : (
                             <tr>
-                                <th className="py-2 px-2 text-left">No.</th>
-                                <th className="py-2 px-2 text-left">Nama Project</th>
-                                <th className="py-2 px-2 text-left">Tanggal</th>
-                                <th className="py-2 px-2 text-left">Lokasi</th>
-                                <th className="py-2 px-2 text-left">Actions</th>
+                                <td colSpan="6" className="py-4 text-center text-gray-500">
+                                    Tidak ada data karyawan
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody className="text-gray-700">
-                            {data && data.length > 0 ? (
-                                data.map((project, index) => (
-                                    <tr
-                                        key={project.id}
-                                        className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-                                    >
-                                        <td className="py-2 px-2 border-b">{index + 1}</td>
-                                        <td className="py-2 px-2 border-b">{project.project_name}</td>
-                                        <td className="py-2 px-2 border-b">
-                                            {new Date(project.tanggal).toLocaleDateString('id-ID')}
-                                        </td>
-                                        <td className="py-2 px-2 border-b">{project.lokasi}</td>
-                                        <td className="py-2 px-2 border-b">
-                                            <div className="flex gap-3 items-center">
-                                                <img
-                                                    src={editIcon}
-                                                    alt="Edit"
-                                                    className="cursor-pointer w-5 h-5"
-                                                />
-                                                <img
-                                                    src={deleteIcon}
-                                                    alt="Delete"
-                                                    className={`cursor-pointer w-5 h-5 ${
-                                                        deleting && deleteId === project.project_id 
-                                                            ? "opacity-50" 
-                                                            : "hover:scale-110"
-                                                    }`}
-                                                    onClick={() => confirmDelete(project.project_id, "project", project.project_name)}
-                                                />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="5" className="py-4 text-center text-gray-500">
-                                        Tidak ada data proyek
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+    
+    // Modify the project table render to include the edit button:
+    if (variant === "proyek") {
+        return (
+            <div className="h-full w-full overflow-auto relative">
+                {/* Confirmation modal */}
+                {showConfirmation && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <ConfirmationCard 
+                            variant="delete"
+                            itemname={itemToDelete?.name || "item"}
+                            onConfirm={handleDeleteConfirm}
+                            onCancel={() => setShowConfirmation(false)}
+                        />
+                    </div>
+                )}
+                
+                <table className="min-w-full bg-white rounded-lg shadow-md">
+                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-40">
+                        <tr>
+                            <th className="py-2 px-2 text-left">No.</th>
+                            <th className="py-2 px-2 text-left">Nama Project</th>
+                            <th className="py-2 px-2 text-left">Deskripsi</th>
+                            <th className="py-2 px-2 text-center">Gambar</th>
+                            <th className="py-2 px-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-700">
+                        {data && data.length > 0 ? (
+                            data.map((project, index) => (
+                                <tr key={project.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                                    <td className="py-2 px-2 border-b">{index + 1}</td>
+                                    <td className="py-2 px-2 border-b">{project.project_name}</td>
+                                    <td className="py-2 px-2 border-b">{project.deskripsi}</td>
+                                    <td className="py-2 px-2 border-b flex items-center justify-center"><ImageFolder/></td>
+                                    <td className="py-2 px-2 border-b">
+                                        <div className="flex gap-3 items-center">
+                                            <img
+                                                src={editIcon}
+                                                alt="Edit"
+                                                className="cursor-pointer w-5 h-5 hover:scale-110"
+                                                onClick={() => handleEdit(project)}
+                                            />
+                                            <img
+                                                src={deleteIcon}
+                                                alt="Delete"
+                                                className={`cursor-pointer w-5 h-5 ${
+                                                    deleting && deleteId === project.id 
+                                                        ? "opacity-50" 
+                                                        : "hover:scale-110"
+                                                }`}
+                                                onClick={() => confirmDelete(project.id, "proyek", project.project_name)}
+                                                disabled={deleting && deleteId === project.id}
+                                            />
+                                        </div>
                                     </td>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-        </div>
-    );
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6" className="py-4 text-center text-gray-500">
+                                    Tidak ada data proyek
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
+    return null;
 };
 
 export default DataTable;

@@ -4,7 +4,6 @@ const ConfirmationCard = ({
   variant = "delete", 
   onConfirm, 
   onCancel,
-  itemType = "item",
   itemname = "item"
 }) => {
     // Configuration based on variant

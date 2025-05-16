@@ -88,7 +88,7 @@ function Navbar() {
             </NavLink>
           ) : (
             <>
-            {isLoggedIn && user === "admin" && (
+            {isLoggedIn && (user === "admin" && location.pathname !== "/admin") && (
               <NavLink
                 to="/admin"
                 className="hover:cursor-pointer hover:font-bold"

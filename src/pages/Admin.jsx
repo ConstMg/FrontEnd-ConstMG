@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "../components/DataTable";
 import Navbar from "./../components/Navbar";
+import Form from "../components/Form";
 import addKaryawan from "../assets/addKaryawan.svg";
 import addProject from "../assets/addProject.svg";
 import karyawanIcon from "../assets/karyawan.svg";
@@ -20,6 +21,33 @@ const Admin = () => {
     const [karyawanCount, setKaryawanCount] = useState(0);
     const [proyekCount, setProjectCount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    
+    // Form state management
+    const [showForm, setShowForm] = useState(false);
+    const [formVariant, setFormVariant] = useState("add");
+    const [editingData, setEditingData] = useState(null);
+    const [formItemType, setFormItemType] = useState("karyawan");
+
+    // Form handling functions
+    const handleShowAddForm = (type) => {
+        setFormVariant("add");
+        setFormItemType(type);
+        setEditingData(null);
+        setShowForm(true);
+    };
+
+    const handleShowEditForm = (data, type) => {
+        setFormVariant("update");
+        setFormItemType(type);
+        setEditingData(data);
+        setShowForm(true);
+    };
+
+    const handleFormSubmit = async () => {
+        await refreshData();
+        setShowForm(false);
+        setEditingData(null);
+    };
 
     // Fetch karyawan data
     useEffect(() => {
@@ -95,6 +123,17 @@ const Admin = () => {
     return (
         <>
             <Navbar />
+            {showForm && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <Form 
+                        variant={formVariant}
+                        itemType={formItemType}
+                        initialData={editingData}
+                        onConfirm={handleFormSubmit}
+                        onCancel={() => setShowForm(false)}
+                    />
+                </div>
+            )}
             <div className="flex flex-col items-center justify-center h-screen pt-20">
                 <div className="body flex gap-10 w-full h-full bg-amber-400 px-10 pt-10">
                     <div className="left-section flex flex-col gap-5 items-center w-1/4 h-full bg-white rounded-t-4xl p-10">
@@ -142,9 +181,7 @@ const Admin = () => {
                                         src={addKaryawan}
                                         alt="Add Karyawan"
                                         className="w-20 h-20 cursor-pointer"
-                                        onClick={() => {
-                                            // Handle add karyawan
-                                        }}
+                                        onClick={() => handleShowAddForm("karyawan")}
                                     />
                                 </>
                             ) : (
@@ -163,9 +200,7 @@ const Admin = () => {
                                         src={addProject}
                                         alt="Add Project"
                                         className="w-20 h-20 cursor-pointer"
-                                        onClick={() => {
-                                            // Handle add project
-                                        }}
+                                        onClick={() => handleShowAddForm("proyek")}
                                     />
                                 </>
                             )}
@@ -177,6 +212,7 @@ const Admin = () => {
                                     data={currentData}
                                     isLoading={isLoading}
                                     refreshData={refreshData}
+                                    onEdit={(data) => handleShowEditForm(data, activeComponent)}
                                 />
                             </div>
                         </div>
