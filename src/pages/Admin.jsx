@@ -8,20 +8,22 @@ import karyawanIcon from "../assets/karyawan.svg";
 import proyekIcon from "../assets/project.svg";
 import { useKaryawan } from "../hooks/UseKaryawan";
 import { useProject } from "../hooks/useProject";
-import { data } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
     const [activeComponent, setActiveComponent] = useState(() => {
         return localStorage.getItem("adminActiveTab") || "karyawan";
     });
-    const {fetchKaryawanData} = useKaryawan();
+    const navigate = useNavigate();
+    const { fetchKaryawanData } = useKaryawan();
     const [karyawanData, setKaryawanData] = useState([]);
-    const {fetchProjectData} = useProject();
+    const { fetchProjectData } = useProject();
     const [proyekData, setProjectData] = useState([]);
     const [karyawanCount, setKaryawanCount] = useState(0);
     const [proyekCount, setProjectCount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    
+
     // Form state management
     const [showForm, setShowForm] = useState(false);
     const [formVariant, setFormVariant] = useState("add");
@@ -48,6 +50,15 @@ const Admin = () => {
         setShowForm(false);
         setEditingData(null);
     };
+
+    useEffect(() => {
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        const userRole = localStorage.getItem("userRole");
+
+        if (!isLoggedIn && userRole !== "admin") {
+            navigate("/");
+        }
+    }, []);
 
     // Fetch karyawan data
     useEffect(() => {
@@ -125,7 +136,7 @@ const Admin = () => {
             <Navbar />
             {showForm && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <Form 
+                    <Form
                         variant={formVariant}
                         itemType={formItemType}
                         initialData={editingData}
@@ -181,7 +192,9 @@ const Admin = () => {
                                         src={addKaryawan}
                                         alt="Add Karyawan"
                                         className="w-20 h-20 cursor-pointer"
-                                        onClick={() => handleShowAddForm("karyawan")}
+                                        onClick={() =>
+                                            handleShowAddForm("karyawan")
+                                        }
                                     />
                                 </>
                             ) : (
@@ -200,7 +213,9 @@ const Admin = () => {
                                         src={addProject}
                                         alt="Add Project"
                                         className="w-20 h-20 cursor-pointer"
-                                        onClick={() => handleShowAddForm("proyek")}
+                                        onClick={() =>
+                                            handleShowAddForm("proyek")
+                                        }
                                     />
                                 </>
                             )}
@@ -212,7 +227,12 @@ const Admin = () => {
                                     data={currentData}
                                     isLoading={isLoading}
                                     refreshData={refreshData}
-                                    onEdit={(data) => handleShowEditForm(data, activeComponent)}
+                                    onEdit={(data) =>
+                                        handleShowEditForm(
+                                            data,
+                                            activeComponent
+                                        )
+                                    }
                                 />
                             </div>
                         </div>

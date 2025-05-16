@@ -38,6 +38,36 @@ export const addKaryawan = async (
     });
 };
 
+export const updateKaryawan = async (
+    id,
+    nama,
+    nik,
+    jk,
+    divisi,
+    alamat,
+    penempatan,
+    email,
+    password
+) => {
+    return await apiClient(`admin/karyawan/${id}`, "PUT", {
+        nama,
+        nik,
+        jk,
+        alamat,
+        divisi,
+        penempatan,
+        email,
+        password,
+    });
+};
+
+export const setRoleKaryawan = async (nama, role) => {
+    return await apiClient(`karyawan/update-role`, "PATCH", {
+        nama,
+        role,
+    });
+};
+
 export const getKaryawan = async () => {
     return await apiClient("karyawan", "GET");
 };

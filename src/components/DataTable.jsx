@@ -17,9 +17,9 @@ const DataTable = ({
     const [deleteId, setDeleteId] = useState(null);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
-    
+
     const { handleDeleteProject } = useProject();
-    const { handleDeleteKaryawan } = useKaryawan();
+    const { handleDeleteKaryawan, handleUpdateKaryawanRole } = useKaryawan();
 
     // Function to show delete confirmation
     const confirmDelete = (id, itemType, name) => {
@@ -37,17 +37,17 @@ const DataTable = ({
     // Handle delete confirmation
     const handleDeleteConfirm = async () => {
         if (!itemToDelete) return;
-        
+
         setDeleting(true);
         setDeleteId(itemToDelete.id);
-        
+
         try {
             if (itemToDelete.type === "karyawan") {
                 await handleDeleteKaryawan(itemToDelete.id);
             } else {
                 await handleDeleteProject(itemToDelete.id);
             }
-            
+
             if (refreshData) {
                 await refreshData();
             }
@@ -59,12 +59,6 @@ const DataTable = ({
             setShowConfirmation(false);
             setItemToDelete(null);
         }
-    };
-
-    // Function to cancel delete
-    const handleDeleteCancel = () => {
-        setShowConfirmation(false);
-        setItemToDelete(null);
     };
 
     if (isLoading) {
@@ -82,7 +76,7 @@ const DataTable = ({
                 {/* Confirmation modal */}
                 {showConfirmation && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                        <ConfirmationCard 
+                        <ConfirmationCard
                             variant="delete"
                             itemname={itemToDelete?.name || "item"}
                             onConfirm={handleDeleteConfirm}
@@ -90,45 +84,146 @@ const DataTable = ({
                         />
                     </div>
                 )}
-                
+
                 <table className="min-w-full bg-white rounded-lg shadow-md">
                     <thead className="bg-gray-50 text-gray-600 sticky top-0 z-10">
                         <tr>
                             <th className="py-2 px-2 text-left">No.</th>
                             <th className="py-2 px-2 text-left">Nama</th>
                             <th className="py-2 px-2 text-left">NIK</th>
-                            <th className="py-2 px-2 text-left">Jenis Kelamin</th>
+                            <th className="py-2 px-2 text-left">Alamat</th>
                             <th className="py-2 px-2 text-left">Divisi</th>
+                            <th className="py-2 px-2 text-left">Email</th>
+                            <th className="py-2 px-2 text-left">Password</th>
+                            <th className="py-2 px-2 text-left">Role</th>
                             <th className="py-2 px-2 text-left">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="text-gray-700">
                         {data && data.length > 0 ? (
                             data.map((karyawan, index) => (
-                                <tr key={karyawan.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                                    <td className="py-2 px-2 border-b">{index + 1}</td>
-                                    <td className="py-2 px-2 border-b">{karyawan.nama}</td>
-                                    <td className="py-2 px-2 border-b">{karyawan.nik}</td>
-                                    <td className="py-2 px-2 border-b">{karyawan.jk}</td>
-                                    <td className="py-2 px-2 border-b">{karyawan.divisi}</td>
+                                <tr
+                                    key={karyawan.id}
+                                    className={
+                                        index % 2 === 0
+                                            ? "bg-gray-50"
+                                            : "bg-white"
+                                    }
+                                >
+                                    <td className="py-2 px-2 border-b">
+                                        {index + 1}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {karyawan.nama}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {karyawan.nik}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {karyawan.alamat}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {karyawan.divisi}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {karyawan.email}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {karyawan.password}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        <select
+                                            value={karyawan.role}
+                                            onChange={async (e) => {
+                                                const newRole = e.target.value;
+                                                try {
+                                                    e.target.disabled = true;
+                                                    e.target.classList.add(
+                                                        "opacity-50"
+                                                    );
+
+                                                    await handleUpdateKaryawanRole(
+                                                        karyawan.nama,
+                                                        newRole
+                                                    );
+
+                                                    if (refreshData) {
+                                                        await refreshData();
+                                                    }
+
+                                                    e.target.classList.remove(
+                                                        "opacity-50"
+                                                    );
+                                                    e.target.classList.add(
+                                                        "bg-green-200"
+                                                    );
+                                                    setTimeout(() => {
+                                                        e.target.classList.remove(
+                                                            "bg-green-200"
+                                                        );
+                                                    }, 1000);
+                                                } catch (error) {
+                                                    console.error(
+                                                        "Failed to update role:",
+                                                        error
+                                                    );
+                                                    e.target.classList.remove(
+                                                        "opacity-50"
+                                                    );
+                                                    e.target.classList.add(
+                                                        "bg-red-200"
+                                                    );
+                                                    setTimeout(() => {
+                                                        e.target.classList.remove(
+                                                            "bg-red-200"
+                                                        );
+                                                    }, 1000);
+                                                } finally {
+                                                    e.target.disabled = false;
+                                                }
+                                            }}
+                                            className={`py-1 px-2 rounded-full ${
+                                                karyawan.role === "admin"
+                                                    ? "bg-amber-100 text-amber-800 border border-amber-300"
+                                                    : "bg-blue-100 text-blue-800 border border-blue-300"
+                                            }`}
+                                        >
+                                            <option value="admin" className="py-1 px-2 rounded-full bg-amber-100 text-amber-800 border border-amber-300">Admin</option>
+                                            <option value="karyawan" className="py-1 px-2 rounded-full bg-blue-100 text-blue-800 border border-blue-300">
+                                                Karyawan
+                                            </option>
+                                        </select>
+                                    </td>
                                     <td className="py-2 px-2 border-b">
                                         <div className="flex gap-3 items-center">
                                             <img
                                                 src={editIcon}
                                                 alt="Edit"
                                                 className="cursor-pointer w-5 h-5 hover:scale-110"
-                                                onClick={() => handleEdit(karyawan)}
+                                                onClick={() =>
+                                                    handleEdit(karyawan)
+                                                }
                                             />
                                             <img
                                                 src={deleteIcon}
                                                 alt="Delete"
                                                 className={`cursor-pointer w-5 h-5 ${
-                                                    deleting && deleteId === karyawan.id 
-                                                        ? "opacity-50" 
+                                                    deleting &&
+                                                    deleteId === karyawan.id
+                                                        ? "opacity-50"
                                                         : "hover:scale-110"
                                                 }`}
-                                                onClick={() => confirmDelete(karyawan.id, "karyawan", karyawan.nama)}
-                                                disabled={deleting && deleteId === karyawan.id}
+                                                onClick={() =>
+                                                    confirmDelete(
+                                                        karyawan.id,
+                                                        "karyawan",
+                                                        karyawan.nama
+                                                    )
+                                                }
+                                                disabled={
+                                                    deleting &&
+                                                    deleteId === karyawan.id
+                                                }
                                             />
                                         </div>
                                     </td>
@@ -136,7 +231,10 @@ const DataTable = ({
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="6" className="py-4 text-center text-gray-500">
+                                <td
+                                    colSpan="7"
+                                    className="py-4 text-center text-gray-500"
+                                >
                                     Tidak ada data karyawan
                                 </td>
                             </tr>
@@ -146,7 +244,7 @@ const DataTable = ({
             </div>
         );
     }
-    
+
     // Modify the project table render to include the edit button:
     if (variant === "proyek") {
         return (
@@ -154,7 +252,7 @@ const DataTable = ({
                 {/* Confirmation modal */}
                 {showConfirmation && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                        <ConfirmationCard 
+                        <ConfirmationCard
                             variant="delete"
                             itemname={itemToDelete?.name || "item"}
                             onConfirm={handleDeleteConfirm}
@@ -162,12 +260,14 @@ const DataTable = ({
                         />
                     </div>
                 )}
-                
+
                 <table className="min-w-full bg-white rounded-lg shadow-md">
                     <thead className="bg-gray-50 text-gray-600 sticky top-0 z-40">
                         <tr>
                             <th className="py-2 px-2 text-left">No.</th>
-                            <th className="py-2 px-2 text-left">Nama Project</th>
+                            <th className="py-2 px-2 text-left">
+                                Nama Project
+                            </th>
                             <th className="py-2 px-2 text-left">Deskripsi</th>
                             <th className="py-2 px-2 text-center">Gambar</th>
                             <th className="py-2 px-2 text-left">Actions</th>
@@ -176,29 +276,56 @@ const DataTable = ({
                     <tbody className="text-gray-700">
                         {data && data.length > 0 ? (
                             data.map((project, index) => (
-                                <tr key={project.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                                    <td className="py-2 px-2 border-b">{index + 1}</td>
-                                    <td className="py-2 px-2 border-b">{project.project_name}</td>
-                                    <td className="py-2 px-2 border-b">{project.deskripsi}</td>
-                                    <td className="py-2 px-2 border-b flex items-center justify-center"><ImageFolder/></td>
+                                <tr
+                                    key={project.id}
+                                    className={
+                                        index % 2 === 0
+                                            ? "bg-gray-50"
+                                            : "bg-white"
+                                    }
+                                >
+                                    <td className="py-2 px-2 border-b">
+                                        {index + 1}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {project.project_name}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {project.deskripsi}
+                                    </td>
+                                    <td className="py-2 px-2 border-b flex items-center justify-center">
+                                        <ImageFolder />
+                                    </td>
                                     <td className="py-2 px-2 border-b">
                                         <div className="flex gap-3 items-center">
                                             <img
                                                 src={editIcon}
                                                 alt="Edit"
                                                 className="cursor-pointer w-5 h-5 hover:scale-110"
-                                                onClick={() => handleEdit(project)}
+                                                onClick={() =>
+                                                    handleEdit(project)
+                                                }
                                             />
                                             <img
                                                 src={deleteIcon}
                                                 alt="Delete"
                                                 className={`cursor-pointer w-5 h-5 ${
-                                                    deleting && deleteId === project.id 
-                                                        ? "opacity-50" 
+                                                    deleting &&
+                                                    deleteId === project.id
+                                                        ? "opacity-50"
                                                         : "hover:scale-110"
                                                 }`}
-                                                onClick={() => confirmDelete(project.id, "proyek", project.project_name)}
-                                                disabled={deleting && deleteId === project.id}
+                                                onClick={() =>
+                                                    confirmDelete(
+                                                        project.id,
+                                                        "proyek",
+                                                        project.project_name
+                                                    )
+                                                }
+                                                disabled={
+                                                    deleting &&
+                                                    deleteId === project.id
+                                                }
                                             />
                                         </div>
                                     </td>
@@ -206,7 +333,10 @@ const DataTable = ({
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="6" className="py-4 text-center text-gray-500">
+                                <td
+                                    colSpan="6"
+                                    className="py-4 text-center text-gray-500"
+                                >
                                     Tidak ada data proyek
                                 </td>
                             </tr>

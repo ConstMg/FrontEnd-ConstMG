@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useKaryawan } from "../hooks/UseKaryawan";
 import { useProject } from "../hooks/useProject";
 
-const Form = ({ 
-  variant = "add", 
-  itemType = "karyawan", // New prop to determine form type
-  onConfirm, 
-  onCancel, 
-  initialData = null 
+const Form = ({
+    variant = "add",
+    itemType = "karyawan", // New prop to determine form type
+    onConfirm,
+    onCancel,
+    initialData = null,
 }) => {
-    const { handleAddKaryawan, loading: karyawanLoading } = useKaryawan();
+    const {
+        handleUpdateKaryawan,
+        handleAddKaryawan,
+        loading: karyawanLoading,
+    } = useKaryawan();
     const { handleAddProject, loading: projectLoading } = useProject();
 
     // Combined config with karyawan and project variants
@@ -17,24 +21,28 @@ const Form = ({
         update: {
             karyawan: {
                 title: "Update Data Karyawan",
-                confirmBtnClass: "bg-amber-500 hover:bg-transparent border-amber-500 hover:text-amber-500",
+                confirmBtnClass:
+                    "bg-amber-500 hover:bg-transparent border-amber-500 hover:text-amber-500",
                 confirmText: "Update",
             },
             proyek: {
                 title: "Update Data Proyek",
-                confirmBtnClass: "bg-amber-500 hover:bg-transparent border-amber-500 hover:text-amber-500",
+                confirmBtnClass:
+                    "bg-amber-500 hover:bg-transparent border-amber-500 hover:text-amber-500",
                 confirmText: "Update",
             },
         },
         add: {
             karyawan: {
                 title: "Tambah Data Karyawan",
-                confirmBtnClass: "bg-green-500 hover:bg-transparent border-green-500 hover:text-green-500",
+                confirmBtnClass:
+                    "bg-green-500 hover:bg-transparent border-green-500 hover:text-green-500",
                 confirmText: "Tambah",
             },
             proyek: {
                 title: "Tambah Data Proyek",
-                confirmBtnClass: "bg-green-500 hover:bg-transparent border-green-500 hover:text-green-500",
+                confirmBtnClass:
+                    "bg-green-500 hover:bg-transparent border-green-500 hover:text-green-500",
                 confirmText: "Tambah",
             },
         },
@@ -45,24 +53,24 @@ const Form = ({
 
     // Initialize state based on form type
     const [formData, setFormData] = useState(
-        itemType === "karyawan" 
+        itemType === "karyawan"
             ? {
-                nama: "",
-                nik: "",
-                jk: "Laki-laki",
-                alamat: "",
-                divisi: "",
-                penempatan: "",
-                email: "",
-                password: "",
-            } 
+                  nama: "",
+                  nik: "",
+                  jk: "Laki-laki",
+                  alamat: "",
+                  divisi: "",
+                  penempatan: "",
+                  email: "",
+                  password: "",
+              }
             : {
-                project_name: "",
-                tanggal: new Date().toISOString().split('T')[0],
-                lokasi: "",
-                deskripsi: "",
-                status: "Ongoing",
-            }
+                  project_name: "",
+                  tanggal: new Date().toISOString().split("T")[0],
+                  lokasi: "",
+                  deskripsi: "",
+                  status: "Ongoing",
+              }
     );
 
     // Division options for karyawan form
@@ -100,7 +108,9 @@ const Form = ({
             } else {
                 setFormData({
                     project_name: initialData.project_name || "",
-                    tanggal: initialData.tanggal || new Date().toISOString().split('T')[0],
+                    tanggal:
+                        initialData.tanggal ||
+                        new Date().toISOString().split("T")[0],
                     lokasi: initialData.lokasi || "",
                     deskripsi: initialData.deskripsi || "",
                     status: initialData.status || "Ongoing",
@@ -149,7 +159,18 @@ const Form = ({
                 if (itemType === "karyawan") {
                     // Handle karyawan update if available
                     if (typeof handleUpdateKaryawan === "function") {
-                        await handleUpdateKaryawan(initialData.id, formData);
+                        console.log("Updating karyawan with ID:", formData.nik);
+                        await handleUpdateKaryawan(
+                            initialData.id,
+                            formData.nama,
+                            formData.nik,
+                            formData.jk,
+                            formData.divisi,
+                            formData.alamat,
+                            formData.penempatan,
+                            formData.email,
+                            formData.password || initialData.password
+                        );
                     }
                 } else {
                     // Handle project update if available
@@ -433,7 +454,9 @@ const Form = ({
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Render fields based on itemType */}
-                {itemType === "karyawan" ? renderKaryawanFields() : renderProjectFields()}
+                {itemType === "karyawan"
+                    ? renderKaryawanFields()
+                    : renderProjectFields()}
 
                 <div className="flex justify-end pt-4">
                     <button

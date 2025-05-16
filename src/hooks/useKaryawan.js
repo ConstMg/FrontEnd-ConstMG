@@ -3,6 +3,8 @@ import {
     getKaryawan,
     deleteKaryawan,
     addKaryawan,
+    updateKaryawan,
+    setRoleKaryawan
 } from "../services/KaryawanServices";
 import { useState, useCallback } from "react";
 import "react-toastify/dist/ReactToastify.css";
@@ -166,6 +168,88 @@ export function useKaryawan() {
         }
     };
 
+    const handleUpdateKaryawan = async (
+        id,
+        nama,
+        nik,
+        jk,
+        alamat,
+        divisi,
+        penempatan,
+        email,
+        password
+    ) => {
+        setLoading(true);
+        const toastId = toast.loading("Menambahkan data karyawan...");
+
+        try {
+            const response = await updateKaryawan(
+                id,
+                nama,
+                nik,
+                jk,
+                alamat,
+                divisi,
+                penempatan,
+                email,
+                password
+            );
+            setKaryawanData((prevData) => [...prevData, response.data]);
+            toast.update(toastId, {
+                render: `Data ${nama} berhasil diupdate`,
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+            });
+
+            return true;
+        } catch (error) {
+            setError(error);
+            toast.update(toastId, {
+                render: error.message || `Gagal mengupdate Data ${nama}`,
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+            });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleUpdateKaryawanRole = async (nama, role) => {
+        setLoading(true);
+        const toastId = toast.loading("Mengupdate role karyawan...");
+
+        try {
+            await setRoleKaryawan(nama, role);
+            setKaryawanData((prevData) =>
+                prevData.map((karyawan) =>
+                    karyawan.nama === nama ? { ...karyawan, role } : karyawan
+                )
+            );
+            toast.update(toastId, {
+                render: "Role karyawan berhasil diupdate",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+            });
+
+            return true;
+        } catch (error) {
+            setError(error);
+            toast.update(toastId, {
+                render: error.message || "Gagal mengupdate role karyawan",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+            });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return {
         karyawanData,
         loading,
@@ -174,5 +258,7 @@ export function useKaryawan() {
         fetchKaryawanData,
         handleDeleteKaryawan,
         handleAddKaryawan,
+        handleUpdateKaryawan,
+        handleUpdateKaryawanRole
     };
 }
