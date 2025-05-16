@@ -26,7 +26,7 @@ export function useAuth() {
       } else {
         toast.error("Login gagal.");
       }
-      saveUserToLocalStorage(data, email);
+      saveUserToLocalStorage(data);
 
       // Simpan status login di localStorage
       localStorage.setItem("isLoggedIn", true);
@@ -72,7 +72,7 @@ export function useAuth() {
         // alert(response.message);
 
         toast.update(toastId, {
-          render:"Berhasil Logout!",
+          render: "Berhasil Logout!",
           type: "success",
           isLoading: false,
           autoClose: 3000,
