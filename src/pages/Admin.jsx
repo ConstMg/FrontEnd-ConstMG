@@ -64,95 +64,93 @@ const Admin = () => {
     const currentData = activeComponent === "karyawan" ? karyawanData : proyekData;
 
     return (
-        <>
-            <Navbar />
-            <div className="flex flex-col items-center justify-center h-screen pt-20">
-                <div className="body flex gap-10 w-full h-full bg-amber-400 px-10 pt-10">
-                    <div className="left-section flex flex-col gap-5 items-center w-1/4 h-full bg-white rounded-t-4xl p-10">
-                        <p className="text-2xl">Murgung Dashboard</p>
-                        <ul className="w-full flex flex-col gap-5">
-                            <li
-                                className={`w-full p-3 rounded-lg cursor-pointer transition-all ${
-                                    activeComponent === "karyawan"
-                                        ? "bg-amber-400 text-white font-bold"
-                                        : "hover:bg-amber-100"
-                                }`}
-                                onClick={() => setActiveComponent("karyawan")}
-                            >
-                                Karyawan
-                            </li>
-                            <li
-                                className={`p-3 rounded-lg cursor-pointer transition-all ${
-                                    activeComponent === "proyek"
-                                        ? "bg-amber-400 text-white font-bold"
-                                        : "hover:bg-amber-100"
-                                }`}
-                                onClick={() => setActiveComponent("proyek")}
-                            >
-                                Proyek
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="right-section flex flex-col gap-10 w-3/4 h-full">
-                        <div className="top w-full h-44 bg-white rounded-3xl px-10 flex items-center justify-between">
-                            {activeComponent === "karyawan" ? (
-                                <>
-                                    <div className="jumlah-karyawan flex flex-col items-center text-xl font-medium">
-                                        <p>Karyawan</p>
-                                        {isLoading ? (
-                                            <div className="animate-pulse h-8 w-8 bg-gray-200 rounded-full"></div>
-                                        ) : (
-                                            <p className="text-2xl text-amber-400">
-                                                {karyawanCount}
-                                            </p>
-                                        )}
-                                        <p>orang</p>
-                                    </div>
-                                    <img
-                                        src={addKaryawan}
-                                        alt="Add Karyawan"
-                                        className="w-20 h-20 cursor-pointer"
-                                        onClick={() => {
-                                            // Handle add karyawan
-                                        }}
-                                    />
-                                </>
-                            ) : (
-                                <>
-                                    <div className="jumlah-karyawan flex flex-col items-center text-xl font-medium">
-                                        <p>Proyek</p>
-                                        {isLoading ? (
-                                            <div className="animate-pulse h-8 w-8 bg-gray-200 rounded-full"></div>
-                                        ) : (
-                                            <p className="text-2xl text-amber-400">
-                                                {proyekCount}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <img
-                                        src={addProject}
-                                        alt="Add Project"
-                                        className="w-20 h-20 cursor-pointer"
-                                        onClick={() => {
-                                            // Handle add project
-                                        }}
-                                    />
-                                </>
-                            )}
-                        </div>
-                        <div className="bottom w-full h-full bg-white rounded-3xl p-2 flex flex-col">
-                            <div className="h-full overflow-hidden">
-                                <DataTable 
-                                    variant={activeComponent} 
-                                    data={currentData}
-                                    isLoading={isLoading} 
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <>
+        <Navbar />
+        <div className="flex flex-col items-center justify-center h-screen pt-20">
+          <div className="body flex gap-10 w-full h-full bg-amber-400 rounded-t-4xl px-10 pt-10">
+            <div className="left-section flex flex-col gap-5 items-center w-1/4 h-full bg-white rounded-t-4xl p-10">
+              <p className="text-2xl">Murgung Dashboard</p>
+              <ul className="w-full flex flex-col gap-5">
+                <li
+                  className={`w-full p-3 rounded-lg cursor-pointer transition-all ${
+                    activeComponent === "karyawan"
+                      ? "bg-amber-400 text-white font-bold"
+                      : "hover:bg-amber-100"
+                  }`}
+                  onClick={() => setActiveComponent("karyawan")}
+                >
+                  Karyawan
+                </li>
+                <li
+                  className={`p-3 rounded-lg cursor-pointer transition-all ${
+                    activeComponent === "proyek"
+                      ? "bg-amber-400 text-white font-bold"
+                      : "hover:bg-amber-100"
+                  }`}
+                  onClick={() => setActiveComponent("proyek")}
+                >
+                  Proyek
+                </li>
+              </ul>
             </div>
-        </>
+            <div className="right-section flex flex-col gap-10 w-3/4 h-full">
+              <div className="top w-full h-44 bg-white rounded-3xl px-10 flex items-center justify-between">
+                {activeComponent === "karyawan" ? (
+                  <>
+                    <div className="jumlah-karyawan flex flex-col items-center text-xl font-medium">
+                      <p>Karyawan</p>
+                      {isLoading ? (
+                        <div className="animate-pulse h-8 w-8 bg-gray-200 rounded-full"></div>
+                      ) : (
+                        <p className="text-2xl text-amber-400">
+                          {karyawanCount}
+                        </p>
+                      )}
+                      <p>orang</p>
+                    </div>
+                    <img
+                      src={addKaryawan}
+                      alt="Add Karyawan"
+                      className="w-20 h-20 cursor-pointer"
+                      onClick={() => {
+                        // Handle add karyawan
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className="jumlah-karyawan flex flex-col items-center text-xl font-medium">
+                      <p>Proyek</p>
+                      {isLoading ? (
+                        <div className="animate-pulse h-8 w-8 bg-gray-200 rounded-full"></div>
+                      ) : (
+                        <p className="text-2xl text-amber-400">{proyekCount}</p>
+                      )}
+                    </div>
+                    <img
+                      src={addProject}
+                      alt="Add Project"
+                      className="w-20 h-20 cursor-pointer"
+                      onClick={() => {
+                        // Handle add project
+                      }}
+                    />
+                  </>
+                )}
+              </div>
+              <div className="bottom w-full h-full bg-white rounded-3xl p-2 flex flex-col">
+                <div className="h-full overflow-hidden">
+                  <DataTable
+                    variant={activeComponent}
+                    data={currentData}
+                    isLoading={isLoading}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
     );
 };
 
