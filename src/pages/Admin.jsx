@@ -3,65 +3,94 @@ import DataTable from "../components/DataTable";
 import Navbar from "./../components/Navbar";
 import addKaryawan from "../assets/addKaryawan.svg";
 import addProject from "../assets/addProject.svg";
-import { getKaryawan } from "../services/KaryawanServices";
+import karyawanIcon from "../assets/karyawan.svg";
+import proyekIcon from "../assets/project.svg";
+import { useKaryawan } from "../hooks/UseKaryawan";
+import { useProject } from "../hooks/useProject";
+import { data } from "react-router-dom";
 
 const Admin = () => {
-    const [activeComponent, setActiveComponent] = useState("karyawan");
+    const [activeComponent, setActiveComponent] = useState(() => {
+        return localStorage.getItem("adminActiveTab") || "karyawan";
+    });
+    const {fetchKaryawanData} = useKaryawan();
     const [karyawanData, setKaryawanData] = useState([]);
-    const [proyekData, setProyekData] = useState([]);
+    const {fetchProjectData} = useProject();
+    const [proyekData, setProjectData] = useState([]);
     const [karyawanCount, setKaryawanCount] = useState(0);
-    const [proyekCount, setProyekCount] = useState(0);
+    const [proyekCount, setProjectCount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
     // Fetch karyawan data
     useEffect(() => {
-        const fetchKaryawanData = async () => {
+        const loadKaryawanData = async () => {
+            setIsLoading(true);
             try {
-                setIsLoading(true);
-                const response = await getKaryawan();
-                const data = Array.isArray(response) ? response : response.data || [];
+                const data = await fetchKaryawanData();
                 setKaryawanData(data);
-                setKaryawanCount(data.length);
-                setIsLoading(false);
+                setKaryawanCount(data.length || 0);
             } catch (err) {
                 console.error("Error fetching karyawan data:", err);
+            } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchKaryawanData();
-    }, []);
+        loadKaryawanData();
+    }, [fetchKaryawanData]);
 
-    // Fetch proyek data when needed
+    // Fetch project data
     useEffect(() => {
-        if (activeComponent === "proyek") {
-            const fetchProyekData = async () => {
-                try {
-                    setIsLoading(true);
-                    // Replace with actual API call when available
-                    // const response = await getProyekData();
-                    
-                    // Mock data for now
-                    const mockData = [
-                        { id: 1, nama: "Pembangunan Gedung A", tanggal: "2025-05-10", lokasi: "Jakarta" },
-                        { id: 2, nama: "Renovasi Kantor", tanggal: "2025-06-15", lokasi: "Bogor" }
-                    ];
-                    
-                    setProyekData(mockData);
-                    setProyekCount(mockData.length);
-                    setIsLoading(false);
-                } catch (err) {
-                    console.error("Error fetching proyek data:", err);
-                    setIsLoading(false);
-                }
-            };
+        const loadProjectData = async () => {
+            setIsLoading(true);
+            try {
+                const data = await fetchProjectData();
+                setProjectData(data);
+                setProjectCount(data.length || 0);
+            } catch (err) {
+                console.error("Error fetching Project data:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-            fetchProyekData();
+        loadProjectData();
+    }, [fetchProjectData]);
+
+    // Fixed fetchProyekData function
+    const fetchProyekData = async () => {
+        try {
+            const data = await fetchProjectData();
+            setProjectData(data);
+            setProjectCount(data.length || 0);
+            return data;
+        } catch (err) {
+            console.error("Error fetching Project data:", err);
+            return [];
         }
-    }, [activeComponent]);
+    };
 
     // Get current data based on active component
-    const currentData = activeComponent === "karyawan" ? karyawanData : proyekData;
+    const currentData =
+        activeComponent === "karyawan" ? karyawanData : proyekData;
+
+    // Create a function to handle tab changes that also updates localStorage
+    const handleTabChange = (tab) => {
+        setActiveComponent(tab);
+        localStorage.setItem("adminActiveTab", tab);
+    };
+
+    const refreshData = async () => {
+        if (activeComponent === "karyawan") {
+            const newData = await fetchKaryawanData();
+            setKaryawanData(newData);
+            setKaryawanCount(newData?.length || 0);
+        } else if (activeComponent === "proyek") {
+            const newData = await fetchProyekData();
+            setProjectData(newData);
+            setProjectCount(newData?.length || 0);
+        }
+    };
 
     return (
         <>
@@ -72,23 +101,25 @@ const Admin = () => {
                         <p className="text-2xl">Murgung Dashboard</p>
                         <ul className="w-full flex flex-col gap-5">
                             <li
-                                className={`w-full p-3 rounded-lg cursor-pointer transition-all ${
+                                className={`w-full flex gap-2 p-3 rounded-lg cursor-pointer transition-all ${
                                     activeComponent === "karyawan"
-                                        ? "bg-amber-400 text-white font-bold"
-                                        : "hover:bg-amber-100"
+                                        ? "bg-gray-200 font-bold"
+                                        : "hover:bg-gray-100"
                                 }`}
-                                onClick={() => setActiveComponent("karyawan")}
+                                onClick={() => handleTabChange("karyawan")}
                             >
+                                <img src={karyawanIcon} alt="" />
                                 Karyawan
                             </li>
                             <li
-                                className={`p-3 rounded-lg cursor-pointer transition-all ${
+                                className={`w-full flex gap-2 p-3 rounded-lg cursor-pointer transition-all ${
                                     activeComponent === "proyek"
-                                        ? "bg-amber-400 text-white font-bold"
-                                        : "hover:bg-amber-100"
+                                        ? "bg-gray-200 font-bold"
+                                        : "hover:bg-gray-100"
                                 }`}
-                                onClick={() => setActiveComponent("proyek")}
+                                onClick={() => handleTabChange("proyek")}
                             >
+                                <img src={proyekIcon} alt="" />
                                 Proyek
                             </li>
                         </ul>
@@ -106,7 +137,6 @@ const Admin = () => {
                                                 {karyawanCount}
                                             </p>
                                         )}
-                                        <p>orang</p>
                                     </div>
                                     <img
                                         src={addKaryawan}
@@ -140,12 +170,13 @@ const Admin = () => {
                                 </>
                             )}
                         </div>
-                        <div className="bottom w-full h-full bg-white rounded-3xl p-2 flex flex-col">
+                        <div className="bottom w-full h-4/6 bg-white rounded-3xl p-2 flex flex-col">
                             <div className="h-full overflow-hidden">
-                                <DataTable 
-                                    variant={activeComponent} 
+                                <DataTable
+                                    variant={activeComponent}
                                     data={currentData}
-                                    isLoading={isLoading} 
+                                    isLoading={isLoading}
+                                    refreshData={refreshData}
                                 />
                             </div>
                         </div>
