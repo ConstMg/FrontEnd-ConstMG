@@ -20,7 +20,9 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.0",
     "react-scroll": "^1.9.3",
-    "scroll": "^3.0.1"
+    "react-toastify": "^11.0.5",
+    "scroll": "^3.0.1",
+    "typewriter-effect": "^2.22.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

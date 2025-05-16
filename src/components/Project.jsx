@@ -41,7 +41,7 @@ const Project = () => {
     return (
       <>
         <div
-          className="project W flex flex-col items-center gap-4 px-24 py-20 bg-white"
+          className="project h-dvh W flex flex-col items-center gap-4 px-24 py-20 bg-white"
           id="project"
         >
           <p className="text-center justify-center text-color-blue-10 text-4xl font-medium font-['Poppins'] leading-[48px]">
