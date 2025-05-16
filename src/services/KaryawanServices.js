@@ -27,7 +27,7 @@ export const addKaryawan = async (
   password,
   userRole
 ) => {
-  return await apiClient(`admin/tambah/karyawan?akses=${userRole}`, "POST", {
+  return await apiClient(`admin/tambah/karyawan`, "POST", {
     nama,
     nik,
     jk,
@@ -49,9 +49,9 @@ export const updateKaryawan = async (
   penempatan,
   email,
   password,
-  userRole
+  
 ) => {
-  return await apiClient(`admin/karyawan/${id}?akses=${userRole}`, "PUT", {
+  return await apiClient(`admin/karyawan/${id}`, "PUT", {
     nama,
     nik,
     jk,
@@ -64,16 +64,16 @@ export const updateKaryawan = async (
 };
 
 export const setRoleKaryawan = async (nama, role) => {
-  return await apiClient(`karyawan/update-role`, "PATCH", {
+  return await apiClient(`admin/update-role`, "PATCH", {
     nama,
     role,
   });
 };
 
-export const getKaryawan = async (role) => {
-  return await apiClient(`admin/karyawan?akses=${role}`, "GET");
+export const getKaryawan = async () => {
+  return await apiClient(`admin/karyawan`, "GET");
 };
 
-export const deleteKaryawan = async (id, role) => {
-  return await apiClient(`admin/karyawan/${id}?akses=${role}`, "DELETE");
+export const deleteKaryawan = async (id) => {
+  return await apiClient(`admin/karyawan/${id}`, "DELETE");
 };

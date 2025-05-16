@@ -155,13 +155,29 @@ export function useKaryawan() {
       console.log("Data karyawan berhasil ditambahkan:", response.data);
       return true;
     } catch (error) {
-      setError(error);
+      console.log("DETAIL ERROR:", error);
+
+      let errorMessage = "Gagal menambahkan data karyawan";
+
+      if (error.response && error.response.data) {
+        const data = error.response.data;
+
+        if (data.errors && typeof data.errors === "object") {
+          errorMessage = Object.values(data.errors).flat().join(", ");
+        } else if (data.message) {
+          errorMessage = data.message;
+        }
+      }
+
+      setError(errorMessage);
+
       toast.update(toastId, {
-        render: error.message || "Gagal menambahkan data karyawan",
+        render: errorMessage,
         type: "error",
         isLoading: false,
         autoClose: 3000,
       });
+
       throw error;
     } finally {
       setLoading(false);
