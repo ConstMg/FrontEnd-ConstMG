@@ -188,8 +188,16 @@ const DataTable = ({
                                                     : "bg-blue-100 text-blue-800 border border-blue-300"
                                             }`}
                                         >
-                                            <option value="admin" className="py-1 px-2 rounded-full bg-amber-100 text-amber-800 border border-amber-300">Admin</option>
-                                            <option value="karyawan" className="py-1 px-2 rounded-full bg-blue-100 text-blue-800 border border-blue-300">
+                                            <option
+                                                value="admin"
+                                                className="py-1 px-2 rounded-full bg-amber-100 text-amber-800 border border-amber-300"
+                                            >
+                                                Admin
+                                            </option>
+                                            <option
+                                                value="karyawan"
+                                                className="py-1 px-2 rounded-full bg-blue-100 text-blue-800 border border-blue-300"
+                                            >
                                                 Karyawan
                                             </option>
                                         </select>
@@ -311,7 +319,8 @@ const DataTable = ({
                                                 alt="Delete"
                                                 className={`cursor-pointer w-5 h-5 ${
                                                     deleting &&
-                                                    deleteId === project.project_id
+                                                    deleteId ===
+                                                        project.project_id
                                                         ? "opacity-50"
                                                         : "hover:scale-110"
                                                 }`}
@@ -324,7 +333,8 @@ const DataTable = ({
                                                 }
                                                 disabled={
                                                     deleting &&
-                                                    deleteId === project.project_id
+                                                    deleteId ===
+                                                        project.project_id
                                                 }
                                             />
                                         </div>
@@ -353,11 +363,9 @@ const DataTable = ({
                     <thead className="bg-gray-50 text-gray-600 sticky top-0 z-40">
                         <tr>
                             <th className="py-2 px-2 text-left">No.</th>
-                            <th className="py-2 px-2 text-left">
-                                Nama
-                            </th>
+                            <th className="py-2 px-2 text-left">Nama</th>
                             <th className="py-2 px-2 text-left">Jam Masuk</th>
-                            <th className="py-2 px-2 text-center">Jam Keluarr</th>
+                            <th className="py-2 px-2 text-left">Jam Keluarr</th>
                             <th className="py-2 px-2 text-left">Status</th>
                         </tr>
                     </thead>
@@ -379,13 +387,15 @@ const DataTable = ({
                                         {presensi.nama}
                                     </td>
                                     <td className="py-2 px-2 border-b">
-                                        {presensi.jam_masuk}
+                                        {presensi.status_presensi === "Hadir"?presensi.jam_masuk:"-"}
                                     </td>
                                     <td className="py-2 px-2 border-b">
-                                        {presensi.jam_keluar}
+                                        {presensi.jam_keluar
+                                            ? presensi.jam_keluar
+                                            : "-"}
                                     </td>
-                                    <td className="py-2 px-2 border-b flex items-center justify-center">
-                                        <ImageFolder />
+                                    <td className="py-2 px-2 border-b">
+                                        {presensi.status_presensi}
                                     </td>
                                 </tr>
                             ))
@@ -407,6 +417,5 @@ const DataTable = ({
 
     return null;
 };
-
 
 export default DataTable;

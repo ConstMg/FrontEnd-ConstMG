@@ -5,6 +5,7 @@ import {
   addKaryawan,
   updateKaryawan,
   setRoleKaryawan,
+  getPresensiKaryawan
 } from "../services/KaryawanServices";
 import { useState, useCallback } from "react";
 import "react-toastify/dist/ReactToastify.css";
@@ -284,6 +285,28 @@ export function useKaryawan() {
     }
   };
 
+  const fetchPresensiAllKaryawan = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const response = await getPresensiKaryawan();
+
+      return response.data;
+    } catch (error) {
+      setError(error);
+      toast.update(toastId, {
+        render: error.message || "Gagal memuat data presensi",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     karyawanData,
     loading,
@@ -294,5 +317,6 @@ export function useKaryawan() {
     handleAddKaryawan,
     handleUpdateKaryawan,
     handleUpdateKaryawanRole,
+    fetchPresensiAllKaryawan
   };
 }
