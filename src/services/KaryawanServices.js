@@ -27,7 +27,7 @@ export const addKaryawan = async (
   password,
   userRole
 ) => {
-  return await apiClient(`admin/tambah/karyawan`, "POST", {
+  return await apiClient(`admin/karyawan`, "POST", {
     nama,
     nik,
     jk,
@@ -48,8 +48,7 @@ export const updateKaryawan = async (
   alamat,
   penempatan,
   email,
-  password,
-  
+  password
 ) => {
   return await apiClient(`admin/karyawan/${id}`, "PUT", {
     nama,
