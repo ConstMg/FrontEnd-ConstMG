@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import gambarBg from "./../assets/rumah-crop.png";
+import { Building2, Phone, Mail, Globe, Pencil, Save } from "lucide-react";
+import EditableField from "./EditableField";
 import "./../tailwind.css";
 import Send from "./../assets/send.svg";
-
+import { useProfile } from "../context/ProfileContext";
 const Contact = () => {
+  const user = localStorage.getItem("userRole");
+  const isEditable = user === "admin";
+  const { profileData, updateProfileData } = useProfile();
+  const handleSave = (fieldName, newValue) => {
+    const updated = { ...profileData, [fieldName]: newValue };
+    updateProfileData(updated);
+  };
+  if (!profileData) return null;
   return (
     <>
       <div
@@ -15,15 +25,48 @@ const Contact = () => {
           <div className="w-full md:w-1/2 space-y-10">
             <h1 className="text-xl font-bold font-poppins">PT MURGUNG</h1>
             <br />
-            <h2 className="text-lg font-semibold mt-2 pb-2">HEAD OFFICE</h2>
+            <h2 className="text-lg font-semibold mt-2 pb-2">
+              {profileData?.nama_kantor}
+            </h2>
 
             <div className="pl-6">
-              <p className="pb-2">
-                🏢 Jl. Apa No. 1-10 Kota 123456 Kota - Indonesia
-              </p>
-              <p className="pb-2">📞 +62 123456789</p>
-              <p className="pb-2">📧 email@email.com</p>
-              <p className="pb-2">🌐 www.murgung.com</p>
+              {/* {isEditable && (
+                <EditableField
+                  icon={null}
+                  value={profileData.headline}
+                  name="headline"
+                  onSave={handleSave}
+                  isEditable={isEditable}
+                />
+              )} */}
+              <EditableField
+                icon={<Building2 size={18} />}
+                value={profileData.nama_kantor}
+                name="nama_kantor"
+                onSave={handleSave}
+                isEditable={isEditable}
+              />
+              <EditableField
+                icon={<Phone size={18} />}
+                value={profileData.nomor_hp}
+                name="nomor_hp"
+                onSave={handleSave}
+                isEditable={isEditable}
+              />
+              <EditableField
+                icon={<Mail size={18} />}
+                value={profileData.email}
+                name="email"
+                onSave={handleSave}
+                isEditable={isEditable}
+              />
+              <EditableField
+                icon={<Globe size={18} />}
+                value={profileData.website_url}
+                name="website_url"
+                onSave={handleSave}
+                isEditable={isEditable}
+              />
             </div>
             <br />
           </div>

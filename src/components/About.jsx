@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import ImageCard from "./ImageCard";
 import ImageGallery from "./ImageGallery";
+import { Building2, Phone, Mail, Globe, Pencil, Save } from "lucide-react";
 import "./../tailwind.css";
-
+import EditableField from "./EditableField";
+import { useProfile } from "../context/ProfileContext";
 const images = [
   "https://indokontraktor.com/uploads/0000/1/2020/04/04/thumbnail2.png",
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBAxEWU4n6s52hNJOW7tkLVNkBgMCRbU3AA&s",
@@ -11,7 +13,15 @@ const images = [
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8pJwY-IjmLU-5MgKBJmtELnlLtlvnpX4tDw&s",
 ];
 const About = () => {
+  const user = localStorage.getItem("userRole");
+  const isEditable = user === "admin";
+  const { profileData, updateProfileData } = useProfile();
   const [activeIndex, setActiveIndex] = useState(null);
+  const handleSave = (fieldName, newValue) => {
+    const updated = { ...profileData, [fieldName]: newValue };
+    updateProfileData(updated);
+  };
+  if (!profileData) return null;
   return (
     <>
       <div
@@ -28,10 +38,13 @@ const About = () => {
             </div>
             <div className="w-full text-center">
               <div className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8">
-                We take pride in our successful project portfolio, with each
-                project reflecting our commitment to quality, timeliness, and
-                client satisfaction. Here are some notable projects we have
-                completed.
+                <EditableField
+                  // icon={<Building2 size={18} />}
+                  value={profileData?.about_desc}
+                  name="about_desc"
+                  onSave={handleSave}
+                  isEditable={isEditable}
+                />
               </div>
             </div>
           </div>
