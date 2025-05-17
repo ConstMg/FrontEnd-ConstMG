@@ -346,8 +346,67 @@ const DataTable = ({
             </div>
         );
     }
+    if (variant === "presensi") {
+        return (
+            <div className="h-full w-full overflow-auto relative">
+                <table className="min-w-full bg-white rounded-lg shadow-md">
+                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-40">
+                        <tr>
+                            <th className="py-2 px-2 text-left">No.</th>
+                            <th className="py-2 px-2 text-left">
+                                Nama
+                            </th>
+                            <th className="py-2 px-2 text-left">Jam Masuk</th>
+                            <th className="py-2 px-2 text-center">Jam Keluarr</th>
+                            <th className="py-2 px-2 text-left">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-700">
+                        {data && data.length > 0 ? (
+                            data.map((presensi, index) => (
+                                <tr
+                                    key={presensi.id}
+                                    className={
+                                        index % 2 === 0
+                                            ? "bg-gray-50"
+                                            : "bg-white"
+                                    }
+                                >
+                                    <td className="py-2 px-2 border-b">
+                                        {index + 1}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {presensi.nama}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {presensi.jam_masuk}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {presensi.jam_keluar}
+                                    </td>
+                                    <td className="py-2 px-2 border-b flex items-center justify-center">
+                                        <ImageFolder />
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan="6"
+                                    className="py-4 text-center text-gray-500"
+                                >
+                                    Tidak ada data proyek
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
 
     return null;
 };
+
 
 export default DataTable;
