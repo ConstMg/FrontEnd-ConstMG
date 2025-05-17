@@ -3,7 +3,7 @@ import editIcon from "../assets/edit.svg";
 import deleteIcon from "../assets/delete.svg";
 import { useProject } from "../hooks/useProject";
 import { useKaryawan } from "../hooks/useKaryawan";
-import ConfirmationCard from "./confirmationCard";
+import ConfirmationCard from "./ConfirmationCard";
 import ImageFolder from "../components/ImageFolder";
 
 const DataTable = ({
