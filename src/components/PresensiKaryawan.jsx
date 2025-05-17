@@ -2,7 +2,7 @@ import React, { use, useEffect, useState } from "react";
 import "./../tailwind.css";
 import Check from "../assets/check.svg";
 import { useNavigate } from "react-router-dom";
-import { useKaryawan } from "../hooks/UseKaryawan";
+import { useKaryawan } from "../hooks/useKaryawan";
 import { ToastContainer } from "react-toastify";
 
 const PresensiKaryawan = () => {
