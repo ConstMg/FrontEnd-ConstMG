@@ -64,7 +64,7 @@ const Project = () => {
             <EditableField
               // icon={<Building2 size={18} />}
               value={profileData?.recent_project_desc}
-              name="project_desc"
+              name="recent_project_desc"
               onSave={handleSave}
               isEditable={isEditable}
             />
