@@ -42,7 +42,7 @@ const Home = () => {
                 }}
                 alt="rumah"
             />
-            <div className="text-space absolute h-full w-full md:w-1/2 flex flex-col justify-center items-start gap-4 px-6 py-12 md:p-20">
+            <div className="text-space absolute h-full w-full md:w-1/2 flex flex-col justify-evenly items-start gap-4 px-6 py-12 md:p-20">
                 {isEditable ? (
                     <EditableField
                         value={profileData.headline}
@@ -65,7 +65,7 @@ const Home = () => {
 
                 <EditableField
                     // icon={<Building2 size={18} />}
-                    // className="text-base sm:text-lg md:text-xl text-gray-700"
+                    className="text-base sm:text-lg md:text-xl text-gray-700"
                     value={profileData?.main_description}
                     name="main_desciption"
                     onSave={handleSave}
