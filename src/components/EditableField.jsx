@@ -12,7 +12,7 @@ const EditableField = ({ icon, value, name, onSave, isEditable }) => {
 
   return (
     <div
-      className={`w-full flex items-center rounded-lg px-3 py-2 mb-2 gap-3 ${
+      className={`w-full flex items-center rounded-lg gap-3 ${
         isEditable ? "border" : ""
       }`}
     >

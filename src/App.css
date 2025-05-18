@@ -1,9 +1,10 @@
-*{
-  margin: 0;
-  box-sizing: border-box;
+* {
+    margin: 0;
+    box-sizing: border-box;
+    /* overflow-x: hidden; */
 }
 
 body {
-  background: linear-gradient(116deg, #FFF 0%, #999 157.79%);
+    overflow-x: hidden;
+    background: linear-gradient(116deg, #fff 0%, #999 157.79%);
 }
-

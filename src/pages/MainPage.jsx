@@ -10,13 +10,15 @@ import "./../tailwind.css";
 
 const MainPage = () => {
     return (
-        <Provider>
-            <Navbar />
-            <Home />
-            <Project />
-            <About />
-            <Contact />
-        </Provider>
+        <div className="w-full min-h-screen">
+            <Provider>
+                <Navbar />
+                <Home />
+                <Project />
+                <About />
+                <Contact />
+            </Provider>
+        </div>
     );
 };
 
