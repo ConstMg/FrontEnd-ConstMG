@@ -6,6 +6,8 @@ import addKaryawan from "../assets/AddKaryawan.svg";
 import addProject from "../assets/AddProject.svg";
 import addPresensi from "../assets/AddPresensi.svg";
 import karyawanIcon from "../assets/karyawan.svg";
+import addingKaryawan from "../assets/addingKaryawan.svg";
+import addingProject from "../assets/addingProject.svg";
 import proyekIcon from "../assets/project.svg";
 import presensiIcon from "../assets/presensi.svg";
 import { useKaryawan } from "../hooks/useKaryawan";
@@ -280,7 +282,7 @@ const Admin = () => {
                                         )}
                                     </div>
                                     <img
-                                        src={addKaryawan}
+                                        src={addingKaryawan}
                                         alt="Add Karyawan"
                                         className="w-20 h-20 cursor-pointer"
                                         onClick={() =>
@@ -301,7 +303,7 @@ const Admin = () => {
                                         )}
                                     </div>
                                     <img
-                                        src={addProject}
+                                        src={addingProject}
                                         alt="Add Project"
                                         className="w-20 h-20 cursor-pointer"
                                         onClick={() =>
