@@ -19,3 +19,9 @@ export const saveUserToLocalStorage = (data) => {
         localStorage.setItem("userName", data.nama);
     }
 };
+
+export function getRandomItems(arr, n) {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, n);
+}
+  
