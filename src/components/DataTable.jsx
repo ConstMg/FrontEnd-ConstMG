@@ -427,7 +427,7 @@ const DataTable = ({
                             <th className="py-2 px-2 text-left">No.</th>
                             <th className="py-2 px-2 text-left">Nama</th>
                             <th className="py-2 px-2 text-left">Jam Masuk</th>
-                            <th className="py-2 px-2 text-left">Jam Keluarr</th>
+                            <th className="py-2 px-2 text-left">Jam Keluar</th>
                             <th className="py-2 px-2 text-left">Status</th>
                             <th className="py-2 px-2 text-center">Lokasi</th>
                         </tr>
@@ -494,7 +494,7 @@ const DataTable = ({
                                     colSpan="6"
                                     className="py-4 text-center text-gray-500"
                                 >
-                                    Tidak ada data proyek
+                                    Tidak ada data {variant}
                                 </td>
                             </tr>
                         )}
