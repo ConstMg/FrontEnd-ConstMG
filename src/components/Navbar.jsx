@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
-  faCartShopping,
-  faClockRotateLeft,
-  faUser,
   faBars,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +11,7 @@ import Logo from "../../public/logo.svg";
 import { useAuth } from "../hooks/useAuth";
 
 // Add icons to the library
-library.add(faCartShopping, faClockRotateLeft, faUser, faBars, faXmark);
+library.add(faBars, faXmark);
 
 function Navbar() {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -88,7 +85,7 @@ function Navbar() {
             </NavLink>
           ) : (
             <>
-            {isLoggedIn && user === "admin" && (
+            {isLoggedIn && (user === "admin" && location.pathname !== "/admin") && (
               <NavLink
                 to="/admin"
                 className="hover:cursor-pointer hover:font-bold"
