@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import editIcon from "../assets/edit.svg";
 import deleteIcon from "../assets/delete.svg";
 import { useProject } from "../hooks/useProject";
 import { useKaryawan } from "../hooks/useKaryawan";
 import ConfirmationCard from "./ConfirmationCard";
 import ImageFolder from "../components/ImageFolder";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 const DataTable = ({
     variant = "karyawan",
@@ -17,9 +20,17 @@ const DataTable = ({
     const [deleteId, setDeleteId] = useState(null);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [showDescription, setShowDescription] = useState(false);
+    const [presensiDescription, setPresensiDescription] = useState(null);
+    const [descriptionPosition, setDescriptionPosition] = useState({
+        top: 0,
+        left: 0,
+    });
+    const descriptionRef = React.useRef(null);
 
     const { handleDeleteProject } = useProject();
     const { handleDeleteKaryawan, handleUpdateKaryawanRole } = useKaryawan();
+    library.add(faCircleInfo);
 
     // Function to show delete confirmation
     const confirmDelete = (id, itemType, name) => {
@@ -32,6 +43,19 @@ const DataTable = ({
         if (onEdit) {
             onEdit(item, variant);
         }
+    };
+
+    // Update the handleDeskripsiPresensi function
+    const handleDeskripsiPresensi = (description, e) => {
+        // Get click position for popup placement
+        const rect = e.currentTarget.getBoundingClientRect();
+        setDescriptionPosition({
+            top: rect.bottom + window.scrollY + 5,
+            left: rect.left + window.scrollX,
+        });
+
+        setPresensiDescription(description);
+        setShowDescription(true);
     };
 
     // Handle delete confirmation
@@ -61,6 +85,26 @@ const DataTable = ({
         }
     };
 
+    // Add a click outside handler to close the description
+    React.useEffect(() => {
+        function handleClickOutside(event) {
+            if (
+                descriptionRef.current &&
+                !descriptionRef.current.contains(event.target)
+            ) {
+                setShowDescription(false);
+            }
+        }
+
+        // Add event listener when description is showing
+        if (showDescription) {
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }
+    }, [showDescription]);
+
     if (isLoading) {
         return (
             <div className="w-full h-full flex justify-center items-center">
@@ -69,7 +113,6 @@ const DataTable = ({
         );
     }
 
-    // Modify the karyawan table render to include the edit button:
     if (variant === "karyawan") {
         return (
             <div className="h-full w-full overflow-auto relative">
@@ -252,8 +295,6 @@ const DataTable = ({
             </div>
         );
     }
-
-    // Modify the project table render to include the edit button:
     if (variant === "proyek") {
         return (
             <div className="h-full w-full overflow-auto relative">
@@ -359,6 +400,27 @@ const DataTable = ({
     if (variant === "presensi") {
         return (
             <div className="h-full w-full overflow-auto relative">
+                {showDescription && (
+                    <div
+                        ref={descriptionRef}
+                        className="fixed bg-white shadow-xl p-4 rounded-md z-50 max-w-md border border-gray-200"
+                        style={{
+                            top: `${descriptionPosition.top}px`,
+                            left: `${descriptionPosition.left}px`,
+                        }}
+                    >
+                        <div className="flex justify-between items-center mb-2">
+                            <h3 className="font-medium text-gray-700">
+                                Keterangan
+                            </h3>
+                        </div>
+                        <div className="text-gray-600">
+                            {presensiDescription
+                                ? presensiDescription
+                                : "Tidak ada keterangan"}
+                        </div>
+                    </div>
+                )}
                 <table className="min-w-full bg-white rounded-lg shadow-md">
                     <thead className="bg-gray-50 text-gray-600 sticky top-0 z-40">
                         <tr>
@@ -367,6 +429,7 @@ const DataTable = ({
                             <th className="py-2 px-2 text-left">Jam Masuk</th>
                             <th className="py-2 px-2 text-left">Jam Keluarr</th>
                             <th className="py-2 px-2 text-left">Status</th>
+                            <th className="py-2 px-2 text-center">Lokasi</th>
                         </tr>
                     </thead>
                     <tbody className="text-gray-700">
@@ -387,7 +450,9 @@ const DataTable = ({
                                         {presensi.nama}
                                     </td>
                                     <td className="py-2 px-2 border-b">
-                                        {presensi.status_presensi === "Hadir"?presensi.jam_masuk:"-"}
+                                        {presensi.status_presensi === "Hadir"
+                                            ? presensi.jam_masuk
+                                            : "-"}
                                     </td>
                                     <td className="py-2 px-2 border-b">
                                         {presensi.jam_keluar
@@ -395,7 +460,31 @@ const DataTable = ({
                                             : "-"}
                                     </td>
                                     <td className="py-2 px-2 border-b">
-                                        {presensi.status_presensi}
+                                        {presensi.status_presensi + " "}
+                                        {presensi.status_presensi !==
+                                            "Hadir" && (
+                                            <FontAwesomeIcon
+                                                icon={faCircleInfo}
+                                                className="cursor-pointer"
+                                                onClick={(e) => {
+                                                    handleDeskripsiPresensi(
+                                                        presensi.deskripsi,
+                                                        e
+                                                    );
+                                                    e.stopPropagation(); // Prevent event bubbling
+                                                }}
+                                            />
+                                        )}
+                                    </td>
+                                    <td className="py-2 px-2 border-b text-center">
+                                        <a
+                                            href={`https://www.google.com/maps/search/?api=1&query=${presensi.latitude},${presensi.longitude}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 hover:underline"
+                                        >
+                                            Cek Lokasi
+                                        </a>
                                     </td>
                                 </tr>
                             ))

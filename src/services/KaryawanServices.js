@@ -73,13 +73,11 @@ export const getKaryawan = async () => {
   return await apiClient(`admin/karyawan`, "GET");
 };
 
-export const getPresensiKaryawan = async (nama = null, tanggal_awal = null, tanggal_akhir = null) => {
-  const params = {};
-  if (nama) params.nama = nama;
-  if (tanggal_awal) params.tanggal_awal = tanggal_awal;
-  if (tanggal_akhir) params.tanggal_akhir = tanggal_akhir;
-  
-  return await apiClient(`admin/presensi`, "GET", Object.keys(params).length > 0 ? params : undefined);
+export const getPresensiKaryawan = async () => {
+  return await apiClient(`admin/presensi`, "GET");
+};
+export const getPresensiKaryawanByDate = async (date) => {
+  return await apiClient(`admin/presensi?tanggal_awal=${date}`, "GET");
 };
 
 export const deleteKaryawan = async (id) => {
