@@ -27,12 +27,13 @@ export const getProjectImageUrl = async (project_name = null, limit = null) => {
 
     const params = new URLSearchParams();
 
-    if (project_name) params.append("project_name", project_name);
+    if (project_name) params.append("name", project_name);
     if (Number.isInteger(limit)) params.append("limit", limit);
 
     const queryString = params.toString();
 
     if (queryString) endpoint += `?${queryString}`;
+    console.log(endpoint);
 
     return await apiClient(endpoint, "GET");
 };

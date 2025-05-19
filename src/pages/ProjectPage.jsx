@@ -15,7 +15,7 @@ const ProjectPage = () => {
         const loadProjectData = async () => {
             setIsLoading(true);
             try {
-                const data = await fetchProjectWithImages(null);
+                const data = await fetchProjectWithImages();
                 setProjectData(data);
             } catch (err) {
                 console.error("Error fetching Project data:", err);

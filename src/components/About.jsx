@@ -38,15 +38,7 @@ const About = () => {
         updateProfileData(updated);
     };
     if (!profileData) return null;
-    // const imagesRaw =
-    //     imagesData?.data?.flatMap((project) =>
-    //         project.images?.map((img) => ({
-    //             project_name: project.project_name,
-    //             secure_url: img.secure_url,
-    //         }))
-    //     ) || [];
-    // Acak urutan array dengan algoritma Fisher-Yates Shuffle
-    const images = imagesAboutData;
+    const images = Array.isArray(imagesAboutData) ? imagesAboutData : [];
 
     // console.log("images pesan: ", imagesData?.data?.project_name);
     console.log("images: ", images);
@@ -90,18 +82,26 @@ const About = () => {
 
                         {/* Thumbnail list - Made responsive with smaller gaps on mobile */}
                         <div className="w-full max-w-5.5 md:max-w-[1320px] flex flex-wrap items-center justify-center gap-3 md:gap-6 px-2 md:px-4">
-                            {images.map((img, i) => (
-                                <div
-                                    key={i}
-                                    onClick={() => setActiveIndex(i)}
-                                    className="md:w-auto"
-                                >
-                                    <ImageCard
-                                        imagePath={img?.secure_url}
-                                        variant={i + 1}
-                                    />
+                            {images.length === 0 ? (
+                                <div className="text-gray-500 text-sm">
+                                    Loading gambar...
                                 </div>
-                            ))}
+                            ) : (
+                                <div className="w-full max-w-5.5 md:max-w-[1320px] flex flex-wrap items-center justify-center gap-3 md:gap-6 px-2 md:px-4">
+                                    {images.map((img, i) => (
+                                        <div
+                                            key={i}
+                                            onClick={() => setActiveIndex(i)}
+                                            className="md:w-auto"
+                                        >
+                                            <ImageCard
+                                                imagePath={img?.secure_url}
+                                                variant={i + 1}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
