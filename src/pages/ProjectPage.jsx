@@ -1,8 +1,7 @@
 import { useProject } from "../hooks/useProject";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import ImageCard from "../components/ImageCard";
-import ImageGallery from "../components/ImageGallery"; // Add this import
+import ImageGallery from "../components/ImageGallery";
 
 const ProjectPage = () => {
     const { loading, error, fetchProjectWithImages } = useProject();
@@ -37,7 +36,7 @@ const ProjectPage = () => {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="bg-gray-100 min-h-screen pt-11">
+        <div className="bg-gray-100 min-h-screen flex flex-col">
             {/* Gallery Modal */}
             {activeGallery && activeImages && (
                 <ImageGallery
@@ -49,16 +48,16 @@ const ProjectPage = () => {
 
             <Navbar />
 
-            <div className="container mx-auto px-4 py-8">
-                <h1 className="text-3xl font-bold text-center mb-8">
+            <div className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-8 w-full">
+                <h1 className="text-4xl font-bold text-center pb-10">
                     Project Gallery
                 </h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+                <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projectData.map((project) => (
                         <div
                             key={project.project_id}
-                            className="bg-white rounded-lg shadow-md overflow-hidden h-64 relative cursor-pointer"
+                            className="bg-white rounded-lg shadow-md overflow-hidden h-72 relative cursor-pointer transition-transform hover:scale-105"
                             onClick={() => {
                                 setActiveImages(project.images);
                                 setActiveGallery(true);
@@ -76,7 +75,7 @@ const ProjectPage = () => {
                                 </div>
                             )}
 
-                            {/* Project name overlay */}
+                            {/* Overlay */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
                                 <p className="text-white font-bold text-xl p-4">
                                     {project.project_name}

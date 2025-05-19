@@ -16,7 +16,8 @@ import { getRandomItems } from "../utils/utils";
 // Ambil hanya URL gambar dari imagesData
 // const images =
 //     imagesData?.[0]?.images?.map((img) => img.secure_url) || [];
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 const About = () => {
     const user = localStorage.getItem("userRole");
     const isEditable = user === "admin";
@@ -31,6 +32,10 @@ const About = () => {
     const [activeIndex, setActiveIndex] = useState(null);
     useEffect(() => {
         getImagesAbout();
+        AOS.init({
+            duration: 1000, // durasi animasi dalam ms
+            once: true, // animasi hanya jalan sekali
+        });
     }, []);
     // const images = imagesData?.[0]?.images?.map((img) => img.secure_url) || [];
     const handleSave = (fieldName, newValue) => {
@@ -52,14 +57,20 @@ const About = () => {
                     {/* Header Section - Made responsive */}
                     <div className="w-full max-w-[900px] px-4 md:px-6 relative">
                         <div className="w-full text-center mb-4">
-                            <div className="text-color-blue-10 text-2xl md:text-4xl font-medium font-['Poppins'] leading-tight md:leading-[48px]">
+                            <div
+                                className="text-color-blue-10 text-2xl md:text-4xl font-medium font-['Poppins'] leading-tight md:leading-[48px]"
+                                data-aos="fade-up"
+                            >
                                 ABOUT US
                             </div>
                         </div>
                         <div className="w-full text-center">
-                            <div className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8">
+                            <div
+                                className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8"
+                                data-aos="fade-up"
+                                data-aos-delay="200"
+                            >
                                 <EditableField
-                                    // icon={<Building2 size={18} />}
                                     value={profileData?.about_desc}
                                     name="about_desc"
                                     onSave={handleSave}
@@ -93,6 +104,8 @@ const About = () => {
                                             key={i}
                                             onClick={() => setActiveIndex(i)}
                                             className="md:w-auto"
+                                            data-aos="zoom-in"
+                                            data-aos-delay={i * 100}
                                         >
                                             <ImageCard
                                                 imagePath={img?.secure_url}
