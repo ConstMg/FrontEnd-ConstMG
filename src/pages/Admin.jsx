@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "../components/DataTable";
 import Navbar from "./../components/Navbar";
+import ProjectImages from "../components/ProjectImages";
 import Form from "../components/Form";
-import addKaryawan from "../assets/AddKaryawan.svg";
-import addProject from "../assets/AddProject.svg";
-import addPresensi from "../assets/AddPresensi.svg";
 import karyawanIcon from "../assets/karyawan.svg";
 import addingKaryawan from "../assets/addingKaryawan.svg";
 import addingProject from "../assets/addingProject.svg";
@@ -12,7 +10,6 @@ import proyekIcon from "../assets/project.svg";
 import presensiIcon from "../assets/presensi.svg";
 import { useKaryawan } from "../hooks/useKaryawan";
 import { useProject } from "../hooks/useProject";
-
 import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
@@ -22,8 +19,8 @@ const Admin = () => {
     const navigate = useNavigate();
     const { fetchKaryawanData, fetchPresensiAllKaryawan, fetchPresensiByDate } =
         useKaryawan();
+    const {fetchProjectData} = useProject();
     const [karyawanData, setKaryawanData] = useState([]);
-    const { fetchProjectData } = useProject();
     const [proyekData, setProjectData] = useState([]);
     const [karyawanCount, setKaryawanCount] = useState(0);
     const [proyekCount, setProjectCount] = useState(0);
@@ -35,6 +32,7 @@ const Admin = () => {
         izin: 0,
         sakit: 0,
     });
+    const [showProjectImages, setShowProjectImages] = useState(false);
     const [selectedDate, setSelectedDate] = useState(
         new Date().toISOString().split("T")[0]
     );
@@ -65,6 +63,10 @@ const Admin = () => {
         setShowForm(false);
         setEditingData(null);
     };
+
+    const handleShowProjectImages = (projectName) => {
+        setShowForm(true);
+    }
 
     // Fix the function to be synchronous and properly declare variables
     const calculatePresensiCounts = (data) => {
@@ -224,6 +226,14 @@ const Admin = () => {
                         initialData={editingData}
                         onConfirm={handleFormSubmit}
                         onCancel={() => setShowForm(false)}
+                    />
+                </div>
+            )}
+            {showProjectImages && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <ProjectImages
+                        images={proyekData.map((project) => project.imageUrl)}
+                        onClose={() => setShowProjectImages(false)}
                     />
                 </div>
             )}
