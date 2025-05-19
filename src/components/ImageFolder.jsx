@@ -1,9 +1,9 @@
 import React from "react";
 
-const ImageFolder = () => {
+const ImageFolder = ({ onClick }) => {
     return (
         <>
-            <section className="relative group flex flex-col items-center justify-center w-full h-full">
+            <section className="relative group flex flex-col items-center justify-center w-full h-full" onClick={onClick}>
                 <div className="file relative w-10 h-7 cursor-pointer origin-bottom [perspective:1500px] z-30">
                     <div className="work-5 bg-amber-600 w-full h-full origin-top rounded-lg rounded-tl-none group-hover:shadow-[0_5px_10px_rgba(0,0,0,.2)] transition-all ease duration-300 relative after:absolute after:content-[''] after:bottom-[99%] after:left-0 after:w-3.5 after:h-0.75 after:bg-amber-600 after:rounded-t-lg before:absolute before:content-[''] before:-top-[3px] before:left-[12.5px] before:w-0.75 before:h-0.75 before:bg-amber-600 before:[clip-path:polygon(0_35%,0%_100%,50%_100%);]"></div>
                     <div className="work-4 absolute inset-0.5 bg-zinc-400 rounded-lg transition-all ease duration-300 origin-bottom select-none group-hover:[transform:rotateX(-20deg)]"></div>
