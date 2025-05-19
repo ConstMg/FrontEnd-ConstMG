@@ -20,10 +20,17 @@ import { getRandomItems } from "../utils/utils";
 const About = () => {
     const user = localStorage.getItem("userRole");
     const isEditable = user === "admin";
-    const { getImages, imagesData, profileData, updateProfileData } = useCtx();
+    const {
+        getImagesAbout,
+        imagesAboutData,
+        profileData,
+        updateProfileData,
+        addImagesAbout,
+        removeImagesAbout,
+    } = useCtx();
     const [activeIndex, setActiveIndex] = useState(null);
     useEffect(() => {
-        getImages("",2);
+        getImagesAbout();
     }, []);
     // const images = imagesData?.[0]?.images?.map((img) => img.secure_url) || [];
     const handleSave = (fieldName, newValue) => {
@@ -31,15 +38,15 @@ const About = () => {
         updateProfileData(updated);
     };
     if (!profileData) return null;
-    const imagesRaw =
-        imagesData?.data?.flatMap((project) =>
-            project.images?.map((img) => ({
-                project_name: project.project_name,
-                secure_url: img.secure_url,
-            }))
-        ) || [];
+    // const imagesRaw =
+    //     imagesData?.data?.flatMap((project) =>
+    //         project.images?.map((img) => ({
+    //             project_name: project.project_name,
+    //             secure_url: img.secure_url,
+    //         }))
+    //     ) || [];
     // Acak urutan array dengan algoritma Fisher-Yates Shuffle
-    const images = [...imagesRaw].sort(() => Math.random() - 0.5).slice(0, 5);
+    const images = imagesAboutData;
 
     // console.log("images pesan: ", imagesData?.data?.project_name);
     console.log("images: ", images);
@@ -75,7 +82,7 @@ const About = () => {
                         {/* Display gallery when an image is selected */}
                         {activeIndex !== null && (
                             <ImageGallery
-                                images={imagesRaw.map((img) => img.secure_url)}
+                                images={images.map((img) => img.secure_url)}
                                 initialIndex={activeIndex}
                                 onClose={() => setActiveIndex(null)}
                             />
@@ -90,7 +97,7 @@ const About = () => {
                                     className="md:w-auto"
                                 >
                                     <ImageCard
-                                        imagePath={img.secure_url}
+                                        imagePath={img?.secure_url}
                                         variant={i + 1}
                                     />
                                 </div>

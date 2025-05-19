@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./../tailwind.css";
 import { useCtx } from "../context/Context";
-import { NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import EditableField from "./EditableField";
 import "./../tailwind.css";
 import { getRandomItems } from "../utils/utils";
@@ -9,9 +9,14 @@ const Project = () => {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const user = localStorage.getItem("userRole");
     const isEditable = user === "admin";
-    const { getImages, imagesProjectData, profileData, updateProfileData } = useCtx();
+    const {
+        getImagesProject,
+        imagesProjectData,
+        profileData,
+        updateProfileData,
+    } = useCtx();
     useEffect(() => {
-        getImages("Project",7);
+        getImagesProject("Project", 7);
     }, []);
     const handleSave = (fieldName, newValue) => {
         const updated = { ...profileData, [fieldName]: newValue };
@@ -40,7 +45,9 @@ const Project = () => {
     const filteredImages =
         selectedCategory === "All"
             ? randomImages
-            : randomImages.filter((image) => image.category === selectedCategory);
+            : randomImages.filter(
+                  (image) => image.category === selectedCategory
+              );
     return (
         <>
             <div
@@ -82,7 +89,7 @@ const Project = () => {
                     ))}
                 </div>
                 <NavLink
-                to="/project"
+                    to="/project"
                     className="cursor-pointer transition-all bg-amber-400 text-white px-6 py-2 rounded-lg
                         border-amber-500 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
                         active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
