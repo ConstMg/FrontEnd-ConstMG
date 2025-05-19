@@ -15,7 +15,7 @@ function Navbar() {
     const { isLoggedIn, logout } = useAuth();
     const [menuOpen, setMenuOpen] = useState(false);
     const location = useLocation();
-    const hideMidOn = ["/login", "/presensi", "/admin"];
+    const hideMidOn = ["/login", "/presensi", "/admin", "/project"];
     const user = localStorage.getItem("userRole");
 
     const toggleMenu = () => {

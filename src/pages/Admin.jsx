@@ -240,7 +240,7 @@ const Admin = () => {
                                 }`}
                                 onClick={() => handleTabChange("presensi")}
                             >
-                                <img src={presensiIcon} alt="" />
+                                <img src={presensiIcon} alt="" className="w-5"/>
                                 Presensi
                             </li>
                             <li
@@ -251,7 +251,7 @@ const Admin = () => {
                                 }`}
                                 onClick={() => handleTabChange("karyawan")}
                             >
-                                <img src={karyawanIcon} alt="" />
+                                <img src={karyawanIcon} alt="" className="w-5"/>
                                 Karyawan
                             </li>
                             <li
@@ -262,7 +262,7 @@ const Admin = () => {
                                 }`}
                                 onClick={() => handleTabChange("proyek")}
                             >
-                                <img src={proyekIcon} alt="" />
+                                <img src={proyekIcon} alt="" className="w-5"/>
                                 Proyek
                             </li>
                         </ul>

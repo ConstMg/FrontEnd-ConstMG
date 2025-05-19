@@ -4,7 +4,7 @@ import "./../tailwind.css";
 import EditableField from "./EditableField";
 import Typewriter from "typewriter-effect";
 import { useCtx } from "../context/Context";
-import { Building2 } from "lucide-react"; // <== Tambahkan ini juga!
+import { Link } from "react-scroll";
 
 const Home = () => {
     const { profileData, updateProfileData } = useCtx();
@@ -76,13 +76,14 @@ const Home = () => {
         </p> */}
 
                 <div className="h-[48px] inline-block">
-                    <button
+                    <Link
+                        to="project"
                         className="absolute cursor-pointer transition-all bg-amber-400 text-white px-6 py-2 rounded-lg border-amber-500 
           border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
           active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
                     >
                         Explore it
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

@@ -22,7 +22,7 @@ export const updateProject = async (project_id, name, deskripsi) => {
     });
 };
 
-export const getProjectImageUrl = async (project_name = null) => {
-    const endpoint = project_name ? `cloudinary/images?project=${project_name}` : `cloudinary/images`;
+export const getProjectImageUrl = async (project_name = null, limit = null) => {
+    const endpoint = project_name ? `cloudinary/images?project=${project_name}&limit=${limit}` : `cloudinary/images?limit=${limit}`;
     return await apiClient(endpoint, "GET");
 };
