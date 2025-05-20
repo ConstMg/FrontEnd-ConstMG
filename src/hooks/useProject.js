@@ -144,7 +144,7 @@ export function useProject() {
         setLoading(true);
 
         try {
-            const response = await getProjectImageUrl(null, limit);
+            const response = await getProjectImageUrl("", limit);
             console.log("Project with images:", response.data);
             return response.data;
         } catch (error) {
