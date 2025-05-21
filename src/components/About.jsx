@@ -33,7 +33,7 @@ const About = () => {
     useEffect(() => {
         getImagesAbout();
         AOS.init({
-            duration: 1000, // durasi animasi dalam ms
+            duration: 500, // durasi animasi dalam ms
             once: true, // animasi hanya jalan sekali
         });
     }, []);
@@ -68,7 +68,7 @@ const About = () => {
                             <div
                                 className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8"
                                 data-aos="fade-up"
-                                data-aos-delay="200"
+                                // data-aos-delay="200"
                             >
                                 <EditableField
                                     value={profileData?.about_desc}
@@ -105,7 +105,7 @@ const About = () => {
                                             onClick={() => setActiveIndex(i)}
                                             className="md:w-auto"
                                             data-aos="zoom-in"
-                                            data-aos-delay={i * 100}
+                                            // data-aos-delay={i * 100}
                                         >
                                             <ImageCard
                                                 imagePath={img?.secure_url}

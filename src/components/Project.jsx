@@ -20,7 +20,7 @@ const Project = () => {
     useEffect(() => {
         getImagesProject("Project", 7);
         AOS.init({
-            duration: 800,
+            duration: 500,
             once: true, // animasi hanya sekali
         });
     }, []);
@@ -70,7 +70,7 @@ const Project = () => {
                     <div
                         className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8"
                         data-aos="fade-up"
-                        data-aos-delay="100"
+                        // data-aos-delay="50"
                     >
                         <EditableField
                             // icon={<Building2 size={18} />}
@@ -85,26 +85,26 @@ const Project = () => {
                 <div
                     className="gallery w-full flex flex-wrap justify-center gap-8"
                     data-aos="fade-up"
-                    data-aos-delay="200"
+                    // data-aos-delay="100"
                 >
                     {filteredImages.map((image) => (
                         <div
                             key={image.id}
                             className="image-item w-72 h-72 relative group overflow-hidden rounded-lg shadow-lg"
                             data-aos="fade-up"
-                            data-aos-delay="200"
+                            // data-aos-delay="100"
                         >
                             <img
                                 src={image.src}
                                 alt={image.alt}
                                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                                 data-aos="fade-down"
-                                data-aos-delay="300"
+                                // data-aos-delay="200"
                             />
                             <div
                                 className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-end justify-center p-8"
                                 data-aos="zoom-in"
-                                data-aos-delay="350"
+                                // data-aos-delay="150"
                             >
                                 <p className="text-white text-xl font-medium transform group-hover:-translate-y-5 transition-transform duration-300">
                                     {image.category}
@@ -116,7 +116,7 @@ const Project = () => {
                 <NavLink
                     to="/project"
                     data-aos="zoom-in"
-                    data-aos-delay="400"
+                    // data-aos-delay="300"
                     className="cursor-pointer transition-all bg-amber-400 text-white px-6 py-2 rounded-lg
   border-amber-500 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
   active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"

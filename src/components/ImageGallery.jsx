@@ -5,7 +5,7 @@ import Left from "../assets/left.svg";
 
 export default function ImageGallery({ images, initialIndex, onClose }) {
     const [current, setCurrent] = useState(initialIndex);
-    const [direction, setDirection] = useState(0); // -1 = kiri, 1 = kanan
+    const [direction, setDirection] = useState(0);
 
     useEffect(() => {
         setCurrent(initialIndex);
@@ -13,17 +13,17 @@ export default function ImageGallery({ images, initialIndex, onClose }) {
 
     const variants = {
         enter: (direction) => ({
-            x: direction > 0 ? 100 : -100,
+            x: direction > 0 ? 300 : -300,
             opacity: 0,
             position: "absolute",
         }),
         center: {
             x: 0,
             opacity: 1,
-            position: "relative",
+            position: "absolute",
         },
         exit: (direction) => ({
-            x: direction > 0 ? -100 : 100,
+            x: direction > 0 ? -300 : 300,
             opacity: 0,
             position: "absolute",
         }),
@@ -45,68 +45,109 @@ export default function ImageGallery({ images, initialIndex, onClose }) {
         }
     };
 
+    const isImageListValid = Array.isArray(images) && images.length > 0;
+
     return (
         <div
             onClick={(e) => {
                 if (e.target === e.currentTarget) onClose();
             }}
-            className="fixed inset-0 backdrop-blur-sm bg-black/30 z-10 flex flex-col items-center justify-center p-6"
+            className="fixed inset-0 backdrop-blur-sm bg-black/30 z-11 flex flex-col items-center justify-center p-4"
         >
-            <div className="relative md:w-[810px] h-[430px] mb-4 flex items-center justify-center overflow-hidden rounded-lg">
-                {/* Tombol kiri */}
-                <button
-                    onClick={handlePrev}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/50 px-2 py-1 rounded-full shadow-md z-10"
-                >
-                    <img src={Left} alt="Left" className="w-20 h-20" />
-                </button>
+            {!isImageListValid ? (
+                <div className="md:w-[30%] w-full bg-white p-6 rounded-lg shadow-md text-center text-gray-700">
+                    <p className="text-lg font-semibold">
+                        Gambar tidak tersedia
+                    </p>
+                    <button
+                        onClick={onClose}
+                        className="t-4 px-4 py-2 bg-amber-400 text-white rounded hover:bg-amber-200"
+                    >
+                        Tutup
+                    </button>
+                </div>
+            ) : (
+                <>
+                    {/* Gambar utama */}
+                    <div className="relative w-full max-w-[810px] aspect-[4/3] mb-4 flex items-center justify-center overflow-hidden rounded-lg">
+                        <button
+                            onClick={handlePrev}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/50 p-2 rounded-full shadow-md z-10"
+                        >
+                            <img
+                                src={Left}
+                                alt="Left"
+                                className="w-6 h-6 md:w-10 md:h-10"
+                            />
+                        </button>
 
-                {/* Gambar utama dengan animasi slide */}
-                <AnimatePresence custom={direction} mode="wait">
-                    <motion.img
-                        key={images[current]}
-                        src={images[current]}
-                        className="w-full h-full object-cover rounded-lg"
-                        custom={direction}
-                        variants={variants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        transition={{
-                            x: { type: "spring", stiffness: 300, damping: 30 },
-                            opacity: { duration: 0.2 },
-                        }}
-                    />
-                </AnimatePresence>
+                        <AnimatePresence
+                            initial={false}
+                            custom={direction}
+                            mode="sync"
+                        >
+                            <motion.img
+                                key={current}
+                                src={images[current]}
+                                className="w-full h-full object-cover rounded-lg absolute"
+                                custom={direction}
+                                variants={variants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{
+                                    x: {
+                                        type: "spring",
+                                        stiffness: 300,
+                                        damping: 30,
+                                    },
+                                    opacity: { duration: 0.2 },
+                                }}
+                            />
+                        </AnimatePresence>
 
-                {/* Tombol kanan */}
-                <button
-                    onClick={handleNext}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/50 px-2 py-1 rounded-full shadow-md z-10"
-                >
-                    <img src={Right} alt="Right" className="w-20" />
-                </button>
-            </div>
+                        <button
+                            onClick={handleNext}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/50 p-2 rounded-full shadow-md z-10"
+                        >
+                            <img
+                                src={Right}
+                                alt="Right"
+                                className="w-6 h-6 md:w-10 md:h-10"
+                            />
+                        </button>
+                    </div>
 
-            {/* Thumbnail */}
-            <div className="flex gap-2 overflow-x-auto max-w-[700px] pt-4">
-                {images.map((img, index) => (
-                    <img
-                        key={index}
-                        src={img}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setDirection(index > current ? 1 : -1);
-                            setCurrent(index);
-                        }}
-                        className={`w-20 h-14 object-cover cursor-pointer rounded-md border-2 ${
-                            current === index
-                                ? "border-white"
-                                : "border-transparent"
-                        }`}
-                    />
-                ))}
-            </div>
+                    {/* Thumbnail */}
+                    <div className="flex gap-2 overflow-x-auto scrollbar-hide max-w-full md:max-w-[700px] pt-2 px-1">
+                        {images.map((img, index) => (
+                            <motion.img
+                                key={index}
+                                src={img}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDirection(index > current ? 1 : -1);
+                                    setCurrent(index);
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                animate={{
+                                    scale: current === index ? 1.1 : 1,
+                                    borderColor:
+                                        current === index
+                                            ? "#ffffff"
+                                            : "transparent",
+                                }}
+                                transition={{
+                                    type: "spring",
+                                    stiffness: 300,
+                                    damping: 20,
+                                }}
+                                className="w-16 h-12 md:w-20 md:h-14 object-cover cursor-pointer rounded-md border-2"
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
     );
 }
