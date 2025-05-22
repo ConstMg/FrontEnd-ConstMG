@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { faSignOutAlt, faHomeAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-
+import { getTodayLocalDateString } from "../utils/utils";
 library.add(faSignOutAlt, faHomeAlt);
 
 const Admin = () => {
@@ -39,9 +39,14 @@ const Admin = () => {
         sakit: 0,
     });
     const [showProjectImages, setShowProjectImages] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(
-        new Date().toISOString().split("T")[0]
-    );
+    // const getTodayLocalDateString = () => {
+    //     const today = new Date(); // Membuat objek Date berdasarkan timezone lokal browser
+    //     const year = today.getFullYear();
+    //     const month = String(today.getMonth() + 1).padStart(2, "0"); // Bulan dimulai dari 0 (Januari), jadi +1. padStart untuk format '05'
+    //     const day = String(today.getDate()).padStart(2, "0"); // padStart untuk format '01'
+    //     return `${year}-${month}-${day}`;
+    // };
+    const [selectedDate, setSelectedDate] = useState(getTodayLocalDateString());
 
     // Form state management
     const [showForm, setShowForm] = useState(false);
