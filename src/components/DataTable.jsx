@@ -325,7 +325,7 @@ const DataTable = ({
                 )}
 
                 <table className="min-w-full bg-white rounded-lg shadow-md">
-                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-40">
+                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-20">
                         <tr>
                             <th className="py-2 px-2 text-left">No.</th>
                             <th className="py-2 px-2 text-left">
@@ -469,7 +469,7 @@ const DataTable = ({
                     </div>
                 )}
                 <table className="min-w-full bg-white rounded-lg shadow-md">
-                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-40">
+                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-10">
                         <tr>
                             <th className="py-2 px-2 text-left">No.</th>
                             <th className="py-2 px-2 text-left">Nama</th>

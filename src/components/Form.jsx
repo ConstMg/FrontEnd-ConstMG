@@ -4,7 +4,7 @@ import { useProject } from "../hooks/useProject";
 
 const Form = ({
     variant = "add",
-    itemType = "karyawan", // New prop to determine form type
+    itemType = "karyawan",
     onConfirm,
     onCancel,
     initialData = null,
@@ -20,19 +20,18 @@ const Form = ({
         loading: projectLoading,
     } = useProject();
 
-    // Combined config with karyawan and project variants
     const config = {
         update: {
             karyawan: {
                 title: "Update Data Karyawan",
                 confirmBtnClass:
-                    "bg-amber-500 hover:bg-transparent border-amber-500 hover:text-amber-500",
+                    "bg-amber-500 hover:bg-amber-600 border-amber-500 hover:border-amber-600", // Slightly darker hover
                 confirmText: "Update",
             },
             proyek: {
                 title: "Update Data Proyek",
                 confirmBtnClass:
-                    "bg-amber-500 hover:bg-transparent border-amber-500 hover:text-amber-500",
+                    "bg-amber-500 hover:bg-amber-600 border-amber-500 hover:border-amber-600",
                 confirmText: "Update",
             },
         },
@@ -40,13 +39,13 @@ const Form = ({
             karyawan: {
                 title: "Tambah Data Karyawan",
                 confirmBtnClass:
-                    "bg-green-500 hover:bg-transparent border-green-500 hover:text-green-500",
+                    "bg-green-500 hover:bg-green-600 border-green-500 hover:border-green-600",
                 confirmText: "Tambah",
             },
             proyek: {
                 title: "Tambah Data Proyek",
                 confirmBtnClass:
-                    "bg-green-500 hover:bg-transparent border-green-500 hover:text-green-500",
+                    "bg-green-500 hover:bg-green-600 border-green-500 hover:border-green-600",
                 confirmText: "Tambah",
             },
         },
@@ -55,27 +54,27 @@ const Form = ({
     const currentConfig = config[variant]?.[itemType] || config.add.karyawan;
     const isLoading = karyawanLoading || projectLoading;
 
-    // Initialize state based on form type
+    const initialKaryawanState = {
+        nama: "",
+        nik: "",
+        jk: "Laki-laki",
+        alamat: "",
+        divisi: "",
+        penempatan: "",
+        email: "",
+        password: "",
+    };
+
+    const initialProyekState = {
+        project_name: "",
+        deskripsi: "",
+        status: "Ongoing", // Assuming 'status' is part of project data
+    };
+
     const [formData, setFormData] = useState(
-        itemType === "karyawan"
-            ? {
-                  nama: "",
-                  nik: "",
-                  jk: "Laki-laki",
-                  alamat: "",
-                  divisi: "",
-                  penempatan: "",
-                  email: "",
-                  password: "",
-              }
-            : {
-                  project_name: "",
-                  deskripsi: "",
-                  status: "Ongoing",
-              }
+        itemType === "karyawan" ? initialKaryawanState : initialProyekState
     );
 
-    // Division options for karyawan form
     const divisi = [
         "Komisaris",
         "Direktur",
@@ -90,7 +89,6 @@ const Form = ({
 
     const [error, setError] = useState(null);
 
-    // If initialData is provided (for update), populate the form
     useEffect(() => {
         if (initialData && variant === "update") {
             if (itemType === "karyawan") {
@@ -102,15 +100,23 @@ const Form = ({
                     divisi: initialData.divisi || "",
                     penempatan: initialData.penempatan || "",
                     email: initialData.email || "",
-                    password: "", // Don't populate password for security reasons
+                    password: "", // Password tidak diisi ulang untuk update
                 });
             } else {
+                // proyek
                 setFormData({
                     project_name: initialData.project_name || "",
                     deskripsi: initialData.deskripsi || "",
                     status: initialData.status || "Ongoing",
                 });
             }
+        } else {
+            // Reset form when variant/itemType changes or for add mode
+            setFormData(
+                itemType === "karyawan"
+                    ? initialKaryawanState
+                    : initialProyekState
+            );
         }
     }, [initialData, variant, itemType]);
 
@@ -129,7 +135,6 @@ const Form = ({
         try {
             if (variant === "add") {
                 if (itemType === "karyawan") {
-                    // Handle karyawan add
                     await handleAddKaryawan(
                         formData.nama,
                         formData.nik,
@@ -141,17 +146,19 @@ const Form = ({
                         formData.password
                     );
                 } else {
-                    // Handle project add
+                    // proyek
                     await handleAddProject(
                         formData.project_name,
-                        formData.deskripsi
+                        formData.deskripsi,
+                        formData.status // Assuming status is sent
                     );
                 }
-            } else if (variant === "update" && (initialData?.id || initialData?.project_id)) {
+            } else if (
+                variant === "update" &&
+                (initialData?.id || initialData?.project_id)
+            ) {
                 if (itemType === "karyawan") {
-                    // Handle karyawan update if available
                     if (typeof handleUpdateKaryawan === "function") {
-                        console.log("Updating karyawan with ID:", initialData);
                         await handleUpdateKaryawan(
                             initialData.id,
                             formData.nama,
@@ -161,21 +168,21 @@ const Form = ({
                             formData.alamat,
                             formData.penempatan,
                             formData.email,
-                            formData.password || initialData.password
+                            formData.password // Kirim password jika diisi, backend harus handle jika kosong
                         );
                     }
                 } else {
-                    console.log("Updating project with ID:", initialData);
+                    // proyek
                     if (typeof handleUpdateProject === "function") {
                         await handleUpdateProject(
                             initialData.project_id,
                             formData.project_name,
-                            formData.deskripsi
+                            formData.deskripsi,
+                            formData.status
                         );
                     }
                 }
             }
-
             if (onConfirm) {
                 await onConfirm(formData);
             }
@@ -184,18 +191,25 @@ const Form = ({
             setError(
                 `Gagal ${variant === "add" ? "menambahkan" : "memperbarui"} ${
                     itemType === "karyawan" ? "karyawan" : "proyek"
-                }: ${err.message || "Terjadi kesalahan"}`
+                }. ${
+                    err.response?.data?.message ||
+                    err.message ||
+                    "Terjadi kesalahan"
+                }`
             );
         }
     };
 
-    // Render karyawan form fields
+    const commonInputClass =
+        "mt-1 block w-full px-3.5 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-500 sm:text-sm transition-colors duration-150 ease-in-out";
+
     const renderKaryawanFields = () => (
         <>
+            {/* Nama */}
             <div>
                 <label
                     htmlFor="nama"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Nama
                 </label>
@@ -206,14 +220,14 @@ const Form = ({
                     value={formData.nama}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    className={commonInputClass}
                 />
             </div>
-
+            {/* NIK */}
             <div>
                 <label
                     htmlFor="nik"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     NIK
                 </label>
@@ -224,14 +238,14 @@ const Form = ({
                     value={formData.nik}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    className={commonInputClass}
                 />
             </div>
-
+            {/* Jenis Kelamin */}
             <div>
                 <label
                     htmlFor="jk"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Jenis Kelamin
                 </label>
@@ -241,17 +255,17 @@ const Form = ({
                     value={formData.jk}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    className={commonInputClass}
                 >
-                    <option value="Laki-Laki">Laki-laki</option>
+                    <option value="Laki-laki">Laki-laki</option>
                     <option value="Perempuan">Perempuan</option>
                 </select>
             </div>
-
+            {/* Alamat */}
             <div>
                 <label
                     htmlFor="alamat"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Alamat
                 </label>
@@ -262,14 +276,14 @@ const Form = ({
                     onChange={handleChange}
                     required
                     rows="3"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    className={commonInputClass}
                 ></textarea>
             </div>
-
+            {/* Divisi */}
             <div>
                 <label
                     htmlFor="divisi"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Divisi
                 </label>
@@ -279,21 +293,21 @@ const Form = ({
                     value={formData.divisi}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    className={commonInputClass}
                 >
                     <option value="">Pilih Divisi</option>
-                    {divisi.map((item, index) => (
-                        <option key={index} value={item}>
+                    {divisi.map((item) => (
+                        <option key={item} value={item}>
                             {item}
                         </option>
                     ))}
                 </select>
             </div>
-
+            {/* Penempatan */}
             <div>
                 <label
                     htmlFor="penempatan"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Penempatan
                 </label>
@@ -304,14 +318,14 @@ const Form = ({
                     value={formData.penempatan}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    className={commonInputClass}
                 />
             </div>
-
+            {/* Email */}
             <div>
                 <label
                     htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Email
                 </label>
@@ -322,14 +336,14 @@ const Form = ({
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    className={commonInputClass}
                 />
             </div>
-
+            {/* Password */}
             <div>
                 <label
                     htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Password{" "}
                     {variant === "update" && (
@@ -344,20 +358,20 @@ const Form = ({
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    required={variant === "add"} // Only required for add, not update
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    required={variant === "add"}
+                    className={commonInputClass}
                 />
             </div>
         </>
     );
 
-    // Render project form fields
     const renderProjectFields = () => (
         <>
+            {/* Nama Proyek */}
             <div>
                 <label
                     htmlFor="project_name"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Nama Proyek
                 </label>
@@ -368,14 +382,14 @@ const Form = ({
                     value={formData.project_name}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    className={commonInputClass}
                 />
             </div>
-
+            {/* Deskripsi */}
             <div>
                 <label
                     htmlFor="deskripsi"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Deskripsi
                 </label>
@@ -384,35 +398,57 @@ const Form = ({
                     name="deskripsi"
                     value={formData.deskripsi}
                     onChange={handleChange}
-                    rows="3"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-                />
+                    rows="4"
+                    className={commonInputClass}
+                ></textarea>
             </div>
+            {/* Status Proyek - Tambahan jika relevan */}
+            {/* <div>
+                <label
+                    htmlFor="status"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Status Proyek
+                </label>
+                <select
+                    id="status"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                    className={commonInputClass}
+                >
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div> */}
         </>
     );
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">
+        <div className="bg-white p-7 rounded-xl shadow-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <div className="flex justify-between items-start mb-6 pb-3 border-b border-gray-200">
+                <h2 className="text-xl font-semibold text-gray-800">
                     {currentConfig.title}
                 </h2>
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="cursor-pointer text-red-500 hover:text-red-700 transition duration-200"
+                    className="p-1.5 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-100 transition-all duration-200"
+                    aria-label="Close form"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
+                        className="h-5 w-5"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
+                        strokeWidth={2.5}
                     >
                         <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            strokeWidth={2}
                             d="M6 18L18 6M6 6l12 12"
                         />
                     </svg>
@@ -420,34 +456,39 @@ const Form = ({
             </div>
 
             {error && (
-                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                    {error}
+                <div className="mb-5 p-3.5 bg-red-50 border border-red-300 text-red-700 rounded-lg text-sm">
+                    <strong className="font-medium">Oops!</strong> {error}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Render fields based on itemType */}
+            <form onSubmit={handleSubmit} className="space-y-5">
                 {itemType === "karyawan"
                     ? renderKaryawanFields()
                     : renderProjectFields()}
 
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-end items-center pt-6 mt-2 border-t border-gray-200 space-x-3">
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="mr-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+                        className="px-5 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 transition-colors duration-150"
                     >
                         Batal
                     </button>
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${currentConfig.confirmBtnClass} disabled:opacity-50`}
+                        className={`px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white ${
+                            currentConfig.confirmBtnClass
+                        } focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-white ${
+                            isLoading
+                                ? "opacity-60 cursor-not-allowed"
+                                : "hover:shadow-md"
+                        } transition-all duration-150`}
                     >
                         {isLoading ? (
-                            <span className="flex items-center">
+                            <span className="flex items-center justify-center">
                                 <svg
-                                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                    className="animate-spin -ml-0.5 mr-2 h-4 w-4 text-white"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
                                     viewBox="0 0 24 24"
@@ -466,7 +507,7 @@ const Form = ({
                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                     ></path>
                                 </svg>
-                                Processing...
+                                Memproses...
                             </span>
                         ) : (
                             currentConfig.confirmText
