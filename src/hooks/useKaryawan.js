@@ -25,8 +25,8 @@ export function useKaryawan() {
         longitude,
         deskripsi
     ) => {
-        if (!nama || !status_presensi) {
-            toast.warn("Mohon lengkapi nama dan status presensi.");
+        if (!status_presensi) {
+            toast.warn("Mohon lengkapi status presensi anda.");
             return;
         }
 

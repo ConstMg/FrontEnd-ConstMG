@@ -1,10 +1,23 @@
 import { apiClient } from "./ApiClient";
 
 export const fetchImagesProjects = async (project_name, limit) => {
-    return apiClient(
-        `cloudinary/images?project_name=${project_name}&limit=${limit}`,
-        "GET"
-    );
+    let endpoint = `cloudinary/images`;
+
+    const params = new URLSearchParams();
+
+    if (project_name) params.append("name", project_name);
+    if (Number.isInteger(limit)) params.append("limit", limit);
+
+    const queryString = params.toString();
+
+    if (queryString) endpoint += `?${queryString}`;
+    console.log(endpoint);
+
+    return await apiClient(endpoint, "GET");
+    // return apiClient(
+    //     `cloudinary/images?project_name=${project_name}&limit=${limit}`,
+    //     "GET"
+    // );
 };
 
 export const fetcImagesAbout = async () => {
@@ -19,6 +32,6 @@ export const postImagesAbout = async (publicIds) => {
 
 // DELETE: Hapus gambar about
 export const deleteImagesAbout = async (publicIds) => {
-    const query = publicIds.join(",");
-    return apiClient(`admin/profile/images?public_id=${query}`, "DELETE");
+    // const query = publicIds.join(",");
+    return apiClient(`admin/profile/images?public_id=${publicIds}`, "DELETE");
 };

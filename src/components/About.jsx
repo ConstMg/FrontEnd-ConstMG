@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef,useState, useEffect } from "react";
 import ImageCard from "./ImageCard";
 import ImageGallery from "./ImageGallery";
-import { Building2, Phone, Mail, Globe, Pencil, Save } from "lucide-react";
+import { Building2, Phone, Mail, Globe, Pencil, Save, PlusCircle, Trash2 } from "lucide-react";
 import "./../tailwind.css";
+import ImageSelectorModal from ".//ImageSelectorModal"; // Import modal baru
 import EditableField from "./EditableField";
 import { useCtx } from "../context/Context";
-import { getRandomItems } from "../utils/utils";
-// const images = [
-//     "https://indokontraktor.com/uploads/0000/1/2020/04/04/thumbnail2.png",
-//     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhBAxEWU4n6s52hNJOW7tkLVNkBgMCRbU3AA&s",
-//     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTurx-nMXRQz_tFgev_BzMgLs0z1PIEL49W6OiggbuHcOtgzF2WR6Qh6i-GiUl__eh3qu4&usqp=CAU",
-//     "https://www.autodesk.com/blogs/construction/wp-content/uploads/2024/07/140-Common-Construction-Terms-to-Know.jpg",
-//     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8pJwY-IjmLU-5MgKBJmtELnlLtlvnpX4tDw&s",
-// ];
-// Ambil hanya URL gambar dari imagesData
-// const images =
-//     imagesData?.[0]?.images?.map((img) => img.secure_url) || [];
+
 import AOS from "aos";
 import "aos/dist/aos.css";
 const About = () => {
     const user = localStorage.getItem("userRole");
+    
     const isEditable = user === "admin";
     const {
         getImagesAbout,
@@ -30,6 +22,7 @@ const About = () => {
         removeImagesAbout,
     } = useCtx();
     const [activeIndex, setActiveIndex] = useState(null);
+    const [showImageSelectorModal, setShowImageSelectorModal] = useState(false);
     useEffect(() => {
         getImagesAbout();
         AOS.init({
@@ -37,16 +30,33 @@ const About = () => {
             once: true, // animasi hanya jalan sekali
         });
     }, []);
-    // const images = imagesData?.[0]?.images?.map((img) => img.secure_url) || [];
+
     const handleSave = (fieldName, newValue) => {
         const updated = { ...profileData, [fieldName]: newValue };
         updateProfileData(updated);
     };
+
+    const handleAddImageClick = () => {
+        setShowImageSelectorModal(true); // Buka modal pemilihan gambar
+    };
+
+    const handleImageSelectionConfirm = async (selectedPublicIds) => {
+        if (selectedPublicIds && selectedPublicIds.length > 0) {
+            await addImagesAbout(selectedPublicIds); // addImagesAbout sudah mengharapkan array publicIds
+            // getImagesAbout(); // addImagesAbout di useCtx sudah memanggil getImagesAbout
+        }
+        setShowImageSelectorModal(false);
+    };
+    const handleRemoveImage = async (publicId) => {
+        // Konfirmasi sebelum menghapus
+        if (window.confirm("Apakah Anda yakin ingin menghapus gambar ini?")) {
+            await removeImagesAbout(publicId); // Asumsi removeImagesAbout menerima imageId dan public_id
+            getImagesAbout(); // Refresh gambar setelah menghapus
+        }
+    };
+
     if (!profileData) return null;
     const images = Array.isArray(imagesAboutData) ? imagesAboutData : [];
-
-    // console.log("images pesan: ", imagesData?.data?.project_name);
-    console.log("images: ", images);
     return (
         <>
             <div
@@ -80,9 +90,20 @@ const About = () => {
                         </div>
                     </div>
 
+                    {/* Tombol Tambah Gambar untuk Admin */}
+                    {isEditable && (
+                        <div className="w-full md:max-w-[1320px] flex justify-center sm:justify-end px-2 sm:px-4 mb-4">
+                            <button
+                                onClick={handleAddImageClick}
+                                className="bg-color-blue-10 hover:bg-blue-700 text-white font-bold py-2 px-3 sm:px-4 rounded-lg flex items-center gap-2 transition-colors duration-150 text-sm sm:text-base"
+                            >
+                                <PlusCircle size={20} />
+                                Tambah Gambar
+                            </button>
+                        </div>
+                    )}
                     {/* Gallery Section */}
                     <div className="flex flex-col items-center justify-center gap-3 md:gap-6 w-full">
-                        
                         {/* Display gallery when an image is selected */}
                         {activeIndex !== null && (
                             <ImageGallery
@@ -102,16 +123,35 @@ const About = () => {
                                 <div className="w-full max-w-5.5 md:max-w-[1320px] flex flex-wrap items-center justify-center gap-3 md:gap-6 px-2 md:px-4">
                                     {images.map((img, i) => (
                                         <div
-                                            key={i}
-                                            onClick={() => setActiveIndex(i)}
-                                            className="md:w-auto"
+                                            key={img.public_id || i} // Gunakan ID unik jika ada, fallback ke index
+                                            className="relative group md:w-auto"
                                             data-aos="zoom-in"
                                             // data-aos-delay={i * 100}
                                         >
-                                            <ImageCard
-                                                imagePath={img?.secure_url}
-                                                variant={i + 1}
-                                            />
+                                            <div
+                                                onClick={() =>
+                                                    setActiveIndex(i)
+                                                }
+                                                className="cursor-pointer"
+                                            >
+                                                <ImageCard
+                                                    imagePath={img?.secure_url}
+                                                    variant={i + 1}
+                                                />
+                                            </div>
+                                            {isEditable && (
+                                                <button
+                                                    onClick={() =>
+                                                        handleRemoveImage(
+                                                            img.public_id
+                                                        )
+                                                    } // Asumsi img memiliki 'id' dan 'public_id'
+                                                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-700 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+                                                    title="Hapus Gambar"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -120,6 +160,12 @@ const About = () => {
                     </div>
                 </div>
             </div>
+            {/* Modal Pemilihan Gambar */}
+            <ImageSelectorModal
+                isOpen={showImageSelectorModal}
+                onClose={() => setShowImageSelectorModal(false)}
+                onConfirmSelection={handleImageSelectionConfirm}
+            />
         </>
     );
 };
