@@ -8,7 +8,7 @@ import {
 import { useState, useCallback } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-
+import { addImageToProject as uploadImage } from "../services/ProjectService"; 
 export function useProject() {
     const [projectData, setProjectData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -154,11 +154,40 @@ export function useProject() {
         }
     }, []);
 
+    const [uploading, setUploading] = useState(false);
+    const [uploadError, setUploadError] = useState(null);
+    const [uploadSuccess, setUploadSuccess] = useState(null);
+
+    const addImageToProject = useCallback(async (project_id, imageFile) => {
+        setUploading(true);
+        setUploadError(null);
+        setUploadSuccess(null);
+
+        try {
+            const response = await uploadImage(project_id, imageFile);
+            setUploadSuccess(response.message || "Gambar berhasil diunggah");
+            return response;
+        } catch (err) {
+            setUploadError(err.message || "Terjadi kesalahan saat upload");
+            throw err;
+        } finally {
+            setUploading(false);
+        }
+    }, []);
+
+
+
+
+
     return {
         projectData,
         loading,
         error,
         fetchProjectData,
+        uploading,
+        uploadError,
+        uploadSuccess,
+        addImageToProject,
         handleDeleteProject,
         handleAddProject,
         handleUpdateProject,

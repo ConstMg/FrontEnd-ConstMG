@@ -305,9 +305,17 @@ const DataTable = ({
                 {showProjectImages && selectedProjectImages && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                         <ProjectImages
+                            key={selectedProjectImages.project_id} // Tambahkan ini
                             images={selectedProjectImages.urls}
                             projectName={selectedProjectImages.name}
+                            projectId={selectedProjectImages.project_id}
                             onClose={() => setShowProjectImages(false)}
+                            onImageUploaded={(newImage) => {
+                                setSelectedProjectImages((prev) => ({
+                                    ...prev,
+                                    urls: [...prev.urls, newImage],
+                                }));
+                            }}
                         />
                     </div>
                 )}
@@ -371,7 +379,7 @@ const DataTable = ({
                                                 onClick={(e) => {
                                                     // Stop propagation to prevent conflicting with row click events
                                                     e.stopPropagation();
-                                                    console.log(project)
+                                                    console.log(project);
 
                                                     // Get image URLs from project
                                                     const imageUrls =
@@ -386,6 +394,9 @@ const DataTable = ({
                                                     setSelectedProjectImages({
                                                         name: project.project_name,
                                                         urls: imageUrls,
+                                                        project_id:
+                                                            project.project_id ||
+                                                            project.id,
                                                     });
                                                     setShowProjectImages(true);
                                                 }}
