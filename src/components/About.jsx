@@ -82,6 +82,7 @@ const About = () => {
 
                     {/* Gallery Section */}
                     <div className="flex flex-col items-center justify-center gap-3 md:gap-6 w-full">
+                        
                         {/* Display gallery when an image is selected */}
                         {activeIndex !== null && (
                             <ImageGallery

@@ -10,7 +10,7 @@ import "./../tailwind.css";
 
 const MainPage = () => {
     return (
-        <div className="mainPage bg-gradient-to-r from-orange-100 via-orange-200 to-amber-200">
+        <div className="mainPage">
             <Provider>
                 <Navbar />
                 <Home />
