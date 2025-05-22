@@ -10,7 +10,7 @@ import "./../tailwind.css";
 
 const MainPage = () => {
     return (
-        <div className="w-full min-h-screen">
+        <div className="mainPage">
             <Provider>
                 <Navbar />
                 <Home />

@@ -4,8 +4,8 @@ import "./../tailwind.css";
 import EditableField from "./EditableField";
 import Typewriter from "typewriter-effect";
 import { useCtx } from "../context/Context";
-import { Building2 } from "lucide-react"; // <== Tambahkan ini juga!
-
+import { Link } from "react-scroll";
+import { motion } from "framer-motion";
 const Home = () => {
     const { profileData, updateProfileData } = useCtx();
     const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -20,8 +20,8 @@ const Home = () => {
     // ⛳️ Pindahkan useEffect sebelum return apa pun
     useEffect(() => {
         const handleMouseMove = (e) => {
-            const x = (e.clientX - window.innerWidth / 2) * 0.02;
-            const y = (e.clientY - window.innerHeight / 2) * 0.02;
+            const x = (e.clientX - window.innerWidth / 5) * 0.08;
+            const y = (e.clientY - window.innerHeight / 2) * 0.06;
             setOffset({ x, y });
         };
 
@@ -34,15 +34,37 @@ const Home = () => {
 
     return (
         <div className="home h-dvh relative" id="main">
-            <img
+            <motion.img
                 src={gambarBg}
-                className="absolute h-5/6 right-[-15px] bottom-0  transition-transform duration-75 ease-out pointer-events-none"
-                style={{
-                    transform: `translate(${offset.x}px, ${offset.y}px)`,
+                className="absolute h-5/6 right-[-15px] bottom-0 pointer-events-none"
+                initial={{ x: 500, opacity: 0 }}
+                animate={{
+                    x: offset.x,
+                    y: offset.y,
+                    opacity: 1,
+                }}
+                transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 90,
+                    mass: 1,
                 }}
                 alt="rumah"
             />
-            <div className="text-space absolute h-full w-full md:w-1/2 flex flex-col justify-evenly items-start gap-4 px-6 py-12 md:p-20">
+
+            <motion.div
+                className="text-space absolute h-full w-full md:w-1/2 flex flex-col justify-evenly items-start gap-4 px-6 py-12 md:p-20"
+                initial={{ x: -500, opacity: 0 }} // dari kiri
+                animate={{ x: 0, opacity: 1 }} // ke tengah
+                transition={{
+                    type: "spring",
+                    stiffness: 70,
+                    damping: 20,
+                    mass: 0.5,
+                    delay: 0.1, // cocokkan dengan gambar
+                }}
+            >
+                {/* Semua konten kamu di sini */}
                 {isEditable ? (
                     <EditableField
                         value={profileData.headline}
@@ -76,15 +98,17 @@ const Home = () => {
         </p> */}
 
                 <div className="h-[48px] inline-block">
-                    <button
+                    <Link
+                        to="project"
                         className="absolute cursor-pointer transition-all bg-amber-400 text-white px-6 py-2 rounded-lg border-amber-500 
           border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
           active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
                     >
                         Explore it
-                    </button>
+                    </Link>
                 </div>
-            </div>
+            </motion.div>
+            {/* <div className="text-space absolute h-full w-full md:w-1/2 flex flex-col justify-evenly items-start gap-4 px-6 py-12 md:p-20"></div> */}
         </div>
     );
 };

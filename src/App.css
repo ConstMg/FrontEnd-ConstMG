@@ -1,10 +1,33 @@
-* {
+/* Style global */
+/* * {
     margin: 0;
     box-sizing: border-box;
-    /* overflow-x: hidden; */
+
+} */
+
+.mainPage {
+    overflow-x: hidden;
 }
+
+#root {
+    min-height: 100vh;
+    background: linear-gradient(to right, #ffedd5, #fed7aa, #fde68a);
+  }
+  
+  
 
 body {
     overflow-x: hidden;
-    background: linear-gradient(116deg, #fff 0%, #999 157.79%);
+    background: linear-gradient(to right, #ffedd5, #fed7aa, #fde68a);
+}
+
+/* selector {
+    
+} */
+.scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
 }

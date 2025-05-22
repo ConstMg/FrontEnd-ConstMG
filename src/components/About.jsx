@@ -16,14 +16,26 @@ import { getRandomItems } from "../utils/utils";
 // Ambil hanya URL gambar dari imagesData
 // const images =
 //     imagesData?.[0]?.images?.map((img) => img.secure_url) || [];
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 const About = () => {
     const user = localStorage.getItem("userRole");
     const isEditable = user === "admin";
-    const { getImages, imagesData, profileData, updateProfileData } = useCtx();
+    const {
+        getImagesAbout,
+        imagesAboutData,
+        profileData,
+        updateProfileData,
+        addImagesAbout,
+        removeImagesAbout,
+    } = useCtx();
     const [activeIndex, setActiveIndex] = useState(null);
     useEffect(() => {
-        getImages("",2);
+        getImagesAbout();
+        AOS.init({
+            duration: 500, // durasi animasi dalam ms
+            once: true, // animasi hanya jalan sekali
+        });
     }, []);
     // const images = imagesData?.[0]?.images?.map((img) => img.secure_url) || [];
     const handleSave = (fieldName, newValue) => {
@@ -31,15 +43,7 @@ const About = () => {
         updateProfileData(updated);
     };
     if (!profileData) return null;
-    const imagesRaw =
-        imagesData?.data?.flatMap((project) =>
-            project.images?.map((img) => ({
-                project_name: project.project_name,
-                secure_url: img.secure_url,
-            }))
-        ) || [];
-    // Acak urutan array dengan algoritma Fisher-Yates Shuffle
-    const images = [...imagesRaw].sort(() => Math.random() - 0.5).slice(0, 5);
+    const images = Array.isArray(imagesAboutData) ? imagesAboutData : [];
 
     // console.log("images pesan: ", imagesData?.data?.project_name);
     console.log("images: ", images);
@@ -53,14 +57,20 @@ const About = () => {
                     {/* Header Section - Made responsive */}
                     <div className="w-full max-w-[900px] px-4 md:px-6 relative">
                         <div className="w-full text-center mb-4">
-                            <div className="text-color-blue-10 text-2xl md:text-4xl font-medium font-['Poppins'] leading-tight md:leading-[48px]">
+                            <div
+                                className="text-color-blue-10 text-2xl md:text-4xl font-medium font-['Poppins'] leading-tight md:leading-[48px]"
+                                data-aos="fade-up"
+                            >
                                 ABOUT US
                             </div>
                         </div>
                         <div className="w-full text-center">
-                            <div className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8">
+                            <div
+                                className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8"
+                                data-aos="fade-up"
+                                // data-aos-delay="200"
+                            >
                                 <EditableField
-                                    // icon={<Building2 size={18} />}
                                     value={profileData?.about_desc}
                                     name="about_desc"
                                     onSave={handleSave}
@@ -72,10 +82,11 @@ const About = () => {
 
                     {/* Gallery Section */}
                     <div className="flex flex-col items-center justify-center gap-3 md:gap-6 w-full">
+                        
                         {/* Display gallery when an image is selected */}
                         {activeIndex !== null && (
                             <ImageGallery
-                                images={imagesRaw.map((img) => img.secure_url)}
+                                images={images.map((img) => img.secure_url)}
                                 initialIndex={activeIndex}
                                 onClose={() => setActiveIndex(null)}
                             />
@@ -83,18 +94,28 @@ const About = () => {
 
                         {/* Thumbnail list - Made responsive with smaller gaps on mobile */}
                         <div className="w-full max-w-5.5 md:max-w-[1320px] flex flex-wrap items-center justify-center gap-3 md:gap-6 px-2 md:px-4">
-                            {images.map((img, i) => (
-                                <div
-                                    key={i}
-                                    onClick={() => setActiveIndex(i)}
-                                    className="md:w-auto"
-                                >
-                                    <ImageCard
-                                        imagePath={img.secure_url}
-                                        variant={i + 1}
-                                    />
+                            {images.length === 0 ? (
+                                <div className="text-gray-500 text-sm">
+                                    Loading gambar...
                                 </div>
-                            ))}
+                            ) : (
+                                <div className="w-full max-w-5.5 md:max-w-[1320px] flex flex-wrap items-center justify-center gap-3 md:gap-6 px-2 md:px-4">
+                                    {images.map((img, i) => (
+                                        <div
+                                            key={i}
+                                            onClick={() => setActiveIndex(i)}
+                                            className="md:w-auto"
+                                            data-aos="zoom-in"
+                                            // data-aos-delay={i * 100}
+                                        >
+                                            <ImageCard
+                                                imagePath={img?.secure_url}
+                                                variant={i + 1}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

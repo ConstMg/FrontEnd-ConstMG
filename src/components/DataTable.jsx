@@ -5,7 +5,8 @@ import deleteIcon from "../assets/delete.svg";
 import { useProject } from "../hooks/useProject";
 import { useKaryawan } from "../hooks/useKaryawan";
 import ConfirmationCard from "./ConfirmationCard";
-import ImageFolder from "../components/ImageFolder";
+import ProjectImages from "./ProjectImages";
+import ImageFolder from "./ImageFolder";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
@@ -27,6 +28,8 @@ const DataTable = ({
         left: 0,
     });
     const descriptionRef = React.useRef(null);
+    const [selectedProjectImages, setSelectedProjectImages] = useState(null);
+    const [showProjectImages, setShowProjectImages] = useState(false);
 
     const { handleDeleteProject } = useProject();
     const { handleDeleteKaryawan, handleUpdateKaryawanRole } = useKaryawan();
@@ -298,6 +301,17 @@ const DataTable = ({
     if (variant === "proyek") {
         return (
             <div className="h-full w-full overflow-auto relative">
+                {/* Project Images Modal */}
+                {showProjectImages && selectedProjectImages && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <ProjectImages
+                            images={selectedProjectImages.urls}
+                            projectName={selectedProjectImages.name}
+                            onClose={() => setShowProjectImages(false)}
+                        />
+                    </div>
+                )}
+
                 {/* Confirmation modal */}
                 {showConfirmation && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -311,7 +325,7 @@ const DataTable = ({
                 )}
 
                 <table className="min-w-full bg-white rounded-lg shadow-md">
-                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-40">
+                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-20">
                         <tr>
                             <th className="py-2 px-2 text-left">No.</th>
                             <th className="py-2 px-2 text-left">
@@ -326,7 +340,7 @@ const DataTable = ({
                         {data && data.length > 0 ? (
                             data.map((project, index) => (
                                 <tr
-                                    key={project.id}
+                                    key={project.id || project.project_id}
                                     className={
                                         index % 2 === 0
                                             ? "bg-gray-50"
@@ -340,10 +354,43 @@ const DataTable = ({
                                         {project.project_name}
                                     </td>
                                     <td className="py-2 px-2 border-b">
-                                        {project.deskripsi}
+                                        <p className="truncate">
+                                            {project.deskripsi !== "-" &&
+                                            project.deskripsi.split(/\s+/)
+                                                .length > 7
+                                                ? project.deskripsi
+                                                      .split(/\s+/)
+                                                      .slice(0, 7)
+                                                      .join(" ") + " ..."
+                                                : project.deskripsi}
+                                        </p>
                                     </td>
-                                    <td className="py-2 px-2 border-b flex items-center justify-center">
-                                        <ImageFolder />
+                                    <td className="py-2 px-2 border-b text-center">
+                                        <div className="flex items-center justify-center">
+                                            <ImageFolder
+                                                onClick={(e) => {
+                                                    // Stop propagation to prevent conflicting with row click events
+                                                    e.stopPropagation();
+                                                    console.log(project)
+
+                                                    // Get image URLs from project
+                                                    const imageUrls =
+                                                        project.images?.length >
+                                                        0
+                                                            ? project.images.map(
+                                                                  (img) =>
+                                                                      img.secure_url
+                                                              )
+                                                            : [];
+
+                                                    setSelectedProjectImages({
+                                                        name: project.project_name,
+                                                        urls: imageUrls,
+                                                    });
+                                                    setShowProjectImages(true);
+                                                }}
+                                            />
+                                        </div>
                                     </td>
                                     <td className="py-2 px-2 border-b">
                                         <div className="flex gap-3 items-center">
@@ -422,7 +469,7 @@ const DataTable = ({
                     </div>
                 )}
                 <table className="min-w-full bg-white rounded-lg shadow-md">
-                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-40">
+                    <thead className="bg-gray-50 text-gray-600 sticky top-0 z-10">
                         <tr>
                             <th className="py-2 px-2 text-left">No.</th>
                             <th className="py-2 px-2 text-left">Nama</th>

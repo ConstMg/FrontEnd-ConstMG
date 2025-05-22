@@ -1,94 +1,172 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import gambarBangunan from "./../assets/const.png";
-import { Link } from "react-router-dom";
 import Navbar from "./../components/Navbar";
-import { useNavigate } from "react-router-dom";
-import "./../tailwind.css";
 import { useAuth } from "../hooks/useAuth";
-import { ToastContainer } from "react-toastify";
+import Typewriter from "typewriter-effect";
+
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const { isLoading, handleLogin } = useAuth();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const { isLoading, handleLogin } = useAuth();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    handleLogin(email, password);
-  };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        handleLogin(email, password);
+    };
 
-  return (
-    <div className="relative h-dvh flex flex-col justify-center items-center">
-      <Navbar />
-      {/* <ToastContainer position="top-right" autoClose={3000} /> */}
-      <div className="container w-3/4 h-6/10 flex flex-row justify-center rounded-4xl">
-        <div className="image relative w-1/3 md:block hidden">
-          <img className="h-full" src={gambarBangunan} alt="gambar bangunan" />
-          <p className="absolute w-full left-1/2 transform -translate-x-1/2 top-0 p-2 text-5xl text-white font-bold">
-            Make Your Dream House Come True.
-          </p>
-        </div>
-        <div className="form bg-white w-full md:w-2/3 flex flex-col justify-between items-center px-6 md:px-8 py-20 md:py-20 shadow-lg rounded-lg">
-          <p className="text-amber-300 text-xl md:text-2xl font-bold text-center">
-            PT Murgung Nusa Parama
-          </p>
-          <p className="text-lg md:text-2xl font-medium text-center mb-6">
-            Welcome Back 👋
-          </p>
-          <form
-            className="flex flex-col justify-center items-center gap-4 w-full md:w-3/4"
-            onSubmit={handleSubmit}
-          >
-            <div className="w-5/6 md:w-3/4 flex flex-col items-start">
-              <label htmlFor="email" className="text-sm md:text-base">
-                Email
-              </label>
-              <input
-                className="w-full border-2 border-gray-300 rounded-full p-2"
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+    // Variants untuk animasi framer-motion
+    const imageVariants = {
+        hidden: { opacity: 0, x: -50 },
+        visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
+    };
+
+    const formVariants = {
+        hidden: { opacity: 0, x: 50 },
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: { duration: 0.8 },
+        },
+    };
+
+    const buttonVariants = {
+        idle: { scale: 1 },
+        loading: {
+            scale: [1, 1.1, 1],
+            transition: { repeat: Infinity, duration: 1.2 },
+        },
+    };
+
+    return (
+        <div className="relative min-h-screen bg-gradient-to-r from-orange-100 via-orange-200 to-amber-200 flex justify-center items-center px-4">
+            <Navbar />
+            <div className="bg-white/50 shadow-2xl rounded-3xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl">
+                {/* Image Section */}
+                <motion.div
+                    className="hidden md:block md:w-1/2 relative"
+                    variants={imageVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    <img
+                        src={gambarBangunan}
+                        alt="Gambar Bangunan"
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 flex items-start justify-start">
+                        <p className="text-white text-3xl md:text-4xl font-bold p-6 text-left">
+                            <Typewriter
+                                options={{
+                                    strings: [
+                                        "Make Your Dream House Come True.",
+                                    ],
+                                    autoStart: true,
+                                    loop: true,
+                                }}
+                            />
+                        </p>
+                    </div>
+                </motion.div>
+
+                {/* Form Section */}
+                <motion.div
+                    className="w-full md:w-1/2 px-6 py-10 md:px-10 flex flex-col justify-center"
+                    variants={formVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    <div className="text-center mb-6">
+                        <p className="text-amber-500 text-2xl font-bold">
+                            PT Murgung Nusa Parama
+                        </p>
+                        <p className="text-gray-700 text-xl mt-2">
+                            Welcome Back 👋
+                        </p>
+                    </div>
+
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex flex-col gap-5 w-full"
+                    >
+                        {/* Email */}
+                        <div>
+                            <label
+                                htmlFor="email"
+                                className="block mb-1 text-sm font-medium text-gray-700"
+                            >
+                                Email
+                            </label>
+                            <input
+                                id="email"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="w-full px-4 py-2 rounded-full border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-300"
+                            />
+                        </div>
+
+                        {/* Password */}
+                        <div className="relative">
+                            <label
+                                htmlFor="password"
+                                className="block mb-1 text-sm font-medium text-gray-700"
+                            >
+                                Password
+                            </label>
+                            <input
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="w-full px-4 py-2 rounded-full border-2 border-gray-300 pr-16 focus:outline-none focus:ring-2 focus:ring-amber-300"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                className="absolute right-4 top-7 text-blue-500 text-xl md:text-2xl"
+                                aria-label="Toggle Password Visibility"
+                            >
+                                {showPassword ? "🙈" : "🙉"}
+                            </button>
+                        </div>
+
+                        {/* Submit */}
+                        <motion.button
+                            type="submit"
+                            disabled={isLoading}
+                            variants={buttonVariants}
+                            animate={isLoading ? "loading" : "idle"}
+                            className={`
+        w-full px-6 py-2 rounded-full text-white font-semibold transition-all
+        ${
+            isLoading
+                ? "bg-gray-400 cursor-not-allowed opacity-60"
+                : "bg-amber-400 hover:bg-amber-500 hover:brightness-110"
+        }
+        ${
+            !isLoading
+                ? "hover:-translate-y-[1px] hover:border-b-[6px] active:translate-y-[2px] active:brightness-90 active:border-b-[2px]"
+                : ""
+        }
+        border-b-[4px] border-amber-500
+        cursor-${isLoading ? "not-allowed" : "pointer"}
+    `}
+                            onClick={(e) => {
+                                // Tambahan keamanan agar tidak bisa diklik ulang via JS
+                                if (isLoading) e.preventDefault();
+                            }}
+                        >
+                            {isLoading ? "Loading..." : "Sign In"}
+                        </motion.button>
+                    </form>
+                </motion.div>
             </div>
-
-            <div className="w-5/6 md:w-3/4 flex flex-col items-start relative">
-              <label htmlFor="password" className="text-sm md:text-base mb-1">
-                Password
-              </label>
-              <input
-                className="w-full border-2 border-gray-300 rounded-full p-2 pr-16"
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-4 top-9 text-sm text-blue-500 focus:outline-none"
-              >
-                {showPassword ? "Hide Password" : "Show Password"}
-              </button>
-            </div>
-
-            <input
-              className={`w-5/6 md:w-3/4 rounded-full ${
-                isLoading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-amber-300 hover:bg-amber-400"
-              } text-white font-bold p-2 mt-2 transition`}
-              type="submit"
-              value={isLoading ? "Loading..." : "Sign In"}
-              disabled={isLoading}
-            />
-          </form>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Login;
