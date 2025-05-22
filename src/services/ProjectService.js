@@ -37,3 +37,39 @@ export const getProjectImageUrl = async (project_name = null, limit = null) => {
 
     return await apiClient(endpoint, "GET");
 };
+
+export const addImageToProject = async (project_id, imageFile) => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL_API;
+    const endpoint = "admin/cloudinary/images";
+    const url = `${BASE_URL}/${endpoint}`;
+
+    const token = localStorage.getItem("token"); // atau dari tempat lain jika kamu simpan di context/state
+
+    const formData = new FormData();
+    formData.append("project_id", project_id);
+    formData.append("image", imageFile); // pastikan ini adalah objek File
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                // Jangan set Content-Type manual agar browser handle boundary
+            },
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            const error = new Error(data.message || "Gagal mengunggah gambar");
+            error.status = response.status;
+            throw error;
+        }
+
+        return data;
+    } catch (error) {
+        console.error("Error saat addImageToProject:", error);
+        throw error;
+    }
+};
