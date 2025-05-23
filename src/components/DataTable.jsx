@@ -305,15 +305,15 @@ const DataTable = ({
                 {showProjectImages && selectedProjectImages && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                         <ProjectImages
-                            key={selectedProjectImages.project_id} // Tambahkan ini
-                            images={selectedProjectImages.urls}
-                            projectName={selectedProjectImages.name}
+                            images={selectedProjectImages.images}
                             projectId={selectedProjectImages.project_id}
                             onClose={() => setShowProjectImages(false)}
-                            onImageUploaded={(newImage) => {
+                            onImageUploaded={refreshData}
+                            onImageUploadedCallback={(newImages) => {
+                                // Update langsung dari callback
                                 setSelectedProjectImages((prev) => ({
                                     ...prev,
-                                    urls: [...prev.urls, newImage],
+                                    images: newImages,
                                 }));
                             }}
                         />
@@ -377,27 +377,30 @@ const DataTable = ({
                                         <div className="flex items-center justify-center">
                                             <ImageFolder
                                                 onClick={(e) => {
-                                                    // Stop propagation to prevent conflicting with row click events
                                                     e.stopPropagation();
                                                     console.log(project);
 
-                                                    // Get image URLs from project
-                                                    const imageUrls =
+                                                    const formattedImages =
                                                         project.images?.length >
                                                         0
                                                             ? project.images.map(
-                                                                  (img) =>
-                                                                      img.secure_url
+                                                                  (img) => ({
+                                                                      secure_url:
+                                                                          img.secure_url,
+                                                                      public_id:
+                                                                          img.public_id,
+                                                                  })
                                                               )
                                                             : [];
 
                                                     setSelectedProjectImages({
                                                         name: project.project_name,
-                                                        urls: imageUrls,
+                                                        images: formattedImages, // <-- sesuai dengan prop `images` yang diharapkan ProjectImages
                                                         project_id:
                                                             project.project_id ||
                                                             project.id,
                                                     });
+
                                                     setShowProjectImages(true);
                                                 }}
                                             />
