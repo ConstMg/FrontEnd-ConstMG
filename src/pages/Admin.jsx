@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "../components/DataTable";
 import Navbar from "./../components/Navbar";
-import ProjectImages from "../components/ProjectImages";
+// import ProjectImages from "../components/ProjectImages";
 import Form from "../components/Form";
 import karyawanIcon from "../assets/karyawan.svg";
 import addingKaryawan from "../assets/addingKaryawan.svg";
@@ -11,6 +11,11 @@ import presensiIcon from "../assets/presensi.svg";
 import { useKaryawan } from "../hooks/useKaryawan";
 import { useProject } from "../hooks/useProject";
 import { useNavigate } from "react-router-dom";
+import { faSignOutAlt, faHomeAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { getTodayLocalDateString } from "../utils/utils";
+library.add(faSignOutAlt, faHomeAlt);
 
 const Admin = () => {
     const [activeComponent, setActiveComponent] = useState(() => {
@@ -19,7 +24,7 @@ const Admin = () => {
     const navigate = useNavigate();
     const { fetchKaryawanData, fetchPresensiAllKaryawan, fetchPresensiByDate } =
         useKaryawan();
-    const {fetchProjectData} = useProject();
+    const { fetchProjectData } = useProject();
     const [karyawanData, setKaryawanData] = useState([]);
     const [proyekData, setProjectData] = useState([]);
     const [karyawanCount, setKaryawanCount] = useState(0);
@@ -27,15 +32,21 @@ const Admin = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [presensiData, setPresensiData] = useState([]);
     const [presensiCount, setPresensiCount] = useState(0);
+    const [selectedProjectImages, setSelectedProjectImages] = useState(null);
     const [detailPresensiCount, setDetailPresensiCount] = useState({
         hadir: 0,
         izin: 0,
         sakit: 0,
     });
-    const [showProjectImages, setShowProjectImages] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(
-        new Date().toISOString().split("T")[0]
-    );
+    // const [showProjectImages, setShowProjectImages] = useState(false);
+    // const getTodayLocalDateString = () => {
+    //     const today = new Date(); // Membuat objek Date berdasarkan timezone lokal browser
+    //     const year = today.getFullYear();
+    //     const month = String(today.getMonth() + 1).padStart(2, "0"); // Bulan dimulai dari 0 (Januari), jadi +1. padStart untuk format '05'
+    //     const day = String(today.getDate()).padStart(2, "0"); // padStart untuk format '01'
+    //     return `${year}-${month}-${day}`;
+    // };
+    const [selectedDate, setSelectedDate] = useState(getTodayLocalDateString());
 
     // Form state management
     const [showForm, setShowForm] = useState(false);
@@ -64,9 +75,10 @@ const Admin = () => {
         setEditingData(null);
     };
 
-    const handleShowProjectImages = (projectName) => {
-        setShowForm(true);
-    }
+    // const handleShowProjectImages = (projectName) => {
+    //     // Seharusnya memanggil setShowProjectImages, dan mungkin perlu data projectName
+    //     setShowProjectImages(true);
+    // };
 
     // Fix the function to be synchronous and properly declare variables
     const calculatePresensiCounts = (data) => {
@@ -174,6 +186,7 @@ const Admin = () => {
     const handleTabChange = (tab) => {
         setActiveComponent(tab);
         localStorage.setItem("adminActiveTab", tab);
+        // Logika penutupan sidebar akan ditangani di Navbar.jsx
     };
 
     const refreshData = async () => {
@@ -185,6 +198,22 @@ const Admin = () => {
             const newData = await fetchProjectData();
             setProjectData(newData);
             setProjectCount(newData?.length || 0);
+
+            // Update selectedProjectImages jika modal gambar proyek sedang terbuka
+            if (selectedProjectImages) {
+                const updatedProject = newData.find(
+                    (p) =>
+                        p.project_id === selectedProjectImages.project_id ||
+                        p.id === selectedProjectImages.project_id
+                );
+
+                if (updatedProject) {
+                    setSelectedProjectImages({
+                        ...selectedProjectImages,
+                        images: updatedProject.images || [],
+                    });
+                }
+            }
         } else if (activeComponent === "presensi") {
             const newData = await fetchPresensiByDate(selectedDate);
             setPresensiData(newData);
@@ -217,7 +246,14 @@ const Admin = () => {
 
     return (
         <>
-            <Navbar />
+            <Navbar
+                isAdminPage={true} // Menandakan ini halaman admin
+                adminActiveComponent={activeComponent}
+                onAdminTabChange={handleTabChange}
+                presensiIcon={presensiIcon}
+                karyawanIcon={karyawanIcon}
+                proyekIcon={proyekIcon}
+            />
             {showForm && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <Form
@@ -229,17 +265,24 @@ const Admin = () => {
                     />
                 </div>
             )}
-            {showProjectImages && (
+            {/* {showProjectImages && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <ProjectImages
-                        images={proyekData.map((project) => project.imageUrl)}
+                        images={
+                            proyekData.find(
+                                (project) => project.id === selectedProjectId
+                            )?.images || [] // contoh: ambil satu project tertentu
+                        }
+                        projectId={selectedProjectId}
                         onClose={() => setShowProjectImages(false)}
+                        onImageUploaded={refetchProjects}
                     />
                 </div>
-            )}
+            )} */}
+
             <div className="h-max-dvh flex flex-col items-center justify-center h-screen pt-20">
-                <div className="body flex gap-10 w-full h-full bg-amber-400 px-10 pt-10">
-                    <div className="left-section flex flex-col gap-5 items-center w-1/4 h-full bg-white rounded-t-4xl p-10">
+                <div className="body w-full h-full bg-amber-400 px-4 md:px-10 pt-4 md:pt-10 flex flex-col md:flex-row md:gap-x-6 lg:md:gap-x-10">
+                    <div className="hidden md:flex flex-col items-center bg-white md:w-1/4 md:h-full md:rounded-t-4xl md:p-10 md:gap-5">
                         <p className="text-2xl">Murgung Dashboard</p>
                         <ul className="w-full flex flex-col gap-5">
                             <li
@@ -250,7 +293,11 @@ const Admin = () => {
                                 }`}
                                 onClick={() => handleTabChange("presensi")}
                             >
-                                <img src={presensiIcon} alt="" className="w-5"/>
+                                <img
+                                    src={presensiIcon}
+                                    alt=""
+                                    className="w-5"
+                                />
                                 Presensi
                             </li>
                             <li
@@ -261,7 +308,11 @@ const Admin = () => {
                                 }`}
                                 onClick={() => handleTabChange("karyawan")}
                             >
-                                <img src={karyawanIcon} alt="" className="w-5"/>
+                                <img
+                                    src={karyawanIcon}
+                                    alt=""
+                                    className="w-5"
+                                />
                                 Karyawan
                             </li>
                             <li
@@ -272,12 +323,36 @@ const Admin = () => {
                                 }`}
                                 onClick={() => handleTabChange("proyek")}
                             >
-                                <img src={proyekIcon} alt="" className="w-5"/>
+                                <img src={proyekIcon} alt="" className="w-5" />
                                 Proyek
+                            </li>
+
+                            <li className="border-t mt-4 pt-4">
+                                <button
+                                    onClick={() => navigate("/main")}
+                                    className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHomeAlt}
+                                        className="w-5 h-5"
+                                    />
+                                    Home
+                                </button>
+                                {/* <button
+                                    onClick={handleLogout}
+                                    className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faSignOutAlt}
+                                        className="w-5 h-5"
+                                    />
+                                    Logout
+                                </button> */}
                             </li>
                         </ul>
                     </div>
-                    <div className="right-section flex flex-col gap-10 w-3/4 h-full">
+
+                    <div className="right-section flex flex-col gap-4 md:gap-10 w-full md:w-3/4 h-full">
                         <div className="top w-full h-1/4 bg-white rounded-3xl px-10 flex items-center justify-between">
                             {activeComponent === "karyawan" ? (
                                 <>
@@ -381,7 +456,7 @@ const Admin = () => {
                                 </div>
                             )}
 
-                            <div className="h-full  w-full overflow-hidden">
+                            <div className="h-full w-full overflow-hidden">
                                 <DataTable
                                     variant={activeComponent}
                                     data={currentData}

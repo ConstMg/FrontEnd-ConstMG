@@ -12,7 +12,7 @@ const Contact = () => {
     const isEditable = user === "admin";
     const { profileData, updateProfileData } = useCtx();
     useEffect(() => {
-        AOS.init({ duration: 800, once: true }); // durasi animasi 800ms, sekali animasi saja
+        AOS.init({ duration: 500, once: true }); // durasi animasi 800ms, sekali animasi saja
     }, []);
     const handleSave = (fieldName, newValue) => {
         const updated = { ...profileData, [fieldName]: newValue };
@@ -27,7 +27,7 @@ const Contact = () => {
                     <div
                         className="w-full md:w-1/2 space-y-8"
                         data-aos="fade-right"
-                        data-aos-delay="200"
+                        // data-aos-delay="100"
                     >
                         <h1 className="text-3xl font-extrabold font-poppins text-yellow-600">
                             PT MURGUNG
@@ -92,7 +92,7 @@ const Contact = () => {
                     <div
                         className="w-full md:w-1/2 flex justify-center items-center"
                         data-aos="fade-left"
-                        data-aos-delay="300"
+                        // data-aos-delay="200"
                     >
                         <form className="flex flex-col gap-6 w-full max-w-[640px] px-6 md:px-0">
                             <div className="flex flex-col md:flex-row gap-4 md:gap-6">

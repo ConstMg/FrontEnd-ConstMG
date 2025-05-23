@@ -4,11 +4,12 @@ import {
     addProject,
     updateProject,
     getProjectImageUrl,
+    deleteImageProject,
 } from "../services/ProjectService";
 import { useState, useCallback } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-
+import { addImageToProject as uploadImage } from "../services/ProjectService";
 export function useProject() {
     const [projectData, setProjectData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -154,11 +155,81 @@ export function useProject() {
         }
     }, []);
 
+    const [uploading, setUploading] = useState(false);
+    const [uploadError, setUploadError] = useState(null);
+    const [uploadSuccess, setUploadSuccess] = useState(null);
+
+    const addImageToProject = useCallback(async (project_id, imageFile) => {
+        setUploading(true);
+        const toastId = toast.loading("Mengunggah gambar...");
+        setUploadError(null);
+        setUploadSuccess(null);
+
+        try {
+            const response = await uploadImage(project_id, imageFile);
+            setUploadSuccess(response.message || "Gambar berhasil diunggah");
+            toast.update(toastId, {
+                render: "Gambar berhasil diunggah!",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+            });
+            return response;
+        } catch (err) {
+            setUploadError(err.message || "Terjadi kesalahan saat upload");
+            toast.update(toastId, {
+                render:
+                    error.message ||
+                    "Terjadi kesalahan saat mengunggah gambar.",
+                type: "error",
+                isLoading: false,
+                autoClose: 2000,
+            });
+            throw err;
+        } finally {
+            setUploading(false);
+        }
+    }, []);
+
+    const deleteImageFromProject = async (publicIds) => {
+        setLoading(true);
+        const toastId = toast.loading("Menghapus gambar...");
+
+        try {
+            await deleteImageProject(publicIds); // panggil dari services
+            toast.update(toastId, {
+                render: "Gambar berhasil dihapus!",
+                type: "success",
+                isLoading: false,
+                autoClose: 3000,
+            });
+            return true;
+        } catch (error) {
+            setError(error);
+            toast.update(toastId, {
+                render:
+                    error.message || "Terjadi kesalahan saat menghapus gambar.",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+            });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         projectData,
         loading,
         error,
         fetchProjectData,
+        uploading,
+        uploadError,
+        uploadSuccess,
+        deleteImageFromProject,
+
+        addImageToProject,
         handleDeleteProject,
         handleAddProject,
         handleUpdateProject,
