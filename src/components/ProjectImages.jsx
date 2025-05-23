@@ -1,19 +1,63 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useProject } from "../hooks/useProject";
+import ConfirmationCard from "./ConfirmationCard";
 
 const ProjectImages = ({
     images = [],
     onClose,
     projectId,
     onImageUploaded,
+    onImageUploadedCallback,
 }) => {
     const fileInputRef = useRef(null);
-    // const [localImages, setLocalImages] = useState(images); // Opsional: untuk update lokal setelah upload
-    const { uploading, uploadError, uploadSuccess, addImageToProject } =
-        useProject();
+    const {
+        uploading,
+        uploadError,
+        uploadSuccess,
+        addImageToProject,
+        deleteImageFromProject,
+    } = useProject();
+    const [localImages, setLocalImages] = useState(images);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [selectedImageId, setSelectedImageId] = useState(null);
+
+    useEffect(() => {
+        setLocalImages(images); // Sinkronkan jika props berubah
+    }, [images]);
 
     const handleUploadClick = () => {
         fileInputRef.current?.click();
+    };
+
+    const handleDeleteClick = (public_id) => {
+        setSelectedImageId(public_id);
+        setShowConfirm(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            await deleteImageFromProject([selectedImageId]);
+            onImageUploaded?.();
+
+            const updatedImages = localImages.filter(
+                (img) => img.public_id !== selectedImageId
+            );
+            setLocalImages(updatedImages);
+            onImageUploadedCallback?.(updatedImages);
+        } catch (err) {
+            console.error("Gagal menghapus gambar:", err);
+        } finally {
+            setShowConfirm(false);
+            setSelectedImageId(null);
+
+            // ✅ Tutup modal setelah hapus berhasil
+            onClose?.();
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setShowConfirm(false);
+        setSelectedImageId(null);
     };
 
     const handleFileChange = async (e) => {
@@ -23,10 +67,21 @@ const ProjectImages = ({
         try {
             const result = await addImageToProject(projectId, file);
             if (result && result?.secure_url) {
-                // Jika `onImageUploaded` disediakan dari parent, panggil untuk update
-                onImageUploaded?.(result.secure_url);
-                // Atau update lokal saja:
-                // setLocalImages((prev) => [...prev, result.data.secure_url]);
+                const newImage = {
+                    secure_url: result.secure_url,
+                    public_id: result.public_id,
+                };
+
+                const updatedImages = [...localImages, newImage];
+                setLocalImages(updatedImages);
+
+                // update tampilan lokal
+                onImageUploadedCallback?.(updatedImages);
+
+                // opsional: fetch data baru dari API
+                onImageUploaded?.();
+                // ✅ Tutup modal setelah upload berhasil
+                onClose?.();
             }
         } catch (err) {
             console.error("Gagal upload gambar:", err);
@@ -44,12 +99,23 @@ const ProjectImages = ({
 
             {images.length > 0 ? (
                 images.map((image, index) => (
-                    <img
+                    <div
                         key={index}
-                        src={image}
-                        alt={`Project ${index + 1}`}
-                        className="w-3/4 h-1/2 md:w-1/3 lg:w-1/4 p-2 rounded-lg shadow-lg"
-                    />
+                        className="relative w-3/4 h-1/2 md:w-1/3 lg:w-1/4 p-2"
+                    >
+                        <img
+                            src={image.secure_url}
+                            alt={`Project ${index + 1}`}
+                            className="w-full h-full object-cover rounded-lg shadow-lg"
+                        />
+                        <button
+                            onClick={() => handleDeleteClick(image.public_id)}
+                            className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center shadow-md"
+                            title="Hapus Gambar"
+                        >
+                            ✕
+                        </button>
+                    </div>
                 ))
             ) : (
                 <p className="text-gray-500 text-center w-full">
@@ -86,6 +152,17 @@ const ProjectImages = ({
                 onChange={handleFileChange}
                 className="hidden"
             />
+
+            {showConfirm && (
+                <div className="fixed inset-0 z-50 backdrop-blur-sm bg-black/30 flex items-center justify-center">
+                    <ConfirmationCard
+                        variant="delete"
+                        itemname="gambar ini"
+                        onConfirm={handleConfirmDelete}
+                        onCancel={handleCancelDelete}
+                    />
+                </div>
+            )}
         </div>
     );
 };

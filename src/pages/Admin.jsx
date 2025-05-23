@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "../components/DataTable";
 import Navbar from "./../components/Navbar";
-import ProjectImages from "../components/ProjectImages";
+// import ProjectImages from "../components/ProjectImages";
 import Form from "../components/Form";
 import karyawanIcon from "../assets/karyawan.svg";
 import addingKaryawan from "../assets/addingKaryawan.svg";
@@ -32,13 +32,13 @@ const Admin = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [presensiData, setPresensiData] = useState([]);
     const [presensiCount, setPresensiCount] = useState(0);
-
+    const [selectedProjectImages, setSelectedProjectImages] = useState(null);
     const [detailPresensiCount, setDetailPresensiCount] = useState({
         hadir: 0,
         izin: 0,
         sakit: 0,
     });
-    const [showProjectImages, setShowProjectImages] = useState(false);
+    // const [showProjectImages, setShowProjectImages] = useState(false);
     // const getTodayLocalDateString = () => {
     //     const today = new Date(); // Membuat objek Date berdasarkan timezone lokal browser
     //     const year = today.getFullYear();
@@ -75,10 +75,10 @@ const Admin = () => {
         setEditingData(null);
     };
 
-    const handleShowProjectImages = (projectName) => {
-        // Seharusnya memanggil setShowProjectImages, dan mungkin perlu data projectName
-        setShowProjectImages(true);
-    };
+    // const handleShowProjectImages = (projectName) => {
+    //     // Seharusnya memanggil setShowProjectImages, dan mungkin perlu data projectName
+    //     setShowProjectImages(true);
+    // };
 
     // Fix the function to be synchronous and properly declare variables
     const calculatePresensiCounts = (data) => {
@@ -198,6 +198,22 @@ const Admin = () => {
             const newData = await fetchProjectData();
             setProjectData(newData);
             setProjectCount(newData?.length || 0);
+
+            // Update selectedProjectImages jika modal gambar proyek sedang terbuka
+            if (selectedProjectImages) {
+                const updatedProject = newData.find(
+                    (p) =>
+                        p.project_id === selectedProjectImages.project_id ||
+                        p.id === selectedProjectImages.project_id
+                );
+
+                if (updatedProject) {
+                    setSelectedProjectImages({
+                        ...selectedProjectImages,
+                        images: updatedProject.images || [],
+                    });
+                }
+            }
         } else if (activeComponent === "presensi") {
             const newData = await fetchPresensiByDate(selectedDate);
             setPresensiData(newData);
@@ -249,14 +265,20 @@ const Admin = () => {
                     />
                 </div>
             )}
-            {showProjectImages && (
+            {/* {showProjectImages && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <ProjectImages
-                        images={proyekData.map((project) => project.imageUrl)}
+                        images={
+                            proyekData.find(
+                                (project) => project.id === selectedProjectId
+                            )?.images || [] // contoh: ambil satu project tertentu
+                        }
+                        projectId={selectedProjectId}
                         onClose={() => setShowProjectImages(false)}
+                        onImageUploaded={refetchProjects}
                     />
                 </div>
-            )}
+            )} */}
 
             <div className="h-max-dvh flex flex-col items-center justify-center h-screen pt-20">
                 <div className="body w-full h-full bg-amber-400 px-4 md:px-10 pt-4 md:pt-10 flex flex-col md:flex-row md:gap-x-6 lg:md:gap-x-10">

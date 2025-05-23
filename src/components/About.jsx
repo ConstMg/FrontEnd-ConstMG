@@ -1,7 +1,16 @@
-import React, { useRef,useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ImageCard from "./ImageCard";
 import ImageGallery from "./ImageGallery";
-import { Building2, Phone, Mail, Globe, Pencil, Save, PlusCircle, Trash2 } from "lucide-react";
+import {
+    Building2,
+    Phone,
+    Mail,
+    Globe,
+    Pencil,
+    Save,
+    PlusCircle,
+    Trash2,
+} from "lucide-react";
 import "./../tailwind.css";
 import ImageSelectorModal from ".//ImageSelectorModal"; // Import modal baru
 import EditableField from "./EditableField";
@@ -11,7 +20,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 const About = () => {
     const user = localStorage.getItem("userRole");
-    
+
     const isEditable = user === "admin";
     const {
         getImagesAbout,
@@ -90,18 +99,6 @@ const About = () => {
                         </div>
                     </div>
 
-                    {/* Tombol Tambah Gambar untuk Admin */}
-                    {isEditable && (
-                        <div className="w-full md:max-w-[1320px] flex justify-center sm:justify-end px-2 sm:px-4 mb-4">
-                            <button
-                                onClick={handleAddImageClick}
-                                className="bg-color-blue-10 hover:bg-blue-700 text-white font-bold py-2 px-3 sm:px-4 rounded-lg flex items-center gap-2 transition-colors duration-150 text-sm sm:text-base"
-                            >
-                                <PlusCircle size={20} />
-                                Tambah Gambar
-                            </button>
-                        </div>
-                    )}
                     {/* Gallery Section */}
                     <div className="flex flex-col items-center justify-center gap-3 md:gap-6 w-full">
                         {/* Display gallery when an image is selected */}
@@ -145,8 +142,8 @@ const About = () => {
                                                         handleRemoveImage(
                                                             img.public_id
                                                         )
-                                                    } // Asumsi img memiliki 'id' dan 'public_id'
-                                                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-700 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+                                                    }
+                                                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-700 text-white p-1.5 rounded-full z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200"
                                                     title="Hapus Gambar"
                                                 >
                                                     <Trash2 size={16} />
@@ -158,6 +155,19 @@ const About = () => {
                             )}
                         </div>
                     </div>
+
+                    {/* Tombol Tambah Gambar untuk Admin */}
+                    {isEditable && (
+                        <div className="w-full md:max-w-[1320px] flex justify-center px-2 sm:px-4 mt-10">
+                            <button
+                                onClick={handleAddImageClick}
+                                className="bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-bold py-2 px-3 sm:px-4 rounded-lg flex items-center gap-2 transition-colors duration-150 text-sm sm:text-base"
+                            >
+                                <PlusCircle size={20} />
+                                Tambah Gambar
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
             {/* Modal Pemilihan Gambar */}

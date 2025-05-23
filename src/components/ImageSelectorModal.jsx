@@ -50,7 +50,7 @@ const ImageSelectorModal = ({ isOpen, onClose, onConfirmSelection }) => {
                     </h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-500 hover:text-red-600 p-1 rounded-full transition-colors"
+                        className="text-red-200 hover:text-red-600 p-1 rounded-full transition-colors"
                     >
                         <X size={24} />
                     </button>
@@ -130,7 +130,7 @@ const ImageSelectorModal = ({ isOpen, onClose, onConfirmSelection }) => {
                         disabled={
                             selectedImagePublicIds.size === 0 || imagesLoading
                         }
-                        className="px-4 py-2 bg-color-blue-10 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Konfirmasi Pilihan ({selectedImagePublicIds.size})
                     </button>

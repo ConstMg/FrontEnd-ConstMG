@@ -73,3 +73,10 @@ export const addImageToProject = async (project_id, imageFile) => {
         throw error;
     }
 };
+
+export const deleteImageProject = async (publicIds) => {
+    return apiClient(
+        `admin/cloudinary/images?public_id=${publicIds}`,
+        "DELETE"
+    );
+};
