@@ -4,6 +4,7 @@ import gambarBangunan from "./../assets/const.png";
 import Navbar from "./../components/Navbar";
 import { useAuth } from "../hooks/useAuth";
 import Typewriter from "typewriter-effect";
+import { Loader } from "../components/Loader";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -42,12 +43,11 @@ const Login = () => {
     return (
         <>
             <Navbar />
-            <div className="h-[80px]" />
-            <div className=" min-h-screen bg-gradient-to-r from-orange-100 via-orange-200 to-amber-200 flex justify-center items-center px-4">
-                <div className="bg-white/50 shadow-2xl rounded-3xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl">
+            <div className="mt-30 m-4 bg-gradient-to-r from-orange-100 via-orange-200 to-amber-200 flex justify-center ">
+                <div className="bg-white/50 shadow-2xl rounded-3xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-screen">
                     {/* Image Section */}
                     <motion.div
-                        className="hidden md:block md:w-1/2 relative"
+                        className="w-full md:w-1/2 relative"
                         variants={imageVariants}
                         initial="hidden"
                         animate="visible"
@@ -55,8 +55,9 @@ const Login = () => {
                         <img
                             src={gambarBangunan}
                             alt="Gambar Bangunan"
-                            className="w-full h-full object-cover"
+                            className="w-full h-64 md:h-full object-cover"
                         />
+
                         <div className="absolute inset-0 bg-black/40 flex items-start justify-start">
                             <p className="text-white text-3xl md:text-4xl font-bold p-6 text-left">
                                 <Typewriter
@@ -74,12 +75,12 @@ const Login = () => {
 
                     {/* Form Section */}
                     <motion.div
-                        className="w-full md:w-1/2 px-6 py-10 md:px-10 flex flex-col justify-center"
+                        className="w-full md:w-1/2 px-6 py-10 md:px-10 flex flex-col md:justify-center justify-items-center gap-20 md:gap-20"
                         variants={formVariants}
                         initial="hidden"
                         animate="visible"
                     >
-                        <div className="text-center mb-6">
+                        <div className="text-center mb-6 items-center justify-center">
                             <p className="text-amber-500 text-2xl font-bold">
                                 PT Murgung Nusa Parama
                             </p>
@@ -87,10 +88,14 @@ const Login = () => {
                                 Welcome Back 👋
                             </p>
                         </div>
-
+                        <div className="w-full h-[30px] mt-10 mb-10 flex justify-center items-center">
+                            <div className="scale-[1.6]">
+                                <Loader />
+                            </div>
+                        </div>
                         <form
                             onSubmit={handleSubmit}
-                            className="flex flex-col gap-5 w-full"
+                            className="flex flex-col gap-5 w-full "
                         >
                             {/* Email */}
                             <div>
