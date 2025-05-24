@@ -11,7 +11,7 @@ import presensiIcon from "../assets/presensi.svg";
 import { useKaryawan } from "../hooks/useKaryawan";
 import { useProject } from "../hooks/useProject";
 import { useNavigate } from "react-router-dom";
-import { faSignOutAlt, faHomeAlt } from "@fortawesome/free-solid-svg-icons";
+import { faSignOutAlt, faHomeAlt, faUserAltSlash, faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { getTodayLocalDateString } from "../utils/utils";
@@ -280,9 +280,9 @@ const Admin = () => {
                 </div>
             )} */}
 
-            <div className="h-max-dvh flex flex-col items-center justify-center h-screen pt-20">
+            <div className="min-h-svw flex flex-col items-center justify-center h-screen pt-20 ">
                 <div className="body w-full h-full bg-amber-400 px-4 md:px-10 pt-4 md:pt-10 flex flex-col md:flex-row md:gap-x-6 lg:md:gap-x-10">
-                    <div className="hidden md:flex flex-col items-center bg-white md:w-1/4 md:h-full md:rounded-t-4xl md:p-10 md:gap-5">
+                    <div className="hidden md:flex flex-col items-center bg-white md:w-1/4 md:h-10/11 rounded-3xl md:rounded-t-4xl md:p-10 md:gap-5">
                         <p className="text-2xl">Murgung Dashboard</p>
                         <ul className="w-full flex flex-col gap-5">
                             <li
@@ -329,6 +329,16 @@ const Admin = () => {
 
                             <li className="border-t mt-4 pt-4">
                                 <button
+                                    onClick={() => navigate("/presensi")}
+                                    className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faUserAlt}
+                                        className="w-5 h-5"
+                                    />
+                                    Lakukan Presensi
+                                </button>
+                                <button
                                     onClick={() => navigate("/main")}
                                     className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-gray-700 hover:bg-gray-100 hover:text-amber-500"
                                 >
@@ -353,7 +363,7 @@ const Admin = () => {
                     </div>
 
                     <div className="right-section flex flex-col gap-4 md:gap-10 w-full md:w-3/4 h-full">
-                        <div className="top w-full h-1/4 bg-white rounded-3xl px-10 flex items-center justify-between">
+                        <div className="top w-full p-6 bg-white rounded-3xl px-10 flex items-center justify-between">
                             {activeComponent === "karyawan" ? (
                                 <>
                                     <div className="jumlah-karyawan flex flex-col items-center text-xl font-medium">
