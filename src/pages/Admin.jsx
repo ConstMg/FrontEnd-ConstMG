@@ -265,24 +265,10 @@ const Admin = () => {
                     />
                 </div>
             )}
-            {/* {showProjectImages && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <ProjectImages
-                        images={
-                            proyekData.find(
-                                (project) => project.id === selectedProjectId
-                            )?.images || [] // contoh: ambil satu project tertentu
-                        }
-                        projectId={selectedProjectId}
-                        onClose={() => setShowProjectImages(false)}
-                        onImageUploaded={refetchProjects}
-                    />
-                </div>
-            )} */}
 
-            <div className="min-h-svw flex flex-col items-center justify-center h-screen pt-20 ">
+            <div className="min-h-svh flex flex-col items-center justify-center h-screen pt-20 md:overflow-hidden">
                 <div className="body w-full h-full bg-amber-400 px-4 md:px-10 pt-4 md:pt-10 flex flex-col md:flex-row md:gap-x-6 lg:md:gap-x-10">
-                    <div className="hidden md:flex flex-col items-center bg-white md:w-1/4 md:h-10/11 rounded-3xl md:rounded-t-4xl md:p-10 md:gap-5">
+                    <div className="hidden md:flex flex-col items-center bg-white md:w-1/4 md:h-full rounded-3xl md:rounded-t-4xl md:p-10 md:gap-5">
                         <p className="text-2xl">Murgung Dashboard</p>
                         <ul className="w-full flex flex-col gap-5">
                             <li
@@ -348,22 +334,12 @@ const Admin = () => {
                                     />
                                     Home
                                 </button>
-                                {/* <button
-                                    onClick={handleLogout}
-                                    className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faSignOutAlt}
-                                        className="w-5 h-5"
-                                    />
-                                    Logout
-                                </button> */}
                             </li>
                         </ul>
                     </div>
 
                     <div className="right-section flex flex-col gap-4 md:gap-10 w-full md:w-3/4 h-full">
-                        <div className="top w-full p-6 bg-white rounded-3xl px-10 flex items-center justify-between">
+                        <div className="top w-full h-1/4 p-6 bg-white rounded-3xl px-10 flex items-center justify-between">
                             {activeComponent === "karyawan" ? (
                                 <>
                                     <div className="jumlah-karyawan flex flex-col items-center text-xl font-medium">

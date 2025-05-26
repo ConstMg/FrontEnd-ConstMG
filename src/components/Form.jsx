@@ -204,7 +204,7 @@ const Form = ({
         "mt-1 block w-full px-3.5 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-500 sm:text-sm transition-colors duration-150 ease-in-out";
 
     const renderKaryawanFields = () => (
-        <>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Nama */}
             <div>
                 <label
@@ -261,24 +261,6 @@ const Form = ({
                     <option value="Perempuan">Perempuan</option>
                 </select>
             </div>
-            {/* Alamat */}
-            <div>
-                <label
-                    htmlFor="alamat"
-                    className="block text-sm font-medium text-gray-700 mb-0.5"
-                >
-                    Alamat
-                </label>
-                <textarea
-                    id="alamat"
-                    name="alamat"
-                    value={formData.alamat}
-                    onChange={handleChange}
-                    required
-                    rows="3"
-                    className={commonInputClass}
-                ></textarea>
-            </div>
             {/* Divisi */}
             <div>
                 <label
@@ -303,24 +285,7 @@ const Form = ({
                     ))}
                 </select>
             </div>
-            {/* Penempatan */}
-            <div>
-                <label
-                    htmlFor="penempatan"
-                    className="block text-sm font-medium text-gray-700 mb-0.5"
-                >
-                    Penempatan
-                </label>
-                <input
-                    type="text"
-                    id="penempatan"
-                    name="penempatan"
-                    value={formData.penempatan}
-                    onChange={handleChange}
-                    required
-                    className={commonInputClass}
-                />
-            </div>
+
             {/* Email */}
             <div>
                 <label
@@ -334,6 +299,24 @@ const Form = ({
                     id="email"
                     name="email"
                     value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className={commonInputClass}
+                />
+            </div>
+            {/* Penempatan */}
+            <div>
+                <label
+                    htmlFor="penempatan"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Penempatan
+                </label>
+                <input
+                    type="text"
+                    id="penempatan"
+                    name="penempatan"
+                    value={formData.penempatan}
                     onChange={handleChange}
                     required
                     className={commonInputClass}
@@ -362,7 +345,25 @@ const Form = ({
                     className={commonInputClass}
                 />
             </div>
-        </>
+            {/* Alamat */}
+            <div>
+                <label
+                    htmlFor="alamat"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Alamat
+                </label>
+                <textarea
+                    id="alamat"
+                    name="alamat"
+                    value={formData.alamat}
+                    onChange={handleChange}
+                    required
+                    rows="3"
+                    className={commonInputClass}
+                ></textarea>
+            </div>
+        </div>
     );
 
     const renderProjectFields = () => (
@@ -402,32 +403,11 @@ const Form = ({
                     className={commonInputClass}
                 ></textarea>
             </div>
-            {/* Status Proyek - Tambahan jika relevan */}
-            {/* <div>
-                <label
-                    htmlFor="status"
-                    className="block text-sm font-medium text-gray-700 mb-0.5"
-                >
-                    Status Proyek
-                </label>
-                <select
-                    id="status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    className={commonInputClass}
-                >
-                    <option value="Ongoing">Ongoing</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
-            </div> */}
         </>
     );
 
     return (
-        <div className="bg-white p-7 rounded-xl shadow-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <div className="bg-white p-7 z-[100] rounded-xl shadow-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             <div className="flex justify-between items-start mb-6 pb-3 border-b border-gray-200">
                 <h2 className="text-xl font-semibold text-gray-800">
                     {currentConfig.title}

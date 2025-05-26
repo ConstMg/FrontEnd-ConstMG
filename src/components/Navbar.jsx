@@ -93,7 +93,7 @@ function Navbar({
     return (
         <>
             {/* Main Navbar */}
-            <nav className="navbar w-full fixed top-0 flex justify-between items-center px-4 sm:px-6 py-3 text-gray-800 font-bold z-[1000] bg-gradient-to-b from-white/90 to-gray-50/80 backdrop-blur-md shadow-sm h-20">
+            <nav className="navbar w-full fixed top-0 flex justify-between items-center px-4 sm:px-6 py-3 text-gray-800 font-bold z-[50] bg-gradient-to-b from-white/90 to-gray-50/80 backdrop-blur-md shadow-sm h-20">
                 {/* Logo */}
                 <div className="left-section flex-shrink-0">
                     <NavLink

@@ -2,6 +2,7 @@ import { useProject } from "../hooks/useProject";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import ImageGallery from "../components/ImageGallery";
+import { p } from "framer-motion/client";
 
 const ProjectPage = () => {
     const { loading, error, fetchProjectWithImages } = useProject();
@@ -9,6 +10,7 @@ const ProjectPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [activeGallery, setActiveGallery] = useState(false);
     const [activeImages, setActiveImages] = useState(null);
+    const [activeProject, setActiveProject] = useState(null);
 
     useEffect(() => {
         const loadProjectData = async () => {
@@ -39,11 +41,13 @@ const ProjectPage = () => {
         <div className="bg-gray-100 min-h-screen flex flex-col">
             {/* Gallery Modal */}
             {activeGallery && activeImages && (
-                <ImageGallery
-                    images={activeImages.map((img) => img.secure_url)}
-                    initialIndex={0}
-                    onClose={() => setActiveGallery(false)}
-                />
+                <>
+                    <ImageGallery
+                        images={activeImages.map((img) => img.secure_url)}
+                        initialIndex={0}
+                        onClose={() => setActiveGallery(false)}
+                    />
+                </>
             )}
 
             <Navbar />
@@ -61,6 +65,7 @@ const ProjectPage = () => {
                             onClick={() => {
                                 setActiveImages(project.images);
                                 setActiveGallery(true);
+                                setActiveProject(project.project_name);
                             }}
                         >
                             {project.images.length > 0 ? (

@@ -52,7 +52,7 @@ export default function ImageGallery({ images, initialIndex, onClose }) {
             onClick={(e) => {
                 if (e.target === e.currentTarget) onClose();
             }}
-            className="fixed inset-0 backdrop-blur-sm bg-black/30 z-11 flex flex-col items-center justify-center p-4"
+            className="fixed inset-0 z-[100] backdrop-blur-sm bg-black/30 flex flex-col items-center justify-center p-4"
         >
             {!isImageListValid ? (
                 <div className="md:w-[30%] w-full bg-white p-6 rounded-lg shadow-md text-center text-gray-700">
@@ -89,7 +89,7 @@ export default function ImageGallery({ images, initialIndex, onClose }) {
                             <motion.img
                                 key={current}
                                 src={images[current]}
-                                className="w-full h-full object-cover rounded-lg absolute"
+                                className="w-full h-full object-contain rounded-lg absolute"
                                 custom={direction}
                                 variants={variants}
                                 initial="enter"
