@@ -38,14 +38,6 @@ const Admin = () => {
         izin: 0,
         sakit: 0,
     });
-    // const [showProjectImages, setShowProjectImages] = useState(false);
-    // const getTodayLocalDateString = () => {
-    //     const today = new Date(); // Membuat objek Date berdasarkan timezone lokal browser
-    //     const year = today.getFullYear();
-    //     const month = String(today.getMonth() + 1).padStart(2, "0"); // Bulan dimulai dari 0 (Januari), jadi +1. padStart untuk format '05'
-    //     const day = String(today.getDate()).padStart(2, "0"); // padStart untuk format '01'
-    //     return `${year}-${month}-${day}`;
-    // };
     const [selectedDate, setSelectedDate] = useState(getTodayLocalDateString());
 
     // Form state management
@@ -75,10 +67,16 @@ const Admin = () => {
         setEditingData(null);
     };
 
-    // const handleShowProjectImages = (projectName) => {
-    //     // Seharusnya memanggil setShowProjectImages, dan mungkin perlu data projectName
-    //     setShowProjectImages(true);
-    // };
+    // Check user role and redirect if not admin
+    useEffect(() => {
+        const userRole = localStorage.getItem("userRole");
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        
+        if (!isLoggedIn || userRole !== "admin") {
+            console.log("Unauthorized access: Redirecting to main page");
+            navigate("/main");
+        }
+    }, [navigate]);
 
     // Fix the function to be synchronous and properly declare variables
     const calculatePresensiCounts = (data) => {

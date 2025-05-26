@@ -12,6 +12,7 @@ import {
     faEnvelope,
     faUserAlt,
     faSignInAlt,
+    faUserShield,
 } from "@fortawesome/free-solid-svg-icons"; // Tambahkan ikon jika perlu
 import { Link as ScrollLink } from "react-scroll"; // Ganti nama agar tidak konflik
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -37,11 +38,16 @@ function Navbar({
     const navigate = useNavigate();
 
     const hideMainSiteMidNavOn = ["/login", "/presensi", "/admin", "/project"];
+    const updatedArray = hideMainSiteMidNavOn.filter(
+        (path) => path !== "/presensi"
+    );
     const userRole = localStorage.getItem("userRole"); // Sebaiknya gunakan dari useAuth jika ada
 
     const toggleMainMobileMenu = () => {
         setMainMobileMenuOpen(!mainMobileMenuOpen);
     };
+
+
 
     const closeAllSidebars = () => {
         setMainMobileMenuOpen(false);
@@ -54,9 +60,6 @@ function Navbar({
         navigate("/login"); // Arahkan ke login setelah logout
     };
 
-    const updatedArray = hideMainSiteMidNavOn.filter(
-        (path) => path !== "/presensi"
-    );
     const handleAdminNavClick = (tab) => {
         if (onAdminTabChange) {
             onAdminTabChange(tab);
@@ -81,6 +84,28 @@ function Navbar({
         { to: "about", label: "About", type: "scroll", icon: faInfoCircle },
         { to: "contact", label: "Contact", type: "scroll", icon: faEnvelope },
     ];
+    const showMainSiteNav =
+        !hideMainSiteMidNavOn.includes(location.pathname) &&
+        mainSiteNavItems.length > 0;
+
+    const renderNavByRole = () => {
+        if (location.pathname === "/presensi" || location.pathname === "/main") {
+            if (userRole === "admin") {
+                return [
+                    { to: "/admin", label: "Admin", icon: faUserShield },
+                    { to: "/main", label: "Main", icon: faHomeAlt },
+                    // { to: "/logout", label: "Logout", icon: faSignOutAlt },
+                ];
+            } else if (userRole === "karyawan") {
+                return [
+                    { to: "/main", label: "Main", icon: faHomeAlt },
+                    // { to: "/logout", label: "Logout", icon: faSignOutAlt },
+                ];
+            }
+        }
+        return null;
+    };
+
     if (isLoggedIn && (userRole === "karyawan" || userRole === "admin")) {
         mainSiteNavItems.push({
             to: "/presensi",
@@ -291,7 +316,7 @@ function Navbar({
                         }`}
                     >
                         {/* Kontainer scroll */}
-                        <div className="flex flex-col h-full overflow-y-auto p-5 pt-[calc(theme(spacing.20)+1rem)]">
+                        <div className="flex flex-col h-full overflow-y-auto p-5 ">
                             {/* Header */}
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-lg font-semibold text-amber-500">
@@ -399,14 +424,14 @@ function Navbar({
                     )}
                     {/* Konten Sidebar Utama */}
                     <div
-                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] p-5 pt-[calc(theme(spacing.20)+1rem)] md:hidden ${
+                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] p-2 md:hidden ${
                             mainMobileMenuOpen
                                 ? "translate-x-0"
                                 : "-translate-x-full"
                         }`}
                     >
-                        <div className="flex flex-col h-full overflow-y-auto p-5 pt-[calc(theme(spacing.20)+1rem)]">
-                            <div className="flex justify-between items-center mb-8">
+                        <div className="flex flex-col h-full overflow-y-auto p-2">
+                            <div className="flex justify-between items-center mb-2">
                                 <h2 className="text-lg font-semibold text-amber-500">
                                     Menu Utama
                                 </h2>
@@ -420,6 +445,7 @@ function Navbar({
 
                             <ul className="flex flex-col gap-3 text-sm">
                                 {!updatedArray.includes(location.pathname) &&
+                                    location.pathname === "/main" &&
                                     mainSiteNavItems.map((item) => (
                                         <li key={item.to}>
                                             {item.type === "scroll" ? (
@@ -463,41 +489,35 @@ function Navbar({
                                         </li>
                                     ))}
                                 {/* Login/Logout & Dashboard for Admin in Main Mobile Menu */}
-                                <li className="border-t mt-4 pt-4">
+                                <li className="border-t ">
                                     {location.pathname !== "/login" &&
+                                        location.pathname === "/main" &&
                                         (isLoggedIn ? (
-                                            <>
-                                                {userRole === "admin" &&
-                                                    location.pathname !==
-                                                        "/admin" && (
-                                                        <NavLink
-                                                            to="/admin"
-                                                            onClick={
-                                                                toggleMainMobileMenu
-                                                            }
-                                                            className="block w-full p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-amber-500 cursor-pointer transition-colors mb-2"
-                                                        >
-                                                            <FontAwesomeIcon
-                                                                icon={
-                                                                    faTachometerAlt
-                                                                }
-                                                                className="mr-2"
-                                                            />
-                                                            Dashboard
-                                                        </NavLink>
-                                                    )}
-
-                                                <button
-                                                    onClick={handleLogout} // handleLogout sudah termasuk toggleMainMobileMenu(false)
-                                                    className="block w-full text-left p-3 rounded-lg text-red-600 hover:bg-red-50 hover:font-semibold cursor-pointer transition-colors"
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faSignOutAlt}
-                                                        className="mr-2"
-                                                    />{" "}
-                                                    Logout
-                                                </button>
-                                            </>
+                                            renderNavByRole()?.map((item) => (
+                                                <li key={item.to}>
+                                                    <NavLink
+                                                        to={item.to}
+                                                        onClick={
+                                                            toggleMainMobileMenu
+                                                        }
+                                                        className={({
+                                                            isActive,
+                                                        }) =>
+                                                            `block w-full p-3 rounded-lg transition-colors ${
+                                                                isActive
+                                                                    ? "bg-amber-100 text-amber-600 font-semibold"
+                                                                    : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                                            }`
+                                                        }
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            icon={item.icon}
+                                                            className="h-4 w-4 mr-2"
+                                                        />
+                                                        {item.label}
+                                                    </NavLink>
+                                                </li>
+                                            ))
                                         ) : (
                                             <NavLink
                                                 to="/login"
@@ -524,7 +544,40 @@ function Navbar({
                                             </NavLink>
                                         </li>
                                     )}
+                                {location.pathname === "/presensi" &&
+                                    renderNavByRole()?.map((item) => (
+                                        <li key={item.to}>
+                                            <NavLink
+                                                to={item.to}
+                                                onClick={toggleMainMobileMenu}
+                                                className={({ isActive }) =>
+                                                    `block w-full p-3 rounded-lg transition-colors ${
+                                                        isActive
+                                                            ? "bg-amber-100 text-amber-600 font-semibold"
+                                                            : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                                    }`
+                                                }
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={item.icon}
+                                                    className="h-4 w-4 mr-2"
+                                                />
+                                                {item.label}
+                                            </NavLink>
+                                        </li>
+                                    ))}
                             </ul>
+
+                            <button
+                                onClick={handleLogout}
+                                className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSignOutAlt}
+                                    className="w-5 h-5"
+                                />
+                                Logout
+                            </button>
                         </div>
                     </div>
                 </>
