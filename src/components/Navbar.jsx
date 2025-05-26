@@ -47,8 +47,6 @@ function Navbar({
         setMainMobileMenuOpen(!mainMobileMenuOpen);
     };
 
-
-
     const closeAllSidebars = () => {
         setMainMobileMenuOpen(false);
         setIsAdminMobileSidebarOpen(false);
@@ -89,7 +87,10 @@ function Navbar({
         mainSiteNavItems.length > 0;
 
     const renderNavByRole = () => {
-        if (location.pathname === "/presensi" || location.pathname === "/main") {
+        if (
+            location.pathname === "/presensi" ||
+            location.pathname === "/main"
+        ) {
             if (userRole === "admin") {
                 return [
                     { to: "/admin", label: "Admin", icon: faUserShield },
@@ -309,7 +310,7 @@ function Navbar({
                     )}
                     {/* Konten Sidebar Admin */}
                     <div
-                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] md:hidden ${
+                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white rounded-tr-4xl rounded-br-4xl shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] md:hidden ${
                             isAdminMobileSidebarOpen
                                 ? "translate-x-0"
                                 : "-translate-x-full"
@@ -424,7 +425,7 @@ function Navbar({
                     )}
                     {/* Konten Sidebar Utama */}
                     <div
-                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] p-2 md:hidden ${
+                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl  rounded-tr-4xl rounded-br-4xl transform transition-transform duration-300 ease-in-out z-[1002] p-2 md:hidden ${
                             mainMobileMenuOpen
                                 ? "translate-x-0"
                                 : "-translate-x-full"
@@ -531,7 +532,45 @@ function Navbar({
                                                 Login
                                             </NavLink>
                                         ))}
+
+                                    {location.pathname === "/presensi" &&
+                                        renderNavByRole()?.map((item) => (
+                                            <li key={item.to}>
+                                                <NavLink
+                                                    to={item.to}
+                                                    onClick={
+                                                        toggleMainMobileMenu
+                                                    }
+                                                    className={({ isActive }) =>
+                                                        `block w-full p-3 rounded-lg transition-colors ${
+                                                            isActive
+                                                                ? "bg-amber-100 text-amber-600 font-semibold"
+                                                                : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                                        }`
+                                                    }
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={item.icon}
+                                                        className="h-4 w-4 mr-2"
+                                                    />
+                                                    {item.label}
+                                                </NavLink>
+                                            </li>
+                                        ))}
+                                    {isLoggedIn && (
+                                        <button
+                                            onClick={handleLogout}
+                                            className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faSignOutAlt}
+                                                className="w-5 h-5"
+                                            />
+                                            Logout
+                                        </button>
+                                    )}
                                 </li>
+
                                 {location.pathname === "/login" &&
                                     !isLoggedIn && (
                                         <li className="border-t mt-4 pt-4">
@@ -544,40 +583,7 @@ function Navbar({
                                             </NavLink>
                                         </li>
                                     )}
-                                {location.pathname === "/presensi" &&
-                                    renderNavByRole()?.map((item) => (
-                                        <li key={item.to}>
-                                            <NavLink
-                                                to={item.to}
-                                                onClick={toggleMainMobileMenu}
-                                                className={({ isActive }) =>
-                                                    `block w-full p-3 rounded-lg transition-colors ${
-                                                        isActive
-                                                            ? "bg-amber-100 text-amber-600 font-semibold"
-                                                            : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
-                                                    }`
-                                                }
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon={item.icon}
-                                                    className="h-4 w-4 mr-2"
-                                                />
-                                                {item.label}
-                                            </NavLink>
-                                        </li>
-                                    ))}
                             </ul>
-
-                            <button
-                                onClick={handleLogout}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSignOutAlt}
-                                    className="w-5 h-5"
-                                />
-                                Logout
-                            </button>
                         </div>
                     </div>
                 </>
