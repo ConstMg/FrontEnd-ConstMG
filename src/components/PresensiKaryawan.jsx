@@ -119,7 +119,7 @@ const PresensiKaryawan = () => {
                     {/* ✅ Tampilkan form atau tampilan sukses */}
                     {showRiwayat && (
                         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                            <div className="w-3/4 bg-white p-6 rounded-2xl shadow-lg z-10">
+                            <div className="w-3/4 h-1/2 bg-white p-6 rounded-2xl shadow-lg z-10">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-xl font-semibold text-gray-700">
                                         Riwayat Presensi
