@@ -532,6 +532,31 @@ function Navbar({
                                                 Login
                                             </NavLink>
                                         ))}
+
+                                    {location.pathname === "/presensi" &&
+                                        renderNavByRole()?.map((item) => (
+                                            <li key={item.to}>
+                                                <NavLink
+                                                    to={item.to}
+                                                    onClick={
+                                                        toggleMainMobileMenu
+                                                    }
+                                                    className={({ isActive }) =>
+                                                        `block w-full p-3 rounded-lg transition-colors ${
+                                                            isActive
+                                                                ? "bg-amber-100 text-amber-600 font-semibold"
+                                                                : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                                        }`
+                                                    }
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={item.icon}
+                                                        className="h-4 w-4 mr-2"
+                                                    />
+                                                    {item.label}
+                                                </NavLink>
+                                            </li>
+                                        ))}
                                     {isLoggedIn && (
                                         <button
                                             onClick={handleLogout}
@@ -558,28 +583,6 @@ function Navbar({
                                             </NavLink>
                                         </li>
                                     )}
-                                {location.pathname === "/presensi" &&
-                                    renderNavByRole()?.map((item) => (
-                                        <li key={item.to}>
-                                            <NavLink
-                                                to={item.to}
-                                                onClick={toggleMainMobileMenu}
-                                                className={({ isActive }) =>
-                                                    `block w-full p-3 rounded-lg transition-colors ${
-                                                        isActive
-                                                            ? "bg-amber-100 text-amber-600 font-semibold"
-                                                            : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
-                                                    }`
-                                                }
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon={item.icon}
-                                                    className="h-4 w-4 mr-2"
-                                                />
-                                                {item.label}
-                                            </NavLink>
-                                        </li>
-                                    ))}
                             </ul>
                         </div>
                     </div>
