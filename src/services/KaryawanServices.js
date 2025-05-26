@@ -79,6 +79,9 @@ export const getPresensiKaryawan = async () => {
 export const getPresensiKaryawanByDate = async (date) => {
   return await apiClient(`admin/presensi?tanggal_awal=${date}`, "GET");
 };
+export const getRiwayatPresensi = async (nama) => {
+  return await apiClient(`karyawan/presensi/riwayat?nama=${nama}`, "GET");
+};
 
 export const deleteKaryawan = async (id) => {
   return await apiClient(`admin/karyawan/${id}`, "DELETE");
