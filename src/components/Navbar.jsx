@@ -310,7 +310,7 @@ function Navbar({
                     )}
                     {/* Konten Sidebar Admin */}
                     <div
-                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] md:hidden ${
+                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white rounded-tr-4xl rounded-br-4xl shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] md:hidden ${
                             isAdminMobileSidebarOpen
                                 ? "translate-x-0"
                                 : "-translate-x-full"
@@ -425,7 +425,7 @@ function Navbar({
                     )}
                     {/* Konten Sidebar Utama */}
                     <div
-                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] p-2 md:hidden ${
+                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl  rounded-tr-4xl rounded-br-4xl transform transition-transform duration-300 ease-in-out z-[1002] p-2 md:hidden ${
                             mainMobileMenuOpen
                                 ? "translate-x-0"
                                 : "-translate-x-full"
