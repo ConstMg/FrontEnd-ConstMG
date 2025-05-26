@@ -21,7 +21,7 @@ const Contact = () => {
     if (!profileData) return null;
     return (
         <>
-            <div className="contact min-h-screen bg-gradient-to-b from-yellow-50 to-white flex justify-center items-center py-16 px-4 md:px-0">
+            <div className="contact bg-white/50 flex justify-center-safe items-baseline py-8 px-4 md:px-0">
                 <div className="w-full max-w-6xl bg-white rounded-tl-[50px] rounded-tr-[50px] p-10 md:p-14 flex flex-col md:flex-row gap-12 shadow-lg">
                     {/* KIRI: Informasi kantor */}
                     <div
@@ -90,12 +90,12 @@ const Contact = () => {
 
                     {/* KANAN: Form kontak */}
                     <div
-                        className="w-full md:w-1/2 flex justify-center items-center"
+                        className="w-full flex justify-center items-center "
                         data-aos="fade-left"
                         // data-aos-delay="200"
                     >
                         <form className="flex flex-col gap-6 w-full max-w-[640px] px-6 md:px-0">
-                            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+                            <div className="flex flex-col md:flex-row gap-4 ">
                                 <input
                                     type="text"
                                     placeholder="Your Name"
@@ -104,7 +104,7 @@ const Contact = () => {
                                 <input
                                     type="email"
                                     placeholder="Your Email"
-                                    className="flex-1 h-14 bg-yellow-50 rounded-3xl border border-yellow-300 p-4 text-base placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                                    className="flex-1 h-14 bg-yellow-50 rounded-3xl border border-yellow-300 p-4 text-base placeholder-yellow-400 focus:outline-none focus:ring-2 resize-none focus:ring-yellow-400 transition"
                                 />
                             </div>
 

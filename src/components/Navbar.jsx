@@ -7,6 +7,11 @@ import {
     faSignOutAlt,
     faTachometerAlt,
     faHomeAlt,
+    faProjectDiagram,
+    faInfoCircle,
+    faEnvelope,
+    faUserAlt,
+    faSignInAlt,
 } from "@fortawesome/free-solid-svg-icons"; // Tambahkan ikon jika perlu
 import { Link as ScrollLink } from "react-scroll"; // Ganti nama agar tidak konflik
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -49,6 +54,9 @@ function Navbar({
         navigate("/login"); // Arahkan ke login setelah logout
     };
 
+    const updatedArray = hideMainSiteMidNavOn.filter(
+        (path) => path !== "/presensi"
+    );
     const handleAdminNavClick = (tab) => {
         if (onAdminTabChange) {
             onAdminTabChange(tab);
@@ -63,16 +71,22 @@ function Navbar({
 
     // Navigasi Item untuk Main Mobile Menu
     const mainSiteNavItems = [
-        { to: "main", label: "Home", type: "scroll" },
-        { to: "project", label: "Project", type: "scroll" }, // Asumsi ini section di halaman utama
-        { to: "about", label: "About", type: "scroll" },
-        { to: "contact", label: "Contact", type: "scroll" },
+        { to: "main", label: "Home", type: "scroll", icon: faHomeAlt },
+        {
+            to: "project",
+            label: "Project",
+            type: "scroll",
+            icon: faProjectDiagram,
+        }, // Asumsi ini section di halaman utama
+        { to: "about", label: "About", type: "scroll", icon: faInfoCircle },
+        { to: "contact", label: "Contact", type: "scroll", icon: faEnvelope },
     ];
     if (isLoggedIn && (userRole === "karyawan" || userRole === "admin")) {
         mainSiteNavItems.push({
             to: "/presensi",
             label: "Presensi",
             type: "navlink",
+            icon: faUserAlt,
         });
     }
 
@@ -94,7 +108,6 @@ function Navbar({
                         onClick={closeAllSidebars}
                     >
                         <img
-                        
                             src={Logo}
                             alt="Logo"
                             className="h-10 sm:h-12 w-auto"
@@ -154,6 +167,19 @@ function Navbar({
                         {location.pathname !== "/login" &&
                             (isLoggedIn ? (
                                 <>
+                                    {location.pathname === "/presensi" && (
+                                        <NavLink
+                                            to="/main"
+                                            className="hover:text-amber-500 transition-colors flex items-center gap-1.5"
+                                            onClick={closeAllSidebars}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faHomeAlt} // pastikan sudah import faHome dari FontAwesome
+                                                className="h-4 w-4"
+                                            />
+                                            Home
+                                        </NavLink>
+                                    )}
                                     {userRole === "admin" &&
                                         location.pathname !== "/admin" && (
                                             <NavLink
@@ -162,12 +188,27 @@ function Navbar({
                                                 onClick={closeAllSidebars}
                                             >
                                                 <FontAwesomeIcon
-                                                    icon={faHomeAlt}
+                                                    icon={faTachometerAlt}
                                                     className="h-4 w-4"
                                                 />
                                                 Dashboard
                                             </NavLink>
                                         )}
+                                    {userRole === "karyawan" &&
+                                        location.pathname === "/karyawan" && (
+                                            <NavLink
+                                                to="/karyawan"
+                                                className="hover:text-amber-500 transition-colors flex items-center gap-1.5"
+                                                onClick={closeAllSidebars}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faUserTie}
+                                                    className="h-4 w-4"
+                                                />
+                                                Karyawan
+                                            </NavLink>
+                                        )}
+
                                     <button
                                         onClick={handleLogout}
                                         className="hover:text-red-500 transition-colors flex items-center gap-1.5 bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600"
@@ -211,9 +252,7 @@ function Navbar({
                                 />
                             </button>
                         ) : (
-                            !hideMainSiteMidNavOn.includes(
-                                location.pathname
-                            ) && (
+                            !updatedArray.includes(location.pathname) && (
                                 <button
                                     onClick={toggleMainMobileMenu}
                                     aria-label="Toggle main menu"
@@ -245,89 +284,104 @@ function Navbar({
                     )}
                     {/* Konten Sidebar Admin */}
                     <div
-                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] p-5 pt-[calc(theme(spacing.20)+1rem)] md:hidden ${
+                        className={`fixed top-0 left-0 h-full w-3/4 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[1002] md:hidden ${
                             isAdminMobileSidebarOpen
                                 ? "translate-x-0"
                                 : "-translate-x-full"
                         }`}
                     >
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-lg font-semibold text-amber-500">
-                                Admin Menu
-                            </h2>
-                            <button
-                                onClick={() =>
-                                    setIsAdminMobileSidebarOpen(false)
-                                }
-                                className="text-gray-500 hover:text-red-500"
-                            >
-                                <FontAwesomeIcon icon={faXmark} size="lg" />
-                            </button>
-                        </div>
-                        <ul className="w-full flex flex-col gap-3 text-sm">
-                            {[
-                                {
-                                    label: "Presensi",
-                                    tab: "presensi",
-                                    icon: presensiIcon,
-                                },
-                                {
-                                    label: "Karyawan",
-                                    tab: "karyawan",
-                                    icon: karyawanIcon,
-                                },
-                                {
-                                    label: "Proyek",
-                                    tab: "proyek",
-                                    icon: proyekIcon,
-                                },
-                            ].map((item) => (
-                                <li
-                                    key={item.tab}
-                                    className={`w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
-                                        adminActiveComponent === item.tab
-                                            ? "bg-amber-100 text-amber-600 font-semibold"
-                                            : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
-                                    }`}
+                        {/* Kontainer scroll */}
+                        <div className="flex flex-col h-full overflow-y-auto p-5 pt-[calc(theme(spacing.20)+1rem)]">
+                            {/* Header */}
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-lg font-semibold text-amber-500">
+                                    Admin Menu
+                                </h2>
+                                <button
                                     onClick={() =>
-                                        handleAdminNavClick(item.tab)
+                                        setIsAdminMobileSidebarOpen(false)
                                     }
+                                    className="text-gray-500 hover:text-red-500"
                                 >
-                                    {item.icon && (
-                                        <img
-                                            src={item.icon}
-                                            alt={item.label}
-                                            className="w-5 h-5 flex-shrink-0"
+                                    <FontAwesomeIcon icon={faXmark} size="lg" />
+                                </button>
+                            </div>
+
+                            {/* Menu Items */}
+                            <ul className="w-full flex flex-col gap-3 text-sm flex-grow">
+                                {[
+                                    {
+                                        label: "Presensi",
+                                        tab: "presensi",
+                                        icon: presensiIcon,
+                                    },
+                                    {
+                                        label: "Karyawan",
+                                        tab: "karyawan",
+                                        icon: karyawanIcon,
+                                    },
+                                    {
+                                        label: "Proyek",
+                                        tab: "proyek",
+                                        icon: proyekIcon,
+                                    },
+                                ].map((item) => (
+                                    <li
+                                        key={item.tab}
+                                        className={`w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
+                                            adminActiveComponent === item.tab
+                                                ? "bg-amber-100 text-amber-600 font-semibold"
+                                                : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                        }`}
+                                        onClick={() =>
+                                            handleAdminNavClick(item.tab)
+                                        }
+                                    >
+                                        {item.icon && (
+                                            <img
+                                                src={item.icon}
+                                                alt={item.label}
+                                                className="w-5 h-5 flex-shrink-0"
+                                            />
+                                        )}
+                                        <span>{item.label}</span>
+                                    </li>
+                                ))}
+
+                                <li className="border-t mt-4 pt-4">
+                                    <button
+                                        onClick={() => navigate("/main")}
+                                        className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faHomeAlt}
+                                            className="w-5 h-5"
                                         />
-                                    )}
-
-                                    <span>{item.label}</span>
+                                        Home
+                                    </button>
+                                    <button
+                                        onClick={() => navigate("/presensi")}
+                                        className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faUserAlt}
+                                            className="w-5 h-5"
+                                        />
+                                        Lakukan Presensi
+                                    </button>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faSignOutAlt}
+                                            className="w-5 h-5"
+                                        />
+                                        Logout
+                                    </button>
                                 </li>
-                            ))}
-
-                            <li className="border-t mt-4 pt-4">
-                                <button
-                                    onClick={() => navigate("/main")}
-                                    className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-gray-700 hover:bg-gray-100 hover:text-amber-500"
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faHomeAlt}
-                                        className="w-5 h-5"
-                                    />
-                                    Home
-                                </button>
-                                <button
-                                    onClick={handleLogout}
-                                    className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faSignOutAlt}
-                                        className="w-5 h-5"
-                                    />
-                                    Logout
-                                </button>
-                            </li>
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
                 </>
             )}
@@ -351,110 +405,127 @@ function Navbar({
                                 : "-translate-x-full"
                         }`}
                     >
-                        <div className="flex justify-between items-center mb-8">
-                            <h2 className="text-lg font-semibold text-amber-500">
-                                Menu Utama
-                            </h2>
-                            <button
-                                onClick={toggleMainMobileMenu}
-                                className="text-gray-500 hover:text-red-500"
-                            >
-                                <FontAwesomeIcon icon={faXmark} size="lg" />
-                            </button>
-                        </div>
+                        <div className="flex flex-col h-full overflow-y-auto p-5 pt-[calc(theme(spacing.20)+1rem)]">
+                            <div className="flex justify-between items-center mb-8">
+                                <h2 className="text-lg font-semibold text-amber-500">
+                                    Menu Utama
+                                </h2>
+                                <button
+                                    onClick={toggleMainMobileMenu}
+                                    className="text-gray-500 hover:text-red-500"
+                                >
+                                    <FontAwesomeIcon icon={faXmark} size="lg" />
+                                </button>
+                            </div>
 
-                        <ul className="flex flex-col gap-3 text-sm">
-                            {!hideMainSiteMidNavOn.includes(
-                                location.pathname
-                            ) &&
-                                mainSiteNavItems.map((item) => (
-                                    <li key={item.to}>
-                                        {item.type === "scroll" ? (
-                                            <ScrollLink
-                                                to={item.to}
-                                                smooth={true}
-                                                duration={500}
-                                                offset={-80}
-                                                onClick={toggleMainMobileMenu} // Tutup menu setelah klik
-                                                className="block w-full p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-amber-500 cursor-pointer transition-colors"
-                                            >
-                                                {item.label}
-                                            </ScrollLink>
+                            <ul className="flex flex-col gap-3 text-sm">
+                                {!updatedArray.includes(location.pathname) &&
+                                    mainSiteNavItems.map((item) => (
+                                        <li key={item.to}>
+                                            {item.type === "scroll" ? (
+                                                <ScrollLink
+                                                    to={item.to}
+                                                    smooth={true}
+                                                    duration={500}
+                                                    offset={-80}
+                                                    onClick={
+                                                        toggleMainMobileMenu
+                                                    } // Tutup menu setelah klik
+                                                    className="block w-full p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-amber-500 cursor-pointer transition-colors"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={item.icon}
+                                                        className="h-4 w-4 mr-2"
+                                                    />
+                                                    {item.label}
+                                                </ScrollLink>
+                                            ) : (
+                                                <NavLink
+                                                    to={item.to}
+                                                    onClick={
+                                                        toggleMainMobileMenu
+                                                    } // Tutup menu setelah klik
+                                                    className={({ isActive }) =>
+                                                        `block w-full p-3 rounded-lg transition-colors ${
+                                                            isActive
+                                                                ? "bg-amber-100 text-amber-600 font-semibold"
+                                                                : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
+                                                        }`
+                                                    }
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={item.icon}
+                                                        className="h-4 w-4 mr-2"
+                                                    />
+                                                    {item.label}
+                                                </NavLink>
+                                            )}
+                                        </li>
+                                    ))}
+                                {/* Login/Logout & Dashboard for Admin in Main Mobile Menu */}
+                                <li className="border-t mt-4 pt-4">
+                                    {location.pathname !== "/login" &&
+                                        (isLoggedIn ? (
+                                            <>
+                                                {userRole === "admin" &&
+                                                    location.pathname !==
+                                                        "/admin" && (
+                                                        <NavLink
+                                                            to="/admin"
+                                                            onClick={
+                                                                toggleMainMobileMenu
+                                                            }
+                                                            className="block w-full p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-amber-500 cursor-pointer transition-colors mb-2"
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                icon={
+                                                                    faTachometerAlt
+                                                                }
+                                                                className="mr-2"
+                                                            />
+                                                            Dashboard
+                                                        </NavLink>
+                                                    )}
+
+                                                <button
+                                                    onClick={handleLogout} // handleLogout sudah termasuk toggleMainMobileMenu(false)
+                                                    className="block w-full text-left p-3 rounded-lg text-red-600 hover:bg-red-50 hover:font-semibold cursor-pointer transition-colors"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faSignOutAlt}
+                                                        className="mr-2"
+                                                    />{" "}
+                                                    Logout
+                                                </button>
+                                            </>
                                         ) : (
                                             <NavLink
-                                                to={item.to}
-                                                onClick={toggleMainMobileMenu} // Tutup menu setelah klik
-                                                className={({ isActive }) =>
-                                                    `block w-full p-3 rounded-lg transition-colors ${
-                                                        isActive
-                                                            ? "bg-amber-100 text-amber-600 font-semibold"
-                                                            : "text-gray-700 hover:bg-gray-100 hover:text-amber-500"
-                                                    }`
-                                                }
-                                            >
-                                                {item.label}
-                                            </NavLink>
-                                        )}
-                                    </li>
-                                ))}
-                            {/* Login/Logout & Dashboard for Admin in Main Mobile Menu */}
-                            <li className="border-t mt-4 pt-4">
-                                {location.pathname !== "/login" &&
-                                    (isLoggedIn ? (
-                                        <>
-                                            {userRole === "admin" &&
-                                                location.pathname !==
-                                                    "/admin" && (
-                                                    <NavLink
-                                                        to="/admin"
-                                                        onClick={
-                                                            toggleMainMobileMenu
-                                                        }
-                                                        className="block w-full p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-amber-500 cursor-pointer transition-colors mb-2"
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={
-                                                                faTachometerAlt
-                                                            }
-                                                            className="mr-2"
-                                                        />
-                                                        Dashboard
-                                                    </NavLink>
-                                                )}
-                                                
-                                            <button
-                                                onClick={handleLogout} // handleLogout sudah termasuk toggleMainMobileMenu(false)
-                                                className="block w-full text-left p-3 rounded-lg text-red-600 hover:bg-red-50 hover:font-semibold cursor-pointer transition-colors"
+                                                to="/login"
+                                                onClick={toggleMainMobileMenu}
+                                                className="block w-full p-3 rounded-lg text-amber-500 hover:bg-amber-500 hover:text-amber-700 cursor-pointer transition-colors"
                                             >
                                                 <FontAwesomeIcon
-                                                    icon={faSignOutAlt}
-                                                    className="mr-2"
-                                                />{" "}
-                                                Logout
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <NavLink
-                                            to="/login"
-                                            onClick={toggleMainMobileMenu}
-                                            className="block w-full p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-amber-500 cursor-pointer transition-colors"
-                                        >
-                                            Login
-                                        </NavLink>
-                                    ))}
-                            </li>
-                            {location.pathname === "/login" && !isLoggedIn && (
-                                <li className="border-t mt-4 pt-4">
-                                    <NavLink
-                                        to="/main" // Atau halaman default jika login page tidak punya menu lain
-                                        onClick={toggleMainMobileMenu}
-                                        className="block w-full p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-amber-500 cursor-pointer transition-colors"
-                                    >
-                                        Home
-                                    </NavLink>
+                                                    icon={faSignInAlt}
+                                                    className="h-4 w-4 mr-2"
+                                                />
+                                                Login
+                                            </NavLink>
+                                        ))}
                                 </li>
-                            )}
-                        </ul>
+                                {location.pathname === "/login" &&
+                                    !isLoggedIn && (
+                                        <li className="border-t mt-4 pt-4">
+                                            <NavLink
+                                                to="/main" // Atau halaman default jika login page tidak punya menu lain
+                                                onClick={toggleMainMobileMenu}
+                                                className="block w-full p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-amber-500 cursor-pointer transition-colors"
+                                            >
+                                                Home
+                                            </NavLink>
+                                        </li>
+                                    )}
+                            </ul>
+                        </div>
                     </div>
                 </>
             )}
