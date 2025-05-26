@@ -47,8 +47,6 @@ function Navbar({
         setMainMobileMenuOpen(!mainMobileMenuOpen);
     };
 
-
-
     const closeAllSidebars = () => {
         setMainMobileMenuOpen(false);
         setIsAdminMobileSidebarOpen(false);
@@ -89,7 +87,10 @@ function Navbar({
         mainSiteNavItems.length > 0;
 
     const renderNavByRole = () => {
-        if (location.pathname === "/presensi" || location.pathname === "/main") {
+        if (
+            location.pathname === "/presensi" ||
+            location.pathname === "/main"
+        ) {
             if (userRole === "admin") {
                 return [
                     { to: "/admin", label: "Admin", icon: faUserShield },
@@ -531,7 +532,20 @@ function Navbar({
                                                 Login
                                             </NavLink>
                                         ))}
+                                    {isLoggedIn && (
+                                        <button
+                                            onClick={handleLogout}
+                                            className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faSignOutAlt}
+                                                className="w-5 h-5"
+                                            />
+                                            Logout
+                                        </button>
+                                    )}
                                 </li>
+
                                 {location.pathname === "/login" &&
                                     !isLoggedIn && (
                                         <li className="border-t mt-4 pt-4">
@@ -567,17 +581,6 @@ function Navbar({
                                         </li>
                                     ))}
                             </ul>
-
-                            <button
-                                onClick={handleLogout}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSignOutAlt}
-                                    className="w-5 h-5"
-                                />
-                                Logout
-                            </button>
                         </div>
                     </div>
                 </>
