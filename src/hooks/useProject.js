@@ -10,6 +10,8 @@ import { useState, useCallback } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { addImageToProject as uploadImage } from "../services/ProjectService";
+import { compressImage } from "../utils/utils";
+
 export function useProject() {
     const [projectData, setProjectData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -166,7 +168,11 @@ export function useProject() {
         setUploadSuccess(null);
 
         try {
-            const response = await uploadImage(project_id, imageFile);
+            const compressedFile = await compressImage(imageFile, 0.5);
+
+            // Panggil fungsi upload dengan file yang sudah dikompres
+            const response = await uploadImage(project_id, compressedFile);
+
             setUploadSuccess(response.message || "Gambar berhasil diunggah");
             toast.update(toastId, {
                 render: "Gambar berhasil diunggah!",
@@ -175,8 +181,9 @@ export function useProject() {
                 autoClose: 2000,
             });
             return response;
-        } catch (err) {
-            setUploadError(err.message || "Terjadi kesalahan saat upload");
+        } catch (error) {
+            setUploadError(error.message || "Terjadi kesalahan saat upload");
+
             toast.update(toastId, {
                 render:
                     error.message ||
@@ -185,7 +192,8 @@ export function useProject() {
                 isLoading: false,
                 autoClose: 2000,
             });
-            throw err;
+
+            throw error;
         } finally {
             setUploading(false);
         }

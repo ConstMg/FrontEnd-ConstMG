@@ -21,7 +21,7 @@ const ProjectImages = ({
         deleteImageFromProject,
     } = useProject();
     const [localImages, setLocalImages] = useState(images);
-    const [showConfirm, setShowConfirm] = useState(false);
+    const [showConfirmation, setShowConfirm] = useState(false);
     const [selectedImageId, setSelectedImageId] = useState(null);
     library.add(faTrashCan);
 
@@ -99,19 +99,19 @@ const ProjectImages = ({
                 className="absolute top-5 right-5 p-1.5 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-100 transition-all duration-200"
             >
                 <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                    />
+                </svg>
             </button>
             <div className="h-full flex flex-wrap justify-center items-center gap-4 bg-white p-4 rounded-lg shadow-md overflow-auto">
                 {images.length > 0 ? (
@@ -173,7 +173,7 @@ const ProjectImages = ({
                     className="hidden"
                 />
 
-                {showConfirm && (
+                {showConfirmation && (
                     <div className="fixed inset-0 z-50 backdrop-blur-sm bg-black/30 flex items-center justify-center">
                         <ConfirmationCard
                             variant="delete"

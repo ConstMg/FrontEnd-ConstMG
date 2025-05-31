@@ -121,7 +121,7 @@ const DataTable = ({
             <div className="h-full w-full overflow-auto relative">
                 {/* Confirmation modal */}
                 {showConfirmation && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="fixed inset-0 z-50 backdrop-blur-sm bg-black/30 flex items-center justify-center">
                         <ConfirmationCard
                             variant="delete"
                             itemname={itemToDelete?.name || "item"}
@@ -322,7 +322,7 @@ const DataTable = ({
 
                 {/* Confirmation modal */}
                 {showConfirmation && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="fixed inset-0 z-50 backdrop-blur-sm bg-black/30 flex items-center justify-center">
                         <ConfirmationCard
                             variant="delete"
                             itemname={itemToDelete?.name || "item"}

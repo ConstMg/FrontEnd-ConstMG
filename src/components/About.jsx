@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import ImageCard from "./ImageCard";
+import ConfirmationCard from "./ConfirmationCard"; // sesuaikan path-nya
 import ImageGallery from "./ImageGallery";
 import {
     Building2,
@@ -32,6 +33,8 @@ const About = () => {
     } = useCtx();
     const [activeIndex, setActiveIndex] = useState(null);
     const [showImageSelectorModal, setShowImageSelectorModal] = useState(false);
+    const [showConfirmation, setShowConfirm] = useState(false);
+    const [selectedImageId, setSelectedImageId] = useState(null);
     useEffect(() => {
         getImagesAbout();
         AOS.init({
@@ -56,12 +59,18 @@ const About = () => {
         }
         setShowImageSelectorModal(false);
     };
-    const handleRemoveImage = async (publicId) => {
-        // Konfirmasi sebelum menghapus
-        if (window.confirm("Apakah Anda yakin ingin menghapus gambar ini?")) {
-            await removeImagesAbout(publicId); // Asumsi removeImagesAbout menerima imageId dan public_id
-            getImagesAbout(); // Refresh gambar setelah menghapus
+    const handleRemoveImage = (publicId) => {
+        setSelectedImageId(publicId);
+        setShowConfirm(true);
+    };
+
+    const confirmRemove = async () => {
+        if (selectedImageId) {
+            await removeImagesAbout(selectedImageId);
+            getImagesAbout();
         }
+        setShowConfirm(false);
+        setSelectedImageId(null);
     };
 
     if (!profileData) return null;
@@ -114,7 +123,8 @@ const About = () => {
                         <div className="w-full max-w-5.5 md:max-w-[1320px] flex flex-wrap items-center justify-center gap-3 md:gap-6 px-2 md:px-4">
                             {images.length === 0 ? (
                                 <div className="text-gray-500 text-sm">
-                                    Loading gambar...
+                                    Gambar belum tersedia. Silakan tambahkan
+                                    gambar terlebih dahulu.
                                 </div>
                             ) : (
                                 <div className="w-full max-w-5.5 md:max-w-[1320px] flex flex-wrap items-center justify-center gap-3 md:gap-6 px-2 md:px-4">
@@ -153,21 +163,30 @@ const About = () => {
                                     ))}
                                 </div>
                             )}
+                            {isEditable && (
+                                <div className="w-full md:max-w-[1320px] flex justify-center px-2 sm:px-4 mt-10">
+                                    <button
+                                        onClick={handleAddImageClick}
+                                        className="bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-bold py-2 px-3 sm:px-4 rounded-lg flex items-center gap-2 transition-colors duration-150 text-sm sm:text-base"
+                                    >
+                                        <PlusCircle size={20} />
+                                        Tambah Gambar
+                                    </button>
+                                </div>
+                            )}
+
+                            {showConfirmation && (
+                                <div className="fixed inset-0 z-50 backdrop-blur-sm bg-black/30 flex items-center justify-center">
+                                    <ConfirmationCard
+                                        variant="delete"
+                                        itemname="gambar"
+                                        onConfirm={confirmRemove}
+                                        onCancel={() => setShowConfirm(false)}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
-
-                    {/* Tombol Tambah Gambar untuk Admin */}
-                    {isEditable && (
-                        <div className="w-full md:max-w-[1320px] flex justify-center px-2 sm:px-4 mt-10">
-                            <button
-                                onClick={handleAddImageClick}
-                                className="bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-bold py-2 px-3 sm:px-4 rounded-lg flex items-center gap-2 transition-colors duration-150 text-sm sm:text-base"
-                            >
-                                <PlusCircle size={20} />
-                                Tambah Gambar
-                            </button>
-                        </div>
-                    )}
                 </div>
             </div>
             {/* Modal Pemilihan Gambar */}
@@ -176,6 +195,7 @@ const About = () => {
                 onClose={() => setShowImageSelectorModal(false)}
                 onConfirmSelection={handleImageSelectionConfirm}
             />
+            {/* Tombol Tambah Gambar untuk Admin */}
         </>
     );
 };
