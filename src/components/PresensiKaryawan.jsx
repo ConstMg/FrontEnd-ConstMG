@@ -119,8 +119,8 @@ const PresensiKaryawan = () => {
                     {/* ✅ Tampilkan form atau tampilan sukses */}
                     {showRiwayat && (
                         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                            <div className="w-3/4 h-1/2 bg-white p-6 rounded-2xl shadow-lg z-10">
-                                <div className="flex justify-between items-center mb-4">
+                            <div className="w-3/4 md:h-3/4 bg-white px-6 pb-6 rounded-2xl shadow-lg z-10 overflow-auto h-5/6 relative">
+                                <div className="flex justify-between items-center mb-4 sticky top-0 md:left-4 md:right-4 pt-5 bg-white">
                                     <h2 className="text-xl font-semibold text-gray-700">
                                         Riwayat Presensi
                                     </h2>
@@ -134,7 +134,7 @@ const PresensiKaryawan = () => {
                                 {isLoading ? (
                                     <p>Loading...</p>
                                 ) : (
-                                    <div className="overflow-auto max-h-[400px]">
+                                    <div className="mt-6 overflow-x-auto">
                                         <table className="min-w-full divide-y divide-gray-200">
                                             <thead className="bg-gray-50">
                                                 <tr>
