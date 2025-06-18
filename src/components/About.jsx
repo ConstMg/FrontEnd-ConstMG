@@ -123,8 +123,7 @@ const About = () => {
                         <div className="w-full max-w-5.5 md:max-w-[1320px] flex flex-wrap items-center justify-center gap-3 md:gap-6 px-2 md:px-4">
                             {images.length === 0 ? (
                                 <div className="text-gray-500 text-sm">
-                                    Gambar belum tersedia. Silakan tambahkan
-                                    gambar terlebih dahulu.
+                                    Gambar belum tersedia.
                                 </div>
                             ) : (
                                 <div className="w-full max-w-5.5 md:max-w-[1320px] flex flex-wrap items-center justify-center gap-3 md:gap-6 px-2 md:px-4">
