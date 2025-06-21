@@ -61,14 +61,14 @@ const Project = () => {
                 id="project"
             >
                 <p
-                    className="text-center justify-center text-color-blue-10 text-4xl font-medium font-['Poppins'] leading-[48px]"
+                    className="text-center justify-center text-color-blue-10 text-4xl font-medium leading-[48px]"
                     data-aos="fade-up"
                 >
                     Our Recent Project
                 </p>
                 <div className="w-full text-center">
                     <div
-                        className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8"
+                        className="text-black text-sm md:text-base font-normal leading-normal px-2 md:px-8"
                         data-aos="fade-up"
                         // data-aos-delay="50"
                     >

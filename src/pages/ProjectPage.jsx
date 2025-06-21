@@ -39,7 +39,7 @@ const ProjectPage = () => {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="bg-gray-100 min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col">
             {/* Gallery Modal */}
             {activeGallery && activeImages && (
                 <>
