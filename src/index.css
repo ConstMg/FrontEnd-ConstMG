@@ -1,7 +1,9 @@
 
+
 #root {
-
     background: linear-gradient(to right, #ffedd5, #fed7aa, #fde68a);
+}
 
-  }
-  
+.backface-hidden {
+    backface-visibility: hidden;
+}

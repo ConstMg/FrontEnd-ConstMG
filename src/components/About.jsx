@@ -78,23 +78,23 @@ const About = () => {
     return (
         <>
             <div
-                className="about min-h-screen bg-white-100 flex justify-center items-center"
+                className="about w-full bg-white-100 flex justify-center items-center"
                 id="about"
             >
                 <div className="w-full px-2 py-10 md:py-10 inline-flex flex-col justify-center items-center gap-0 md:gap-12 pb-20">
                     {/* Header Section - Made responsive */}
-                    <div className="w-full max-w-[900px] px-4 md:px-6 relative">
+                    <div className="w-full max-w-[1350px] px-4 md:px-6 relative">
                         <div className="w-full text-center mb-4">
                             <div
-                                className="text-color-blue-10 text-2xl md:text-4xl font-medium font-['Poppins'] leading-tight md:leading-[48px]"
+                                className="text-color-blue-10 text-2xl md:text-4xl font-medium leading-tight md:leading-[48px]"
                                 data-aos="fade-up"
                             >
                                 ABOUT US
                             </div>
                         </div>
-                        <div className="w-full text-center">
+                        <div className="w-full">
                             <div
-                                className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8"
+                                className="text-black text-sm md:text-base px-2 md:px-8"
                                 data-aos="fade-up"
                                 // data-aos-delay="200"
                             >

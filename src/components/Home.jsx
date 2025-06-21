@@ -30,7 +30,13 @@ const Home = () => {
     }, []);
 
     // ⛔️ Hook sudah aman di atas, baru di sini boleh return null
-    if (!profileData) return null;
+ if (!profileData) {
+     return (
+         <div className="flex items-center justify-center h-screen">
+             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
+         </div>
+     );
+ }
 
     return (
         <div className="home h-dvh relative" id="main">
@@ -77,7 +83,11 @@ const Home = () => {
                     <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-amber-400 font-bold leading-tight">
                         <Typewriter
                             options={{
-                                strings: [profileData?.headline],
+                                strings: [
+                                    profileData?.headline,
+                                    "We Build Your Dream Home",
+                                    "Your Dream Home Awaits",
+                                ],
                                 autoStart: true,
                                 loop: true,
                             }}
