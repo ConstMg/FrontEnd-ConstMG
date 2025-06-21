@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import ImageGallery from "../components/ImageGallery";
 import { p } from "framer-motion/client";
+import { FlipCard } from "../components/FlipCard";
 
 const ProjectPage = () => {
     const { loading, error, fetchProjectWithImages } = useProject();
@@ -59,33 +60,23 @@ const ProjectPage = () => {
 
                 <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projectData.map((project) => (
-                        <div
-                            key={project.project_id}
-                            className="bg-white rounded-lg shadow-md overflow-hidden h-72 relative cursor-pointer transition-transform hover:scale-105"
-                            onClick={() => {
-                                setActiveImages(project.images);
-                                setActiveGallery(true);
-                                setActiveProject(project.project_name);
-                            }}
-                        >
+                        <div key={project.project_id}>
                             {project.images.length > 0 ? (
-                                <img
-                                    src={project.images[0].secure_url}
-                                    alt={project.project_name}
-                                    className="w-full h-full object-cover"
+                                <FlipCard
+                                    imageUrl={project.images[0].secure_url}
+                                    description={project.deskripsi}
+                                    title={project.project_name}
+                                    onClick={() => {
+                                        setActiveImages(project.images);
+                                        setActiveGallery(true);
+                                        setActiveProject(project.project_name);
+                                    }}
                                 />
                             ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <div className="bg-white rounded-lg shadow-md overflow-hidden h-72 flex items-center justify-center">
                                     <p className="text-gray-500">No image</p>
                                 </div>
                             )}
-
-                            {/* Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                                <p className="text-white font-bold text-xl p-4">
-                                    {project.project_name}
-                                </p>
-                            </div>
                         </div>
                     ))}
                 </div>

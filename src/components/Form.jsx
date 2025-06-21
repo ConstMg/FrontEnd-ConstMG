@@ -400,23 +400,24 @@ const Form = ({
                     value={formData.deskripsi}
                     onChange={handleChange}
                     rows="4"
-                    className={commonInputClass}
+                    className={`${commonInputClass} h-80`}
                 ></textarea>
             </div>
         </>
     );
 
     return (
-        <div className="bg-white p-7 z-[100] rounded-xl shadow-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            <div className="flex justify-between items-start mb-6 pb-3 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-800">
+        <div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-5/6 max-w-3xl max-h-[80vh] overflow-y-auto z-[100]">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6 border-b pb-4 border-gray-200">
+                <h2 className="text-2xl font-semibold text-gray-800">
                     {currentConfig.title}
                 </h2>
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="p-1.5 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-100 transition-all duration-200"
-                    aria-label="Close form"
+                    className="p-2 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-100 transition"
+                    aria-label="Close"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -435,40 +436,43 @@ const Form = ({
                 </button>
             </div>
 
+            {/* Error Alert */}
             {error && (
-                <div className="mb-5 p-3.5 bg-red-50 border border-red-300 text-red-700 rounded-lg text-sm">
-                    <strong className="font-medium">Oops!</strong> {error}
+                <div className="mb-5 p-4 bg-red-50 border border-red-300 text-red-700 rounded-lg text-sm">
+                    <strong className="font-semibold">Oops!</strong> {error}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
                 {itemType === "karyawan"
                     ? renderKaryawanFields()
                     : renderProjectFields()}
 
-                <div className="flex justify-end items-center pt-6 mt-2 border-t border-gray-200 space-x-3">
+                {/* Footer Buttons */}
+                <div className="flex justify-end items-center gap-3 pt-6 border-t border-gray-200">
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="px-5 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 transition-colors duration-150"
+                        className="px-5 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 transition"
                     >
                         Batal
                     </button>
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white ${
+                        className={`px-5 py-2.5 rounded-lg text-sm font-medium text-white ${
                             currentConfig.confirmBtnClass
-                        } focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-white ${
+                        } focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-white transition ${
                             isLoading
                                 ? "opacity-60 cursor-not-allowed"
                                 : "hover:shadow-md"
-                        } transition-all duration-150`}
+                        }`}
                     >
                         {isLoading ? (
-                            <span className="flex items-center justify-center">
+                            <span className="flex items-center gap-2">
                                 <svg
-                                    className="animate-spin -ml-0.5 mr-2 h-4 w-4 text-white"
+                                    className="animate-spin h-4 w-4 text-white"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
                                     viewBox="0 0 24 24"
@@ -480,12 +484,12 @@ const Form = ({
                                         r="10"
                                         stroke="currentColor"
                                         strokeWidth="4"
-                                    ></circle>
+                                    />
                                     <path
                                         className="opacity-75"
                                         fill="currentColor"
                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
+                                    />
                                 </svg>
                                 Memproses...
                             </span>

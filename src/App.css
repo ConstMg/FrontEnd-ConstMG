@@ -9,6 +9,14 @@
     overflow-x: hidden;
 }
 
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+
 #root {
     min-height: 100vh;
     background: linear-gradient(to right, #ffedd5, #fed7aa, #fde68a);
@@ -16,6 +24,7 @@
 
 body {
     overflow-x: hidden;
+    background: linear-gradient(to right, #ffedd5, #fed7aa, #fde68a);
     background: linear-gradient(to right, #ffedd5, #fed7aa, #fde68a);
     font-family: sans-serif; /* <-- INI LANGKAH SELANJUTNYA */
     -webkit-font-smoothing: antialiased;
