@@ -92,9 +92,9 @@ const About = () => {
                                 ABOUT US
                             </div>
                         </div>
-                        <div className="w-full">
+                        <div className="w-full text-center">
                             <div
-                                className="text-black text-sm md:text-base px-2 md:px-8"
+                                className="text-black text-sm md:text-base font-normal leading-normal px-2 md:px-8"
                                 data-aos="fade-up"
                                 // data-aos-delay="200"
                             >

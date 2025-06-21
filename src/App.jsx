@@ -4,7 +4,8 @@ import Contact from "./components/Contact";
 import Admin from "./pages/Admin";
 import MainPage from "./pages/MainPage";
 import Presensi from "./pages/Presensi";
-import Project from "./pages/ProjectPage";
+import Project from "./pages/ProjectGallery";
+import ProjectDetail from "./pages/ProjectDetail";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -36,6 +37,7 @@ function App() {
         <Route path="/presensi" element={<Presensi />} />
         <Route path="/login" element={<Login />} />
         <Route path="/project" element={<Project />} />
+        <Route path="/project/:projectName" element={<ProjectDetail />} />
         {/* <Route path="/contact" element={<Contact/>}/> */}
       </Routes>
     </Router>

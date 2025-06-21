@@ -5,12 +5,14 @@ import { NavLink } from "react-router-dom";
 import EditableField from "./EditableField";
 import "./../tailwind.css";
 import { getRandomItems } from "../utils/utils";
+import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 const Project = () => {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const user = localStorage.getItem("userRole");
     const isEditable = user === "admin";
+    const navigate = useNavigate();
     const {
         getImagesProject,
         imagesProjectData,
@@ -90,9 +92,17 @@ const Project = () => {
                     {filteredImages.map((image) => (
                         <div
                             key={image.id}
-                            className="image-item w-72 h-72 relative group overflow-hidden rounded-lg shadow-lg"
+                            className="image-item w-72 h-72 relative group overflow-hidden rounded-lg shadow-lg cursor-pointer"
                             data-aos="fade-up"
                             // data-aos-delay="100"
+                            onClick={() => {
+                                        // Navigate to project-specific page
+                                        navigate(
+                                            `/project/${image.category
+                                                .replace(/\s+/g, "_")
+                                                .toLowerCase()}`
+                                        );
+                                    }}
                         >
                             <img
                                 src={image.src}

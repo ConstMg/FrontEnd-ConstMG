@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import ImageGallery from "../components/ImageGallery";
 import { p } from "framer-motion/client";
 import { FlipCard } from "../components/FlipCard";
+import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
     const { loading, error, fetchProjectWithImages } = useProject();
@@ -12,7 +13,7 @@ const ProjectPage = () => {
     const [activeGallery, setActiveGallery] = useState(false);
     const [activeImages, setActiveImages] = useState(null);
     const [activeProject, setActiveProject] = useState(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const loadProjectData = async () => {
             setIsLoading(true);
@@ -40,17 +41,6 @@ const ProjectPage = () => {
 
     return (
         <div className="min-h-screen flex flex-col">
-            {/* Gallery Modal */}
-            {activeGallery && activeImages && (
-                <>
-                    <ImageGallery
-                        images={activeImages.map((img) => img.secure_url)}
-                        initialIndex={0}
-                        onClose={() => setActiveGallery(false)}
-                    />
-                </>
-            )}
-
             <Navbar />
 
             <div className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-8 w-full">
@@ -67,9 +57,12 @@ const ProjectPage = () => {
                                     description={project.deskripsi}
                                     title={project.project_name}
                                     onClick={() => {
-                                        setActiveImages(project.images);
-                                        setActiveGallery(true);
-                                        setActiveProject(project.project_name);
+                                        // Navigate to project-specific page
+                                        navigate(
+                                            `/project/${project.project_name
+                                                .replace(/\s+/g, "_")
+                                                .toLowerCase()}`
+                                        );
                                     }}
                                 />
                             ) : (

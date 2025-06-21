@@ -157,6 +157,20 @@ export function useProject() {
         }
     }, []);
 
+    const fetchProjectWithImagesByName = useCallback(async (name, limit) => {
+        setLoading(true);
+
+        try {
+            const response = await getProjectImageUrl(name, limit);
+            console.log("Project with images:", response.data);
+            return response.data;
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState(null);
     const [uploadSuccess, setUploadSuccess] = useState(null);
@@ -242,5 +256,6 @@ export function useProject() {
         handleAddProject,
         handleUpdateProject,
         fetchProjectWithImages,
+        fetchProjectWithImagesByName
     };
 }
