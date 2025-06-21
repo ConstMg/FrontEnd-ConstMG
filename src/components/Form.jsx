@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useKaryawan } from "../hooks/useKaryawan";
 import { useProject } from "../hooks/useProject";
-
-import "react-datepicker/dist/react-datepicker.css";
 import { formatDateToYMD } from "./../utils/utils"; // Assuming you have a utility function for date formatting
 const Form = ({
     variant = "add",

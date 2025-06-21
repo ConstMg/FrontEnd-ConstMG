@@ -1,3 +1,7 @@
+import { toast } from "react-toastify";
+import history from "./../utils/history";
+// const history = createBrowserHistory();
+
 export const apiClient = async (endpoint, method = "GET", body = null) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL_API;
     const url = `${BASE_URL}/${endpoint}`;
@@ -30,6 +34,22 @@ export const apiClient = async (endpoint, method = "GET", body = null) => {
             const errorData = await response.json();
             const error = new Error(errorData.message || "API error");
             error.status = response.status;
+
+            if (
+                response.status === 401 ||
+                error.message.toLowerCase().includes("unauthenticated")
+            ) {
+                // ✅ Langsung handle dari sini
+                toast.error("Sesi kamu telah berakhir. Silakan login kembali.");
+                localStorage.clear();
+                if (window.location.pathname !== "/login") {
+                    history.push("/login");
+                }
+
+                // Jika ingin menghentikan eksekusi
+                return Promise.reject(error); // atau throw error;
+            }
+
             throw error;
         }
 

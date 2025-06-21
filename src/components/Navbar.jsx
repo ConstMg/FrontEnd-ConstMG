@@ -55,7 +55,7 @@ function Navbar({
     const handleLogout = () => {
         closeAllSidebars();
         logout();
-        navigate("/login"); // Arahkan ke login setelah logout
+      
     };
 
     const handleAdminNavClick = (tab) => {
