@@ -51,25 +51,25 @@ const ProjectPage = () => {
                 <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projectData.map((project) => (
                         <div key={project.project_id}>
-                            {project.images.length > 0 ? (
-                                <FlipCard
-                                    imageUrl={project.images[0].secure_url}
-                                    description={project.deskripsi}
-                                    title={project.project_name}
-                                    onClick={() => {
-                                        // Navigate to project-specific page
-                                        navigate(
-                                            `/project/${project.project_name
-                                                .replace(/\s+/g, "_")
-                                                .toLowerCase()}`
-                                        );
-                                    }}
-                                />
-                            ) : (
-                                <div className="bg-white rounded-lg shadow-md overflow-hidden h-72 flex items-center justify-center">
-                                    <p className="text-gray-500">No image</p>
-                                </div>
-                            )}
+                            <FlipCard
+                                imageUrl={project.images?.[0]?.secure_url || ""}
+                                description={
+                                    project.deskripsi || "Tidak ada deskripsi"
+                                }
+                                title={
+                                    project.project_name || "Proyek Tanpa Nama"
+                                }
+                                onClick={() => {
+                                    const projectSlug = (
+                                        project.project_name || ""
+                                    )
+                                        .trim()
+                                        .replace(/\s+/g, "_")
+                                        .toLowerCase();
+
+                                    navigate(`/project/${projectSlug}`);
+                                }}
+                            />
                         </div>
                     ))}
                 </div>

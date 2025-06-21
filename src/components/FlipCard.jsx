@@ -1,7 +1,7 @@
 // FlipCard.jsx
 import React from "react";
 // import "./FlipCard.css"; // Jika kamu letakkan CSS-nya di file terpisah
-
+import noImage from "./../assets/no_image.jpeg";
 export const FlipCard = ({ imageUrl, description, title, onClick }) => {
     return (
         <div
@@ -17,11 +17,18 @@ export const FlipCard = ({ imageUrl, description, title, onClick }) => {
                         WebkitBackfaceVisibility: "hidden",
                     }}
                 >
-                    <img
-                        src={imageUrl}
-                        alt={title}
-                        className="w-full h-full object-cover"
-                    />
+                    {imageUrl ? (
+                        <img
+                            src={imageUrl}
+                            alt={title}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <div className="h-full w-full bg-gray-200 rounded-lg flex items-center justify-center">
+                            <p className="text-gray-500">No Images Available</p>
+                        </div>
+                    )}
+
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
                         <p className="text-white font-bold text-xl p-4">
                             {title}
@@ -39,11 +46,7 @@ export const FlipCard = ({ imageUrl, description, title, onClick }) => {
                     }}
                 >
                     <div
-                        className={`text-base font-medium overflow-y-auto h-full py-4 whitespace-pre-line ${
-                            description === "-"
-                                ? "text-center  flex items-center justify-center"
-                                : "text-justify p-4"
-                        }`}
+                        className={`text-base font-medium h-full whitespace-pre-line flex items-center justify-center text-center`}
                     >
                         {description === "-"
                             ? "Belum ada deskripsi."

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useKaryawan } from "../hooks/useKaryawan";
 import { useProject } from "../hooks/useProject";
 
+import "react-datepicker/dist/react-datepicker.css";
+import { formatDateToYMD } from "./../utils/utils"; // Assuming you have a utility function for date formatting
 const Form = ({
     variant = "add",
     itemType = "karyawan",
@@ -66,8 +68,13 @@ const Form = ({
     };
 
     const initialProyekState = {
-        project_name: "",
+        nama_project: "",
         deskripsi: "",
+        pemberi_kerja: "",
+        tanggal_dimulai_proyek: "",
+        tanggal_selesai_proyek: "",
+        kategori: "",
+        nilai_kontrak: "",
         status: "Ongoing", // Assuming 'status' is part of project data
     };
 
@@ -105,7 +112,14 @@ const Form = ({
             } else {
                 // proyek
                 setFormData({
-                    project_name: initialData.project_name || "",
+                    nama_project: initialData.project_name || "",
+                    pemberi_kerja: initialData.pemberi_kerja || "",
+                    tanggal_dimulai_proyek:
+                        initialData.tanggal_dimulai_proyek || "",
+                    tanggal_selesai_proyek:
+                        initialData.tanggal_selesai_proyek || "",
+                    kategori: initialData.kategori || "",
+                    nilai_kontrak: initialData.nilai_kontrak || "",
                     deskripsi: initialData.deskripsi || "",
                     status: initialData.status || "Ongoing",
                 });
@@ -148,8 +162,13 @@ const Form = ({
                 } else {
                     // proyek
                     await handleAddProject(
-                        formData.project_name,
+                        formData.nama_project,
                         formData.deskripsi,
+                        formData.pemberi_kerja,
+                        formatDateToYMD(formData.tanggal_dimulai_proyek),
+                        formatDateToYMD(formData.tanggal_selesai_proyek),
+                        formData.kategori,
+                        formData.nilai_kontrak,
                         formData.status // Assuming status is sent
                     );
                 }
@@ -174,9 +193,29 @@ const Form = ({
                 } else {
                     // proyek
                     if (typeof handleUpdateProject === "function") {
+                        // Konversi format tanggal menjadi YYYY-MM-DD
+                       const startDate = formData.tanggal_dimulai_proyek
+                           ? new Date(formData.tanggal_dimulai_proyek)
+                                 .toISOString()
+                                 .split("T")[0]
+                           : null;
+
+                       const endDate = formData.tanggal_selesai_proyek
+                           ? new Date(formData.tanggal_selesai_proyek)
+                                 .toISOString()
+                                 .split("T")[0]
+                           : null;
+                        console.log(
+                            initialData.project_id + " " + formData.nama_project
+                        );
                         await handleUpdateProject(
                             initialData.project_id,
-                            formData.project_name,
+                            formData.nama_project,
+                            formData.pemberi_kerja,
+                            startDate,
+                            endDate,
+                            formData.kategori,
+                            formData.nilai_kontrak,
                             formData.deskripsi,
                             formData.status
                         );
@@ -192,9 +231,10 @@ const Form = ({
                 `Gagal ${variant === "add" ? "menambahkan" : "memperbarui"} ${
                     itemType === "karyawan" ? "karyawan" : "proyek"
                 }. ${
+                    (console.error(err.response?.data?.message),
                     err.response?.data?.message ||
-                    err.message ||
-                    "Terjadi kesalahan"
+                        err.message ||
+                        "Terjadi kesalahan")
                 }`
             );
         }
@@ -371,21 +411,127 @@ const Form = ({
             {/* Nama Proyek */}
             <div>
                 <label
-                    htmlFor="project_name"
+                    htmlFor="nama_project"
                     className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Nama Proyek
                 </label>
                 <input
                     type="text"
-                    id="project_name"
-                    name="project_name"
-                    value={formData.project_name}
+                    id="nama_project"
+                    name="nama_project"
+                    value={formData.nama_project}
                     onChange={handleChange}
                     required
                     className={commonInputClass}
                 />
             </div>
+            {/* Pemberi Kerja */}
+            <div>
+                <label
+                    htmlFor="pemberi_kerja"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Pemberi Kerja
+                </label>
+                <input
+                    type="text"
+                    id="pemberi_kerja"
+                    name="pemberi_kerja"
+                    value={formData.pemberi_kerja}
+                    onChange={handleChange}
+                    required
+                    className={commonInputClass}
+                />
+            </div>
+
+            {/* Tanggal Dimulai Proyek */}
+            <div>
+                <label
+                    htmlFor="tanggal_dimulai_proyek"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Tanggal Dimulai Proyek
+                </label>
+                <input
+                    type="date"
+                    id="tanggal_dimulai_proyek"
+                    name="tanggal_dimulai_proyek"
+                    value={formData.tanggal_dimulai_proyek || ""}
+                    onChange={(e) =>
+                        setFormData({
+                            ...formData,
+                            tanggal_dimulai_proyek: e.target.value || null,
+                        })
+                    }
+                    placeholder="Pilih tanggal mulai"
+                    className={commonInputClass}
+                />
+            </div>
+
+            {/* Tanggal Selesai Proyek */}
+            <div>
+                <label
+                    htmlFor="tanggal_selesai_proyek"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Tanggal Selesai Proyek
+                </label>
+                <input
+                    type="date"
+                    id="tanggal_selesai_proyek"
+                    name="tanggal_selesai_proyek"
+                    value={formData.tanggal_selesai_proyek || ""}
+                    onChange={(e) =>
+                        setFormData({
+                            ...formData,
+                            tanggal_selesai_proyek: e.target.value || null,
+                        })
+                    }
+                    placeholder="Pilih tanggal selesai"
+                    className={commonInputClass}
+                />
+            </div>
+
+            {/* Kategori */}
+            <div>
+                <label
+                    htmlFor="kategori"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Kategori
+                </label>
+                <input
+                    type="text"
+                    id="kategori"
+                    name="kategori"
+                    value={formData.kategori}
+                    onChange={handleChange}
+                    required
+                    className={commonInputClass}
+                />
+            </div>
+
+            {/* Nilai Kontrak */}
+            <div>
+                <label
+                    htmlFor="nilai_kontrak"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Nilai Kontrak (Rp)
+                </label>
+                <input
+                    type="number"
+                    id="nilai_kontrak"
+                    name="nilai_kontrak"
+                    value={formData.nilai_kontrak}
+                    onChange={handleChange}
+                    min={0}
+                    step="any"
+                    className={commonInputClass}
+                />
+            </div>
+
             {/* Deskripsi */}
             <div>
                 <label
@@ -399,8 +545,8 @@ const Form = ({
                     name="deskripsi"
                     value={formData.deskripsi}
                     onChange={handleChange}
-                    rows="4"
-                    className={`${commonInputClass} h-80`}
+                    rows="2"
+                    className={`${commonInputClass} h-40`}
                 ></textarea>
             </div>
         </>

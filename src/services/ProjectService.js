@@ -8,17 +8,28 @@ export const deleteProject = async (id) => {
     return await apiClient(`admin/projects/${id}`, "DELETE");
 };
 
-export const addProject = async (nama_project, deskripsi) => {
-    return await apiClient(`admin/addProject`, "POST", {
-        nama_project,
-        deskripsi,
-    });
+export const addProject = async (formData) => {
+    return await apiClient("admin/addProject", "POST", formData);
 };
 
-export const updateProject = async (project_id, name, deskripsi) => {
+export const updateProject = async (
+    project_id,
+    name,
+    pemberi_kerja,
+    tanggal_dimulai_proyek,
+    tanggal_selesai_proyek,
+    kategori,
+    nilai_kontrak,
+    deskripsi
+) => {
     return await apiClient(`admin/projects/${project_id}`, "PUT", {
         name,
         deskripsi,
+        pemberi_kerja,
+        tanggal_dimulai_proyek,
+        tanggal_selesai_proyek,
+        kategori,
+        nilai_kontrak,
     });
 };
 

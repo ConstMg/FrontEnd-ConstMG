@@ -9,7 +9,7 @@ import ProjectImages from "./ProjectImages";
 import ImageFolder from "./ImageFolder";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-
+import { formatDateToYMD } from "../utils/utils";
 const DataTable = ({
     variant = "karyawan",
     data = [],
@@ -339,6 +339,19 @@ const DataTable = ({
                             <th className="py-2 px-2 text-left">
                                 Nama Project
                             </th>
+                            <th className="py-2 px-2 text-left">
+                                Pemberi Kerja
+                            </th>
+                            <th className="py-2 px-2 text-left">
+                                Tanggal Mulai
+                            </th>
+                            <th className="py-2 px-2 text-left">
+                                Tanggal Selesai
+                            </th>
+                            <th className="py-2 px-2 text-left">Kategori</th>
+                            <th className="py-2 px-2 text-left">
+                                Nilai Kontrak
+                            </th>
                             <th className="py-2 px-2 text-left">Deskripsi</th>
                             <th className="py-2 px-2 text-center">Gambar</th>
                             <th className="py-2 px-2 text-left">Actions</th>
@@ -355,12 +368,53 @@ const DataTable = ({
                                             : "bg-white"
                                     }
                                 >
+                                    {/* No. */}
                                     <td className="py-2 px-2 border-b">
                                         {index + 1}
                                     </td>
+
+                                    {/* Nama Project */}
                                     <td className="py-2 px-2 border-b">
                                         {project.project_name}
                                     </td>
+
+                                    {/* Pemberi Kerja */}
+                                    <td className="py-2 px-2 border-b">
+                                        {project.pemberi_kerja}
+                                    </td>
+
+                                    {/* Tanggal Mulai */}
+                                    <td className="py-2 px-2 border-b">
+                                        {formatDateToYMD(
+                                            project.tanggal_dimulai_proyek
+                                        )}
+                                    </td>
+
+                                    {/* Tanggal Selesai */}
+                                    <td className="py-2 px-2 border-b">
+                                        {formatDateToYMD(
+                                            project.tanggal_selesai_proyek
+                                        )}
+                                    </td>
+
+                                    {/* Kategori */}
+                                    <td className="py-2 px-2 border-b">
+                                        {project.kategori}
+                                    </td>
+
+                                    {/* Nilai Kontrak */}
+                                    <td className="py-2 px-2 border-b">
+                                        {project.nilai_kontrak?.toLocaleString(
+                                            "id-ID",
+                                            {
+                                                style: "currency",
+                                                currency: "IDR",
+                                                minimumFractionDigits: 0,
+                                            }
+                                        ) || "Rp0"}
+                                    </td>
+
+                                    {/* Deskripsi */}
                                     <td className="py-2 px-2 border-b">
                                         <p className="truncate">
                                             {project.deskripsi !== "-" &&
@@ -373,16 +427,15 @@ const DataTable = ({
                                                 : project.deskripsi}
                                         </p>
                                     </td>
+
+                                    {/* Gambar */}
                                     <td className="py-2 px-2 border-b text-center">
                                         <div className="flex items-center justify-center">
                                             <ImageFolder
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    console.log(project);
-
                                                     const formattedImages =
-                                                        project.images?.length >
-                                                        0
+                                                        project.images?.length
                                                             ? project.images.map(
                                                                   (img) => ({
                                                                       secure_url:
@@ -395,7 +448,7 @@ const DataTable = ({
 
                                                     setSelectedProjectImages({
                                                         name: project.project_name,
-                                                        images: formattedImages, // <-- sesuai dengan prop `images` yang diharapkan ProjectImages
+                                                        images: formattedImages,
                                                         project_id:
                                                             project.project_id ||
                                                             project.id,
@@ -406,6 +459,8 @@ const DataTable = ({
                                             />
                                         </div>
                                     </td>
+
+                                    {/* Actions */}
                                     <td className="py-2 px-2 border-b">
                                         <div className="flex gap-3 items-center">
                                             <img
