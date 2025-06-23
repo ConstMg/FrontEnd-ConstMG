@@ -78,19 +78,19 @@ const About = () => {
     return (
         <>
             <div
-                className="about w-full bg-white-100 flex justify-center items-center"
+                className="about bg-white/50 w-full bg-white-100 flex justify-center items-center"
                 id="about"
             >
                 <div className="w-full px-2 py-10 md:py-10 inline-flex flex-col justify-center items-center gap-0 md:gap-12 pb-20">
                     {/* Header Section - Made responsive */}
                     <div className="w-full max-w-[1350px] px-4 md:px-6 relative">
                         <div className="w-full text-center mb-4">
-                            <div
-                                className="text-color-blue-10 text-2xl md:text-4xl font-medium leading-tight md:leading-[48px]"
+                            <h2
+                                className="ttext-2xl sm:text-4xl font-bold text-center text-gray-800 mb-12"
                                 data-aos="fade-up"
                             >
                                 ABOUT US
-                            </div>
+                            </h2>
                         </div>
                         <div className="w-full text-center">
                             <div

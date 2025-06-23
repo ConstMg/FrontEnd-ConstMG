@@ -140,7 +140,7 @@ const DataTable = ({
                             <th className="py-2 px-2 text-left">Alamat</th>
                             <th className="py-2 px-2 text-left">Divisi</th>
                             <th className="py-2 px-2 text-left">Email</th>
-                            <th className="py-2 px-2 text-left">Password</th>
+                            {/* <th className="py-2 px-2 text-left">Password</th> */}
                             <th className="py-2 px-2 text-left">Role</th>
                             <th className="py-2 px-2 text-left">Actions</th>
                         </tr>
@@ -174,9 +174,9 @@ const DataTable = ({
                                     <td className="py-2 px-2 border-b">
                                         {karyawan.email}
                                     </td>
-                                    <td className="py-2 px-2 border-b">
+                                    {/* <td className="py-2 px-2 border-b">
                                         {karyawan.password}
-                                    </td>
+                                    </td> */}
                                     <td className="py-2 px-2 border-b">
                                         <select
                                             value={karyawan.role}

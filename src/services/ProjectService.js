@@ -12,25 +12,10 @@ export const addProject = async (formData) => {
     return await apiClient("admin/addProject", "POST", formData);
 };
 
-export const updateProject = async (
-    project_id,
-    name,
-    pemberi_kerja,
-    tanggal_dimulai_proyek,
-    tanggal_selesai_proyek,
-    kategori,
-    nilai_kontrak,
-    deskripsi
-) => {
-    return await apiClient(`admin/projects/${project_id}`, "PUT", {
-        name,
-        deskripsi,
-        pemberi_kerja,
-        tanggal_dimulai_proyek,
-        tanggal_selesai_proyek,
-        kategori,
-        nilai_kontrak,
-    });
+export const updateProject = async (formData) => {
+    const { project_id, ...data } = formData;
+    console.log(data);
+    return await apiClient(`admin/projects/${project_id}`, "PUT", data);
 };
 
 export const getProjectImageUrl = async (project_name = null, limit = null) => {

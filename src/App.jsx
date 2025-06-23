@@ -6,6 +6,7 @@ import Admin from "./pages/Admin";
 import MainPage from "./pages/MainPage";
 import Presensi from "./pages/Presensi";
 import Project from "./pages/ProjectGallery";
+
 import ProjectDetail from "./pages/ProjectDetail";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";

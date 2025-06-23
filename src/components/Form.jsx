@@ -147,28 +147,33 @@ const Form = ({
         try {
             if (variant === "add") {
                 if (itemType === "karyawan") {
-                    await handleAddKaryawan(
-                        formData.nama,
-                        formData.nik,
-                        formData.jk,
-                        formData.divisi,
-                        formData.alamat,
-                        formData.penempatan,
-                        formData.email,
-                        formData.password
-                    );
+                    await handleAddKaryawan({
+                        nama: formData.nama,
+                        nik: formData.nik,
+                        jk: formData.jk,
+                        divisi: formData.divisi,
+                        alamat: formData.alamat,
+                        penempatan: formData.penempatan,
+                        email: formData.email,
+                        password: formData.password,
+                        role: localStorage.getItem("userRole"),
+                    });
                 } else {
                     // proyek
-                    await handleAddProject(
-                        formData.nama_project,
-                        formData.deskripsi,
-                        formData.pemberi_kerja,
-                        formatDateToYMD(formData.tanggal_dimulai_proyek),
-                        formatDateToYMD(formData.tanggal_selesai_proyek),
-                        formData.kategori,
-                        formData.nilai_kontrak,
-                        formData.status // Assuming status is sent
-                    );
+                    await handleAddProject({
+                        nama_project: formData.nama_project,
+                        deskripsi: formData.deskripsi,
+                        pemberi_kerja: formData.pemberi_kerja,
+                        tanggal_dimulai_proyek: formatDateToYMD(
+                            formData.tanggal_dimulai_proyek
+                        ),
+                        tanggal_selesai_proyek: formatDateToYMD(
+                            formData.tanggal_selesai_proyek
+                        ),
+                        kategori: formData.kategori,
+                        nilai_kontrak: formData.nilai_kontrak,
+                        status: formData.status,
+                    });
                 }
             } else if (
                 variant === "update" &&
@@ -176,50 +181,43 @@ const Form = ({
             ) {
                 if (itemType === "karyawan") {
                     if (typeof handleUpdateKaryawan === "function") {
-                        await handleUpdateKaryawan(
-                            initialData.id,
-                            formData.nama,
-                            formData.nik,
-                            formData.jk,
-                            formData.divisi,
-                            formData.alamat,
-                            formData.penempatan,
-                            formData.email,
-                            formData.password // Kirim password jika diisi, backend harus handle jika kosong
-                        );
+                        await handleUpdateKaryawan({
+                            id: initialData.id,
+                            nama: formData.nama,
+                            nik: formData.nik,
+                            jk: formData.jk,
+                            divisi: formData.divisi,
+                            alamat: formData.alamat,
+                            penempatan: formData.penempatan,
+                            email: formData.email,
+                            password: formData.password,
+                            role: localStorage.getItem("userRole"),
+                        });
                     }
                 } else {
                     // proyek
                     if (typeof handleUpdateProject === "function") {
-                        // Konversi format tanggal menjadi YYYY-MM-DD
-                       const startDate = formData.tanggal_dimulai_proyek
-                           ? new Date(formData.tanggal_dimulai_proyek)
-                                 .toISOString()
-                                 .split("T")[0]
-                           : null;
-
-                       const endDate = formData.tanggal_selesai_proyek
-                           ? new Date(formData.tanggal_selesai_proyek)
-                                 .toISOString()
-                                 .split("T")[0]
-                           : null;
-                        console.log(
-                            initialData.project_id + " " + formData.nama_project
-                        );
-                        await handleUpdateProject(
-                            initialData.project_id,
-                            formData.nama_project,
-                            formData.pemberi_kerja,
-                            startDate,
-                            endDate,
-                            formData.kategori,
-                            formData.nilai_kontrak,
-                            formData.deskripsi,
-                            formData.status
-                        );
+                        console.log(formData.nama_project);
+                        await handleUpdateProject({
+                            project_id: initialData.project_id,
+                            name: formData.nama_project,
+                            deskripsi: formData.deskripsi,
+                            pemberi_kerja: formData.pemberi_kerja,
+                            tanggal_dimulai_proyek: formatDateToYMD(
+                                formData.tanggal_dimulai_proyek
+                            ),
+                            tanggal_selesai_proyek: formatDateToYMD(
+                                formData.tanggal_selesai_proyek
+                            ),
+                            kategori: formData.kategori,
+                            nilai_kontrak: formData.nilai_kontrak,
+                            status: formData.status,
+                        });
                     }
                 }
             }
+
+            // Callback jika disediakan
             if (onConfirm) {
                 await onConfirm(formData);
             }

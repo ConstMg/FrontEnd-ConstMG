@@ -71,58 +71,16 @@ export function useProject() {
         }
     };
 
-    const handleUpdateProject = async (
-        id,
-        name,
-        pemberi_kerja,
-        tanggal_dimulai_proyek,
-        tanggal_selesai_proyek,
-        kategori,
-        nilai_kontrak,
-        deskripsi
-    ) => {
-        // Validasi tanggal
-        //    if (
-        //        tanggal_dimulai_proyek &&
-        //        tanggal_selesai_proyek &&
-        //        !isNaN(new Date(tanggal_selesai_proyek)) &&
-        //        new Date(tanggal_selesai_proyek) < new Date(tanggal_dimulai_proyek)
-        //    ) {
-        //        toast.error(
-        //            "Tanggal selesai tidak boleh lebih awal dari tanggal mulai."
-        //        );
-        //        return;
-        //    }
-
+    const handleUpdateProject = async (project) => {
         setLoading(true);
         const toastId = toast.loading("Memperbarui project...");
-
+        console.log(`use Project : ${project}`);
         try {
-            await updateProject(
-                id,
-                name,
-                pemberi_kerja,
-                tanggal_dimulai_proyek,
-                tanggal_selesai_proyek,
-                kategori,
-                nilai_kontrak,
-                deskripsi
-            );
+            const response = await updateProject(project);
 
             setProjectData((prevData) =>
-                prevData.map((project) =>
-                    project.id === id
-                        ? {
-                              ...project,
-                              nama: name,
-                              pemberi_kerja,
-                              tanggal_dimulai_proyek,
-                              tanggal_selesai_proyek,
-                              kategori,
-                              nilai_kontrak,
-                              deskripsi,
-                          }
-                        : project
+                prevData.map((p) =>
+                    p.id === project.project_id ? response.data : p
                 )
             );
 
@@ -133,8 +91,6 @@ export function useProject() {
                 autoClose: 3000,
             });
 
-            // Di sinilah biasanya form ditutup, misalnya:
-            // onClose(); <-- pastikan ini tidak dipanggil kalau gagal
             return true;
         } catch (error) {
             setError(error);
@@ -152,15 +108,17 @@ export function useProject() {
         }
     };
 
-    const handleAddProject = async (
-        nama,
-        deskripsi,
-        pemberi_kerja,
-        tanggal_dimulai_proyek,
-        tanggal_selesai_proyek,
-        kategori,
-        nilai_kontrak
-    ) => {
+    const handleAddProject = async (project) => {
+        const {
+            nama_project,
+            deskripsi,
+            pemberi_kerja,
+            tanggal_dimulai_proyek,
+            tanggal_selesai_proyek,
+            kategori,
+            nilai_kontrak,
+        } = project;
+
         // 💡 Validasi: tanggal selesai tidak boleh lebih awal dari tanggal mulai
         if (
             tanggal_dimulai_proyek &&
@@ -178,29 +136,9 @@ export function useProject() {
         const toastId = toast.loading("Menambahkan project...");
 
         try {
-            await addProject({
-                nama_project: nama,
-                deskripsi,
-                pemberi_kerja,
-                tanggal_dimulai_proyek,
-                tanggal_selesai_proyek: tanggal_selesai_proyek || null,
-                kategori,
-                nilai_kontrak,
-            });
+            const response = await addProject(project);
 
-            // Jika kamu ingin menambahkan project baru ke dalam daftar:
-            setProjectData((prevData) => [
-                ...prevData,
-                {
-                    nama_project: nama,
-                    deskripsi,
-                    pemberi_kerja,
-                    tanggal_dimulai_proyek,
-                    tanggal_selesai_proyek,
-                    kategori,
-                    nilai_kontrak,
-                },
-            ]);
+            setProjectData((prevData) => [...prevData, response.data]);
 
             toast.update(toastId, {
                 render: "✅ Project berhasil ditambahkan",
@@ -208,10 +146,12 @@ export function useProject() {
                 isLoading: false,
                 autoClose: 3000,
             });
+
             return true;
         } catch (error) {
             console.error("AddProject error:", error.response?.data || error);
             setError(error);
+
             toast.update(toastId, {
                 render:
                     error.response?.data?.message ||
@@ -221,6 +161,7 @@ export function useProject() {
                 isLoading: false,
                 autoClose: 3000,
             });
+
             throw error;
         } finally {
             setLoading(false);
