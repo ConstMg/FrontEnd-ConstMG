@@ -18,12 +18,12 @@ function App() {
         <>
             <ToastContainer
                 position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick={true}
-                rtl={false}
-                draggable={true}
+                autoClose={1000}
+                // hideProgressBar={false}
+                // newestOnTop={false}
+                // closeOnClick={true}
+                // rtl={false}
+                // draggable={true}
                 theme="colored"
             />
 

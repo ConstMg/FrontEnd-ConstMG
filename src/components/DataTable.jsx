@@ -545,11 +545,11 @@ const DataTable = ({
                         }}
                     >
                         <div className="flex justify-between items-center mb-2">
-                            <h3 className="font-medium text-gray-700">
+                            <h3 className="font-bold text-black bold">
                                 Keterangan
                             </h3>
                         </div>
-                        <div className="text-gray-600">
+                        <div className="text-gray-500 text-sm">
                             {presensiDescription
                                 ? presensiDescription
                                 : "Tidak ada keterangan"}

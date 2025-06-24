@@ -4,6 +4,8 @@ import Check from "../assets/check.svg";
 import { useNavigate } from "react-router-dom";
 import { useKaryawan } from "../hooks/useKaryawan";
 import { compressImage } from "../utils/utils";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 const PresensiKaryawan = () => {
     const name = localStorage.getItem("userName");
     const [description, setDescription] = useState("");
@@ -23,6 +25,16 @@ const PresensiKaryawan = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // ✅ Validasi manual sebelum buat FormData
+        if (
+            (statusPresensi === "Izin" || statusPresensi === "Sakit") &&
+            !compressedFile
+        ) {
+            toast.warn("Mohon unggah bukti izin/sakit anda.");
+            return;
+        }
+
         const formData = new FormData();
         formData.append("nama", name);
         formData.append("status_presensi", statusPresensi);
@@ -30,27 +42,27 @@ const PresensiKaryawan = () => {
         formData.append("longitude", location.lng);
         formData.append("deskripsi", description);
 
-        if (
-            compressedFile &&
-            (statusPresensi === "Izin" || statusPresensi === "Sakit")
-        ) {
+        if (compressedFile) {
             formData.append("gambar", compressedFile);
         }
+
+        // Debug log
         for (let [key, value] of formData.entries()) {
             console.log(`${key}:`, value);
         }
+
         try {
             const response = await handlePresensiMasuk(formData);
             setMessage(response.message);
             if (response) {
-                // ✅ respons dari API sukses, tampilkan success UI
                 setSubmitted(true);
-            } // Set submitted to true after successful submission
+            }
         } catch (error) {
             console.error("Error during presensi:", error);
             // alert("Gagal melakukan presensi. Silakan coba lagi.");
         }
     };
+
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
