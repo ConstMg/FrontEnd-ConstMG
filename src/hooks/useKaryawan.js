@@ -19,14 +19,11 @@ export function useKaryawan() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const handlePresensiMasuk = async (
-        nama,
-        status_presensi,
-        latitude,
-        longitude,
-        deskripsi
-    ) => {
-        if (!status_presensi) {
+    const handlePresensiMasuk = async (formData) => {
+        // Ambil status_presensi dari objek formData untuk validasi
+        const statusPresensi = formData.get("status_presensi");
+
+        if (!statusPresensi) {
             toast.warn("Mohon lengkapi status presensi anda.");
             return;
         }
@@ -35,14 +32,9 @@ export function useKaryawan() {
         const toastId = toast.loading("Mohon tunggu sebentar...");
 
         try {
-            const response = await presensi(
-                nama,
-                status_presensi,
-                latitude,
-                longitude,
-                deskripsi
-            );
-
+            // Teruskan SELURUH objek formData ke fungsi presensi
+            const response = await presensi(formData);
+            console.log(response)
             toast.update(toastId, {
                 render: response.message || "Presensi berhasil!",
                 type: "success",
@@ -53,7 +45,7 @@ export function useKaryawan() {
             return response;
         } catch (error) {
             setError(error);
-
+            console.log(error);
             toast.update(toastId, {
                 render: error.message || "Terjadi kesalahan saat presensi.",
                 type: "error",

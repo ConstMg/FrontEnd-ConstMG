@@ -263,8 +263,8 @@ const ProjectDetail = () => {
                                         {project.nilai_kontrak == "-"
                                             ? "-"
                                             : formatCurrency(
-                                                    project.nilai_kontrak
-                                                )}
+                                                  project.nilai_kontrak
+                                              )}
                                     </p>
                                 </div>
                             </div>
@@ -281,17 +281,28 @@ const ProjectDetail = () => {
                                         {project.tanggal_dimulai_proyek == "-"
                                             ? "-"
                                             : `${Math.ceil(
-                                                    (new Date(
-                                                        project.tanggal_selesai_proyek
-                                                    ) -
-                                                        new Date(
-                                                            project.tanggal_dimulai_proyek
-                                                        )) /
-                                                        (1000 * 60 * 60 * 24)
-                                                )} Hari`}
+                                                  (new Date(
+                                                      project.tanggal_selesai_proyek
+                                                  ) -
+                                                      new Date(
+                                                          project.tanggal_dimulai_proyek
+                                                      )) /
+                                                      (1000 * 60 * 60 * 24)
+                                              )} Hari`}
                                     </p>
                                 </div>
                             )}
+
+                        <div className="mt-5 flex items-start">
+                            <div>
+                                <p className="text-sm text-gray-500">
+                                    Status
+                                </p>
+                                <p className="font-medium capitalize">
+                                    {project.status}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

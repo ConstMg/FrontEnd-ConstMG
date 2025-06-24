@@ -141,7 +141,7 @@ export function useProject() {
             setProjectData((prevData) => [...prevData, response.data]);
 
             toast.update(toastId, {
-                render: "✅ Project berhasil ditambahkan",
+                render: "Project berhasil ditambahkan",
                 type: "success",
                 isLoading: false,
                 autoClose: 3000,
