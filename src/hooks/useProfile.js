@@ -40,22 +40,15 @@ export function useProfile() {
         setError(null);
         setUpdateMessage("");
         try {
-            const response = await updateProfile(
-                updatedData.headline,
-                updatedData.main_description,
-                updatedData.recent_project_desc,
-                updatedData.about_desc,
-                updatedData.nama_kantor,
-                updatedData.nomor_hp,
-                updatedData.email,
-                updatedData.website_url
-            );
+            console.log(updatedData);
+            const response = await updateProfile(updatedData);
+            console.log(response);
             setProfileData(response.data); // Asumsi response.data berisi profil yang diperbarui
             setUpdateMessage(response.message || "Profil berhasil diperbarui");
         } catch (err) {
             console.error("Error updating profile:", err);
-            const errorMessage =
-                err.response?.data?.message || "Gagal memperbarui profil";
+            const errorMessage = err.message || "Gagal memperbarui profil";
+            console.log(errorMessage);
             setError(errorMessage);
             setUpdateMessage(""); // Reset message if error
         } finally {

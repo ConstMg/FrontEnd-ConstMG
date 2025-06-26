@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import ImageGallery from "../components/ImageGallery";
 import { p } from "framer-motion/client";
+import { FlipCard } from "../components/FlipCard";
+import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
     const { loading, error, fetchProjectWithImages } = useProject();
@@ -11,7 +13,7 @@ const ProjectPage = () => {
     const [activeGallery, setActiveGallery] = useState(false);
     const [activeImages, setActiveImages] = useState(null);
     const [activeProject, setActiveProject] = useState(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const loadProjectData = async () => {
             setIsLoading(true);
@@ -38,18 +40,7 @@ const ProjectPage = () => {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="bg-gray-100 min-h-screen flex flex-col">
-            {/* Gallery Modal */}
-            {activeGallery && activeImages && (
-                <>
-                    <ImageGallery
-                        images={activeImages.map((img) => img.secure_url)}
-                        initialIndex={0}
-                        onClose={() => setActiveGallery(false)}
-                    />
-                </>
-            )}
-
+        <div className="min-h-screen flex flex-col">
             <Navbar />
 
             <div className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-8 w-full">
@@ -59,33 +50,26 @@ const ProjectPage = () => {
 
                 <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projectData.map((project) => (
-                        <div
-                            key={project.project_id}
-                            className="bg-white rounded-lg shadow-md overflow-hidden h-72 relative cursor-pointer transition-transform hover:scale-105"
-                            onClick={() => {
-                                setActiveImages(project.images);
-                                setActiveGallery(true);
-                                setActiveProject(project.project_name);
-                            }}
-                        >
-                            {project.images.length > 0 ? (
-                                <img
-                                    src={project.images[0].secure_url}
-                                    alt={project.project_name}
-                                    className="w-full h-full object-cover"
-                                />
-                            ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                    <p className="text-gray-500">No image</p>
-                                </div>
-                            )}
+                        <div key={project.project_id}>
+                            <FlipCard
+                                imageUrl={project.images?.[0]?.secure_url || ""}
+                                description={
+                                    project.deskripsi || "Tidak ada deskripsi"
+                                }
+                                title={
+                                    project.project_name || "Proyek Tanpa Nama"
+                                }
+                                onClick={() => {
+                                    const projectSlug = (
+                                        project.project_name || ""
+                                    )
+                                        .trim()
+                                        .replace(/\s+/g, "_")
+                                        .toLowerCase();
 
-                            {/* Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                                <p className="text-white font-bold text-xl p-4">
-                                    {project.project_name}
-                                </p>
-                            </div>
+                                    navigate(`/project/${projectSlug}`);
+                                }}
+                            />
                         </div>
                     ))}
                 </div>

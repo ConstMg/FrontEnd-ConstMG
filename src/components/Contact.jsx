@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react"; // Tambahkan useState
 import AOS from "aos";
 import "aos/dist/aos.css"; // Import CSS AOS
 import gambarBg from "./../assets/rumah-crop.png"; // Ini tidak digunakan di sini, bisa dihapus kalau tidak perlu
-import { Building2, Phone, Mail, Globe } from "lucide-react"; // Pencil, Save tidak digunakan langsung di sini
+import {
+    Building2,
+    Phone,
+    Mail,
+    Globe,
+    Instagram,
+    FacebookIcon,
+} from "lucide-react"; // Pencil, Save tidak digunakan langsung di sini
 import EditableField from "./EditableField";
 import "./../tailwind.css"; // Pastikan Tailwind CSS diimpor dengan benar
 import Send from "./../assets/send.svg";
@@ -83,19 +90,17 @@ const Contact = () => {
 
     return (
         <>
-            <div className="contact bg-white/50 flex justify-center-safe items-baseline py-8 px-4 md:px-0">
-                <div className="w-full max-w-6xl bg-white rounded-tl-[50px] rounded-tr-[50px] p-10 md:p-14 flex flex-col md:flex-row gap-12 shadow-lg">
+            <div className="contact flex justify-center-safe items-baseline pt-8 px-4 md:px-0">
+                <div className="w-full max-w-6xl pb-8 bg-white rounded-tl-[50px] rounded-tr-[50px] p-10 md:p-8 flex flex-col md:flex-row gap-12 shadow-lg">
                     {/* KIRI: Informasi kantor */}
+
                     <div
                         className="w-full md:w-1/2 space-y-8"
                         data-aos="fade-right"
                     >
-                        <h1 className="text-3xl font-extrabold font-poppins text-yellow-600">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-12 text-yellow-600 border-b-2 border-yellow-400 pb-2">
                             PT MURGUNG
                         </h1>
-                        <h2 className="text-2xl font-semibold mt-2 text-gray-800 border-b-2 border-yellow-400 pb-2">
-                            {profileData?.nama_kantor}
-                        </h2>
 
                         <div className="pl-6 space-y-6">
                             <EditableField
@@ -143,6 +148,30 @@ const Contact = () => {
                                 }
                                 value={profileData.website_url}
                                 name="website_url"
+                                onSave={handleSave}
+                                isEditable={isEditable}
+                            />
+                            <EditableField
+                                icon={
+                                    <FacebookIcon
+                                        size={22}
+                                        className="text-yellow-600"
+                                    />
+                                }
+                                value={profileData.facebook}
+                                name="facebook"
+                                onSave={handleSave}
+                                isEditable={isEditable}
+                            />
+                            <EditableField
+                                icon={
+                                    <Instagram
+                                        size={22}
+                                        className="text-yellow-600"
+                                    />
+                                }
+                                value={profileData.instagram}
+                                name="instagram"
                                 onSave={handleSave}
                                 isEditable={isEditable}
                             />
@@ -224,17 +253,6 @@ const Contact = () => {
                                 {sendingEmail ? "Sending..." : "Send Message"}{" "}
                                 {/* Tampilkan teks loading */}
                             </button>
-                            {/* Opsional: Tampilkan pesan error/sukses di sini juga */}
-                            {/* {emailError && (
-                                <p className="text-red-500 text-center">
-                                    {emailError}
-                                </p>
-                            )}
-                            {emailSuccess && (
-                                <p className="text-green-500 text-center">
-                                    Pesan berhasil dikirim!
-                                </p>
-                            )} */}
                         </form>
                     </div>
                 </div>

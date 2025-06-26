@@ -93,3 +93,12 @@ export const compressImage = (
         reader.onerror = () => reject(new Error("Gagal baca file"));
     });
 };
+
+export function formatDateToYMD(dateString) {
+    if (!dateString || dateString === "-") return null;
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}

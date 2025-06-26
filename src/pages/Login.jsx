@@ -5,12 +5,14 @@ import Navbar from "./../components/Navbar";
 import { useAuth } from "../hooks/useAuth";
 import Typewriter from "typewriter-effect";
 import { Loader } from "../components/Loader";
-
+import { useCtx } from "../context/Context";
+import { Eye, EyeOff } from "lucide-react";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const { isLoading, handleLogin } = useAuth();
+    const { profileData } = useCtx();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -62,8 +64,8 @@ const Login = () => {
                             <p className="text-white text-3xl md:text-4xl font-bold p-6 text-left">
                                 <Typewriter
                                     options={{
-                                        strings: [
-                                            "Make Your Dream House Come True.",
+                                        strings: profileData?.headline || [
+                                            "Selamat Datang di PT Murgung Nusa Parama",
                                         ],
                                         autoStart: true,
                                         loop: true,
@@ -88,11 +90,7 @@ const Login = () => {
                                 Welcome Back 👋
                             </p>
                         </div>
-                        <div className="w-full h-[30px] mt-10 mb-10 flex justify-center items-center">
-                            <div className="scale-[1.6]">
-                                <Loader />
-                            </div>
-                        </div>
+
                         <form
                             onSubmit={handleSubmit}
                             className="flex flex-col gap-5 w-full "
@@ -138,10 +136,14 @@ const Login = () => {
                                     onClick={() =>
                                         setShowPassword((prev) => !prev)
                                     }
-                                    className="absolute right-4 top-7 text-blue-500 text-xl md:text-2xl"
+                                    className="absolute right-4 top-8 text-xl md:text-2xl"
                                     aria-label="Toggle Password Visibility"
                                 >
-                                    {showPassword ? "🙈" : "🙉"}
+                                    {showPassword ? (
+                                        <EyeOff size={22} />
+                                    ) : (
+                                        <Eye size={22} />
+                                    )}
                                 </button>
                             </div>
 

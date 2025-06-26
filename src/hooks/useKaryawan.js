@@ -19,14 +19,11 @@ export function useKaryawan() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const handlePresensiMasuk = async (
-        nama,
-        status_presensi,
-        latitude,
-        longitude,
-        deskripsi
-    ) => {
-        if (!status_presensi) {
+    const handlePresensiMasuk = async (formData) => {
+        // Ambil status_presensi dari objek formData untuk validasi
+        const statusPresensi = formData.get("status_presensi");
+
+        if (!statusPresensi) {
             toast.warn("Mohon lengkapi status presensi anda.");
             return;
         }
@@ -35,14 +32,9 @@ export function useKaryawan() {
         const toastId = toast.loading("Mohon tunggu sebentar...");
 
         try {
-            const response = await presensi(
-                nama,
-                status_presensi,
-                latitude,
-                longitude,
-                deskripsi
-            );
-
+            // Teruskan SELURUH objek formData ke fungsi presensi
+            const response = await presensi(formData);
+            console.log(response)
             toast.update(toastId, {
                 render: response.message || "Presensi berhasil!",
                 type: "success",
@@ -53,7 +45,7 @@ export function useKaryawan() {
             return response;
         } catch (error) {
             setError(error);
-
+            console.log(error);
             toast.update(toastId, {
                 render: error.message || "Terjadi kesalahan saat presensi.",
                 type: "error",
@@ -126,32 +118,18 @@ export function useKaryawan() {
         }
     };
 
-    const handleAddKaryawan = async (
-        nama,
-        nik,
-        jk,
-        alamat,
-        divisi,
-        penempatan,
-        email,
-        password
-    ) => {
+    const handleAddKaryawan = async (karyawan) => {
         setLoading(true);
         const toastId = toast.loading("Menambahkan data karyawan...");
 
         try {
-            const response = await addKaryawan(
-                nama,
-                nik,
-                jk,
-                alamat,
-                divisi,
-                penempatan,
-                email,
-                password,
-                localStorage.getItem("userRole")
-            );
+            const response = await addKaryawan({
+                ...karyawan,
+                role: localStorage.getItem("userRole"), // Inject role
+            });
+
             setKaryawanData((prevData) => [...prevData, response.data]);
+
             toast.update(toastId, {
                 render: "Data karyawan berhasil ditambahkan",
                 type: "success",
@@ -166,14 +144,12 @@ export function useKaryawan() {
 
             let errorMessage = "Gagal menambahkan data karyawan";
 
-            if (error.response && error.response.data) {
-                const data = error.response.data;
-
-                if (data.errors && typeof data.errors === "object") {
-                    errorMessage = Object.values(data.errors).flat().join(", ");
-                } else if (data.message) {
-                    errorMessage = data.message;
-                }
+            if (error.response?.data?.errors) {
+                errorMessage = Object.values(error.response.data.errors)
+                    .flat()
+                    .join(", ");
+            } else if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
             }
 
             setError(errorMessage);
@@ -191,46 +167,27 @@ export function useKaryawan() {
         }
     };
 
-    const handleUpdateKaryawan = async (
-        id,
-        nama,
-        nik,
-        jk,
-        alamat,
-        divisi,
-        penempatan,
-        email,
-        password,
-        role = localStorage.getItem("userRole")
-    ) => {
+    const handleUpdateKaryawan = async (karyawan) => {
         setLoading(true);
-        const toastId = toast.loading("Menambahkan data karyawan...");
+        const toastId = toast.loading("Memperbarui data karyawan...");
 
         try {
-            const response = await updateKaryawan(
-                id,
-                nama,
-                nik,
-                jk,
-                alamat,
-                divisi,
-                penempatan,
-                email,
-                password,
-                role
-            );
+            const response = await updateKaryawan(karyawan);
+
             setKaryawanData((prevData) =>
-                prevData.map((k) => (k.id === id ? response.data : k))
+                prevData.map((k) => (k.id === karyawan.id ? response.data : k))
             );
+
+            // Cek apakah perlu update localStorage
             if (
-                response.data.role == role &&
+                response.data.role === karyawan.role &&
                 response.data.id == localStorage.getItem("userId")
             ) {
                 saveUserToLocalStorage(response.data);
-                // localStorage.setItem("userName", response.data.nama);
             }
+
             toast.update(toastId, {
-                render: `Data ${nama} berhasil diupdate`,
+                render: `Data ${karyawan.nama} berhasil diupdate`,
                 type: "success",
                 isLoading: false,
                 autoClose: 2000,
@@ -238,13 +195,14 @@ export function useKaryawan() {
 
             return true;
         } catch (error) {
-            setError(error);
             toast.update(toastId, {
-                render: error.message || `Gagal mengupdate Data ${nama}`,
+                render:
+                    error.message || `Gagal mengupdate Data ${karyawan.nama}`,
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,
             });
+            setError(error);
             throw error;
         } finally {
             setLoading(false);

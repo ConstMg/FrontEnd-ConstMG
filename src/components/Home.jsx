@@ -14,6 +14,8 @@ const Home = () => {
 
     const handleSave = (fieldName, newValue) => {
         const updated = { ...profileData, [fieldName]: newValue };
+        // Jika headline adalah array, pastikan kita mengubahnya menjadi array
+        console.log("handleSave called with:", updated);
         updateProfileData(updated);
     };
 
@@ -30,7 +32,13 @@ const Home = () => {
     }, []);
 
     // ⛔️ Hook sudah aman di atas, baru di sini boleh return null
-    if (!profileData) return null;
+    if (!profileData) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="home h-dvh relative" id="main">
@@ -66,18 +74,38 @@ const Home = () => {
             >
                 {/* Semua konten kamu di sini */}
                 {isEditable ? (
+                    // <EditableField
+                    //     value={profileData.headline}
+                    //     name="headline"
+                    //     onSave={handleSave}
+                    //     isEditable={isEditable}
+                    //     className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-amber-400 font-bold leading-tight"
+                    // />
                     <EditableField
-                        value={profileData.headline}
+                        value={profileData.headline.join("\n")}
                         name="headline"
-                        onSave={handleSave}
+                        onSave={(name, value) => {
+                            const newHeadline = value.split("\n");
+                            console.log("New Headline:", newHeadline);
+                            handleSave(name, newHeadline);
+                        }}
                         isEditable={isEditable}
                         className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-amber-400 font-bold leading-tight"
                     />
                 ) : (
                     <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-amber-400 font-bold leading-tight">
                         <Typewriter
+                            // options={{
+                            //     strings: [
+                            //         profileData?.headline,
+                            //         "Kami fokus untuk anda.",
+                            //         "Interior Design",
+                            //     ],
+                            //     autoStart: true,
+                            //     loop: true,
+                            // }}
                             options={{
-                                strings: [profileData?.headline],
+                                strings: profileData.headline, // langsung pakai array dari backend
                                 autoStart: true,
                                 loop: true,
                             }}
@@ -89,7 +117,7 @@ const Home = () => {
                     // icon={<Building2 size={18} />}
                     className="text-base sm:text-lg md:text-xl text-gray-700"
                     value={profileData?.main_description}
-                    name="main_desciption"
+                    name="main_description"
                     onSave={handleSave}
                     isEditable={isEditable}
                 />
@@ -99,7 +127,7 @@ const Home = () => {
 
                 <div className="h-[48px] inline-block">
                     <Link
-                        to="project"
+                        to="visi-misi"
                         className="absolute cursor-pointer transition-all bg-amber-400 text-white px-6 py-2 rounded-lg border-amber-500 
           border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
           active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"

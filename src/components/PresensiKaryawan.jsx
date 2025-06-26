@@ -3,14 +3,16 @@ import "./../tailwind.css";
 import Check from "../assets/check.svg";
 import { useNavigate } from "react-router-dom";
 import { useKaryawan } from "../hooks/useKaryawan";
-
+import { compressImage } from "../utils/utils";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 const PresensiKaryawan = () => {
     const name = localStorage.getItem("userName");
     const [description, setDescription] = useState("");
 
     const [location, setLocation] = useState({ lat: null, lng: null });
     const [submitted, setSubmitted] = useState(false); // NEW
-    const today = new Date().toISOString().split("T")[0];
+    const [proofFile, setProofFile] = useState(null);
     const navigate = useNavigate();
     const [statusPresensi, setStatusPresensi] = useState("");
     const { handlePresensiMasuk, fetchRiwayatPresensi, loading, error } =
@@ -19,30 +21,58 @@ const PresensiKaryawan = () => {
     const [dataPresensi, setDataPresensi] = useState([]);
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [compressedFile, setCompressedFile] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const latitude = location.lat;
-        const longitude = location.lng;
-        const status_presensi = statusPresensi;
-        const deskripsi = description;
-        const nama = name;
+
+        // ✅ Validasi manual sebelum buat FormData
+        if (
+            (statusPresensi === "Izin" || statusPresensi === "Sakit") &&
+            !compressedFile
+        ) {
+            toast.warn("Mohon unggah bukti izin/sakit anda.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("nama", name);
+        formData.append("status_presensi", statusPresensi);
+        formData.append("latitude", location.lat);
+        formData.append("longitude", location.lng);
+        formData.append("deskripsi", description);
+
+        if (compressedFile) {
+            formData.append("gambar", compressedFile);
+        }
+
+        // Debug log
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+        }
+
         try {
-            const response = await handlePresensiMasuk(
-                nama,
-                status_presensi,
-                latitude,
-                longitude,
-                deskripsi
-            );
+            const response = await handlePresensiMasuk(formData);
             setMessage(response.message);
             if (response) {
-                // ✅ respons dari API sukses, tampilkan success UI
                 setSubmitted(true);
-            } // Set submitted to true after successful submission
+            }
         } catch (error) {
             console.error("Error during presensi:", error);
             // alert("Gagal melakukan presensi. Silakan coba lagi.");
+        }
+    };
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        try {
+            const compressed = await compressImage(file);
+            setCompressedFile(compressed); // simpan file hasil kompres
+            console.log("File berhasil dikompres:", compressed);
+        } catch (error) {
+            console.error("Gagal kompres gambar:", error);
         }
     };
 
@@ -278,11 +308,27 @@ const PresensiKaryawan = () => {
                                 <option value="Sakit">Sakit</option>
                                 <option value="Alpa">Alpa</option>
                             </select>
-                            {/* <input
-                type="date"
-                className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                defaultValue={today}
-              /> */}
+
+                            {/* ▼▼▼ TAMBAHKAN BLOK KODE INI ▼▼▼ */}
+                            {(statusPresensi === "Izin" ||
+                                statusPresensi === "Sakit") && (
+                                <input
+                                    type="file"
+                                    onChange={handleFileChange}
+                                    required={
+                                        statusPresensi === "Izin" ||
+                                        statusPresensi === "Sakit"
+                                    }
+                                    className="w-full text-sm text-gray-500
+                   file:mr-4 file:py-2 file:px-4
+                   file:rounded-md file:border-0
+                   file:text-sm file:font-semibold
+                   file:bg-yellow-50 file:text-yellow-700
+                   hover:file:bg-yellow-100"
+                                />
+                            )}
+                            {/* ▲▲▲ AKHIR DARI BLOK KODE ▲▲▲ */}
+
                             <input
                                 type="text"
                                 value={
@@ -293,6 +339,7 @@ const PresensiKaryawan = () => {
                                 readOnly
                                 className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-700"
                             />
+
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}

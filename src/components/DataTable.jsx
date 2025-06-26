@@ -9,7 +9,7 @@ import ProjectImages from "./ProjectImages";
 import ImageFolder from "./ImageFolder";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-
+import { formatDateToYMD } from "../utils/utils";
 const DataTable = ({
     variant = "karyawan",
     data = [],
@@ -140,7 +140,7 @@ const DataTable = ({
                             <th className="py-2 px-2 text-left">Alamat</th>
                             <th className="py-2 px-2 text-left">Divisi</th>
                             <th className="py-2 px-2 text-left">Email</th>
-                            <th className="py-2 px-2 text-left">Password</th>
+                            {/* <th className="py-2 px-2 text-left">Password</th> */}
                             <th className="py-2 px-2 text-left">Role</th>
                             <th className="py-2 px-2 text-left">Actions</th>
                         </tr>
@@ -174,9 +174,9 @@ const DataTable = ({
                                     <td className="py-2 px-2 border-b">
                                         {karyawan.email}
                                     </td>
-                                    <td className="py-2 px-2 border-b">
+                                    {/* <td className="py-2 px-2 border-b">
                                         {karyawan.password}
-                                    </td>
+                                    </td> */}
                                     <td className="py-2 px-2 border-b">
                                         <select
                                             value={karyawan.role}
@@ -339,6 +339,20 @@ const DataTable = ({
                             <th className="py-2 px-2 text-left">
                                 Nama Project
                             </th>
+                            <th className="py-2 px-2 text-left">
+                                Pemberi Kerja
+                            </th>
+                            <th className="py-2 px-2 text-left">
+                                Tanggal Mulai
+                            </th>
+                            <th className="py-2 px-2 text-left">
+                                Tanggal Selesai
+                            </th>
+                            <th className="py-2 px-2 text-left">Kategori</th>
+                            <th className="py-2 px-2 text-left">
+                                Nilai Kontrak
+                            </th>
+                            <th className="py-2 px-2 text-left">Status</th>
                             <th className="py-2 px-2 text-left">Deskripsi</th>
                             <th className="py-2 px-2 text-center">Gambar</th>
                             <th className="py-2 px-2 text-left">Actions</th>
@@ -355,13 +369,72 @@ const DataTable = ({
                                             : "bg-white"
                                     }
                                 >
+                                    {/* No. */}
                                     <td className="py-2 px-2 border-b">
                                         {index + 1}
                                     </td>
-                                    <td className="py-2 px-2 border-b">
-                                        {project.project_name}
+
+                                    {/* Nama Project */}
+                                    <td className="py-2 px-2 border-b align-middle text-center">
+                                        {project.project_name?.trim()
+                                            ? project.project_name
+                                            : "-"}
                                     </td>
-                                    <td className="py-2 px-2 border-b">
+
+                                    {/* Pemberi Kerja */}
+                                    <td className="py-2 px-2 border-b text-center align-middle">
+                                        {project.pemberi_kerja?.trim()
+                                            ? project.pemberi_kerja
+                                            : "-"}
+                                    </td>
+
+                                    {/* Tanggal Mulai */}
+                                    <td className="py-2 px-2 border-b align-middle text-center">
+                                        {formatDateToYMD(
+                                            project.tanggal_dimulai_proyek
+                                        ) || "-"}
+                                    </td>
+
+                                    {/* Tanggal Selesai */}
+                                    <td className="py-2 px-2 border-b align-middle text-center">
+                                        {formatDateToYMD(
+                                            project.tanggal_selesai_proyek
+                                        ) || "-"}
+                                    </td>
+
+                                    {/* Kategori */}
+                                    <td className="py-2 px-2 border-b align-middle text-center">
+                                        {project.kategori?.trim()
+                                            ? project.kategori
+                                            : "-"}
+                                    </td>
+
+                                    {/* Nilai Kontrak */}
+                                    <td className="py-2 px-2 border-b align-middle text-center">
+                                        {/* {project.nilai_kontrak
+                                            ? project.nilai_kontrak?.toLocaleString(
+                                                  "id-ID",
+                                                  {
+                                                      style: "currency",
+                                                      currency: "IDR",
+                                                      minimumFractionDigits: 0,
+                                                  }
+                                              )
+                                            : "-"} */}
+                                        {project.nilai_kontrak?.toLocaleString(
+                                            "id-ID",
+                                            {
+                                                style: "currency",
+                                                currency: "IDR",
+                                                minimumFractionDigits: 0,
+                                            }
+                                        ) || "Rp0"}
+                                    </td>
+                                    <td className="py-2 px-2 border-b align-middle text-center">
+                                        {project.status}
+                                    </td>
+                                    {/* Deskripsi */}
+                                    <td className="py-2 px-2 border-b align-middle">
                                         <p className="truncate">
                                             {project.deskripsi !== "-" &&
                                             project.deskripsi.split(/\s+/)
@@ -373,16 +446,15 @@ const DataTable = ({
                                                 : project.deskripsi}
                                         </p>
                                     </td>
-                                    <td className="py-2 px-2 border-b text-center">
+
+                                    {/* Gambar */}
+                                    <td className="py-2 px-2 border-b text-center align-middle">
                                         <div className="flex items-center justify-center">
                                             <ImageFolder
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    console.log(project);
-
                                                     const formattedImages =
-                                                        project.images?.length >
-                                                        0
+                                                        project.images?.length
                                                             ? project.images.map(
                                                                   (img) => ({
                                                                       secure_url:
@@ -395,7 +467,7 @@ const DataTable = ({
 
                                                     setSelectedProjectImages({
                                                         name: project.project_name,
-                                                        images: formattedImages, // <-- sesuai dengan prop `images` yang diharapkan ProjectImages
+                                                        images: formattedImages,
                                                         project_id:
                                                             project.project_id ||
                                                             project.id,
@@ -406,6 +478,8 @@ const DataTable = ({
                                             />
                                         </div>
                                     </td>
+
+                                    {/* Actions */}
                                     <td className="py-2 px-2 border-b">
                                         <div className="flex gap-3 items-center">
                                             <img
@@ -471,11 +545,11 @@ const DataTable = ({
                         }}
                     >
                         <div className="flex justify-between items-center mb-2">
-                            <h3 className="font-medium text-gray-700">
+                            <h3 className="font-bold text-black bold">
                                 Keterangan
                             </h3>
                         </div>
-                        <div className="text-gray-600">
+                        <div className="text-gray-500 text-sm">
                             {presensiDescription
                                 ? presensiDescription
                                 : "Tidak ada keterangan"}
@@ -490,6 +564,9 @@ const DataTable = ({
                             <th className="py-2 px-2 text-left">Jam Masuk</th>
                             <th className="py-2 px-2 text-left">Jam Keluar</th>
                             <th className="py-2 px-2 text-left">Status</th>
+                            <th className="py-2 px-2 text-left">
+                                Bukti Sakit atau Izin
+                            </th>
                             <th className="py-2 px-2 text-center">Lokasi</th>
                         </tr>
                     </thead>
@@ -535,6 +612,20 @@ const DataTable = ({
                                                     e.stopPropagation(); // Prevent event bubbling
                                                 }}
                                             />
+                                        )}
+                                    </td>
+                                    <td className="py-2 px-2 border-b">
+                                        {presensi.gambar ? (
+                                            <a
+                                                href={presensi.gambar}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-500 underline"
+                                            >
+                                                Lihat Gambar
+                                            </a>
+                                        ) : (
+                                            "-"
                                         )}
                                     </td>
                                     <td className="py-2 px-2 border-b text-center">

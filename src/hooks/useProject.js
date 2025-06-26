@@ -71,25 +71,26 @@ export function useProject() {
         }
     };
 
-    const handleUpdateProject = async (id, nama, deskripsi) => {
+    const handleUpdateProject = async (project) => {
         setLoading(true);
         const toastId = toast.loading("Memperbarui project...");
-
+        console.log(`use Project : ${project}`);
         try {
-            await updateProject(id, nama, deskripsi);
+            const response = await updateProject(project);
+
             setProjectData((prevData) =>
-                prevData.map((project) =>
-                    project.id === id
-                        ? { ...project, nama, deskripsi }
-                        : project
+                prevData.map((p) =>
+                    p.id === project.project_id ? response.data : p
                 )
             );
+
             toast.update(toastId, {
                 render: "Project berhasil diperbarui!",
                 type: "success",
                 isLoading: false,
                 autoClose: 3000,
             });
+
             return true;
         } catch (error) {
             setError(error);
@@ -107,36 +108,60 @@ export function useProject() {
         }
     };
 
-    const handleAddProject = async (nama, deskripsi) => {
+    const handleAddProject = async (project) => {
+        const {
+            nama_project,
+            deskripsi,
+            pemberi_kerja,
+            tanggal_dimulai_proyek,
+            tanggal_selesai_proyek,
+            kategori,
+            nilai_kontrak,
+        } = project;
+
+        // 💡 Validasi: tanggal selesai tidak boleh lebih awal dari tanggal mulai
+        if (
+            tanggal_dimulai_proyek &&
+            tanggal_selesai_proyek &&
+            !isNaN(new Date(tanggal_selesai_proyek)) &&
+            new Date(tanggal_selesai_proyek) < new Date(tanggal_dimulai_proyek)
+        ) {
+            toast.error(
+                "Tanggal selesai tidak boleh lebih awal dari tanggal mulai."
+            );
+            return;
+        }
+
         setLoading(true);
-        const toastId = toast.loading("Memperbarui project...");
+        const toastId = toast.loading("Menambahkan project...");
 
         try {
-            await addProject(nama, deskripsi);
-            setProjectData((prevData) =>
-                prevData.map((project) =>
-                    project.nama_project === nama
-                        ? { ...project, nama, deskripsi }
-                        : project
-                )
-            );
+            const response = await addProject(project);
+
+            setProjectData((prevData) => [...prevData, response.data]);
+
             toast.update(toastId, {
                 render: "Project berhasil ditambahkan",
                 type: "success",
                 isLoading: false,
                 autoClose: 3000,
             });
+
             return true;
         } catch (error) {
+            console.error("AddProject error:", error.response?.data || error);
             setError(error);
+
             toast.update(toastId, {
                 render:
+                    error.response?.data?.message ||
                     error.message ||
                     "Terjadi kesalahan saat menambahkan project.",
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,
             });
+
             throw error;
         } finally {
             setLoading(false);
@@ -148,6 +173,20 @@ export function useProject() {
 
         try {
             const response = await getProjectImageUrl("", limit);
+            console.log("Project with images:", response.data);
+            return response.data;
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const fetchProjectWithImagesByName = useCallback(async (name, limit) => {
+        setLoading(true);
+
+        try {
+            const response = await getProjectImageUrl(name, limit);
             console.log("Project with images:", response.data);
             return response.data;
         } catch (error) {
@@ -242,5 +281,6 @@ export function useProject() {
         handleAddProject,
         handleUpdateProject,
         fetchProjectWithImages,
+        fetchProjectWithImagesByName,
     };
 }

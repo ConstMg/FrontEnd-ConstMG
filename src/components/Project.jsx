@@ -5,12 +5,14 @@ import { NavLink } from "react-router-dom";
 import EditableField from "./EditableField";
 import "./../tailwind.css";
 import { getRandomItems } from "../utils/utils";
+import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 const Project = () => {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const user = localStorage.getItem("userRole");
     const isEditable = user === "admin";
+    const navigate = useNavigate();
     const {
         getImagesProject,
         imagesProjectData,
@@ -57,18 +59,18 @@ const Project = () => {
     return (
         <>
             <div
-                className="project w-full flex flex-col items-center gap-4 px-6 md:px-24 py-20 bg-white/50"
+                className="project w-full flex flex-col items-center gap-4 px-6 md:px-24 py-20 "
                 id="project"
             >
-                <p
-                    className="text-center justify-center text-color-blue-10 text-4xl font-medium font-['Poppins'] leading-[48px]"
+                <h2
+                    className="text-2xl sm:text-4xl font-bold text-center text-gray-800 mb-12"
                     data-aos="fade-up"
                 >
                     Our Recent Project
-                </p>
+                </h2>
                 <div className="w-full text-center">
                     <div
-                        className="text-gray-400 text-sm md:text-base font-normal font-['Poppins'] leading-normal px-2 md:px-8"
+                        className="text-black text-sm md:text-base font-normal leading-normal px-2 md:px-8"
                         data-aos="fade-up"
                         // data-aos-delay="50"
                     >
@@ -84,31 +86,47 @@ const Project = () => {
 
                 <div
                     className="gallery w-full flex flex-wrap justify-center gap-8"
-                    data-aos="fade-up"
-                    // data-aos-delay="100"
+                    data-aos="fade-up" // AOS cukup di sini untuk seluruh galeri
                 >
                     {filteredImages.map((image) => (
                         <div
                             key={image.id}
-                            className="image-item w-72 h-72 relative group overflow-hidden rounded-lg shadow-lg"
-                            data-aos="fade-up"
-                            // data-aos-delay="100"
+                            className="image-item w-72 h-72 relative group overflow-hidden rounded-lg shadow-lg cursor-pointer"
+                            // data-aos dihapus dari sini agar tidak konflik dengan hover
+                            onClick={() => {
+                                navigate(
+                                    `/project/${image.category
+                                        .replace(/\s+/g, "_")
+                                        .toLowerCase()}`
+                                );
+                            }}
                         >
                             <img
                                 src={image.src}
                                 alt={image.alt}
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                                data-aos="fade-down"
-                                // data-aos-delay="200"
+                                className="absolute inset-0 w-full h-full object-cover 
+                           transition-transform duration-500 ease-in-out  // DIUBAH: durasi lebih lama dan ditambah ease-in-out
+                           group-hover:scale-110"
+                                // data-aos dihapus dari sini
                             />
                             <div
-                                className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-end justify-center p-8"
-                                data-aos="zoom-in"
-                                // data-aos-delay="150"
+                                className="absolute inset-0 bg-black/0 group-hover:bg-black/50 
+                           transition-all duration-500 ease-in-out" // DIUBAH: durasi lebih lama dan ditambah ease-in-out
+                                // data-aos dihapus dari sini
                             >
-                                <p className="text-white text-xl font-medium transform group-hover:-translate-y-5 transition-transform duration-300">
-                                    {image.category}
-                                </p>
+                                {/* Pembungkus untuk teks agar posisi awal bisa diatur */}
+                                <div className="absolute inset-0 flex items-end justify-center p-8">
+                                    <p
+                                        className="text-white text-xl font-medium 
+                                  opacity-0 transform translate-y-5 // DITAMBAHKAN: Posisi awal teks (tidak terlihat & sedikit di bawah)
+                                  group-hover:opacity-100 group-hover:translate-y-0 // DITAMBAHKAN: Posisi akhir saat hover (terlihat & di posisi normal)
+                                  transition-all duration-500 ease-in-out delay-100"
+                                    >
+                                        {" "}
+                                        {/* DIUBAH: Transisi untuk semua properti dengan sedikit delay */}
+                                        {image.category}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     ))}

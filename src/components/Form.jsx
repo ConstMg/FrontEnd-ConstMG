@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useKaryawan } from "../hooks/useKaryawan";
 import { useProject } from "../hooks/useProject";
-
+import { formatDateToYMD } from "./../utils/utils"; // Assuming you have a utility function for date formatting
 const Form = ({
     variant = "add",
     itemType = "karyawan",
@@ -66,8 +66,13 @@ const Form = ({
     };
 
     const initialProyekState = {
-        project_name: "",
+        nama_project: "",
         deskripsi: "",
+        pemberi_kerja: "",
+        tanggal_dimulai_proyek: "",
+        tanggal_selesai_proyek: "",
+        kategori: "",
+        nilai_kontrak: "",
         status: "Ongoing", // Assuming 'status' is part of project data
     };
 
@@ -105,7 +110,14 @@ const Form = ({
             } else {
                 // proyek
                 setFormData({
-                    project_name: initialData.project_name || "",
+                    nama_project: initialData.project_name || "",
+                    pemberi_kerja: initialData.pemberi_kerja || "",
+                    tanggal_dimulai_proyek:
+                        initialData.tanggal_dimulai_proyek || "",
+                    tanggal_selesai_proyek:
+                        initialData.tanggal_selesai_proyek || "",
+                    kategori: initialData.kategori || "",
+                    nilai_kontrak: initialData.nilai_kontrak || "",
                     deskripsi: initialData.deskripsi || "",
                     status: initialData.status || "Ongoing",
                 });
@@ -135,23 +147,33 @@ const Form = ({
         try {
             if (variant === "add") {
                 if (itemType === "karyawan") {
-                    await handleAddKaryawan(
-                        formData.nama,
-                        formData.nik,
-                        formData.jk,
-                        formData.divisi,
-                        formData.alamat,
-                        formData.penempatan,
-                        formData.email,
-                        formData.password
-                    );
+                    await handleAddKaryawan({
+                        nama: formData.nama,
+                        nik: formData.nik,
+                        jk: formData.jk,
+                        divisi: formData.divisi,
+                        alamat: formData.alamat,
+                        penempatan: formData.penempatan,
+                        email: formData.email,
+                        password: formData.password,
+                        role: localStorage.getItem("userRole"),
+                    });
                 } else {
                     // proyek
-                    await handleAddProject(
-                        formData.project_name,
-                        formData.deskripsi,
-                        formData.status // Assuming status is sent
-                    );
+                    await handleAddProject({
+                        nama_project: formData.nama_project,
+                        deskripsi: formData.deskripsi,
+                        pemberi_kerja: formData.pemberi_kerja,
+                        tanggal_dimulai_proyek: formatDateToYMD(
+                            formData.tanggal_dimulai_proyek
+                        ),
+                        tanggal_selesai_proyek: formatDateToYMD(
+                            formData.tanggal_selesai_proyek
+                        ),
+                        kategori: formData.kategori,
+                        nilai_kontrak: formData.nilai_kontrak,
+                        status: formData.status,
+                    });
                 }
             } else if (
                 variant === "update" &&
@@ -159,30 +181,43 @@ const Form = ({
             ) {
                 if (itemType === "karyawan") {
                     if (typeof handleUpdateKaryawan === "function") {
-                        await handleUpdateKaryawan(
-                            initialData.id,
-                            formData.nama,
-                            formData.nik,
-                            formData.jk,
-                            formData.divisi,
-                            formData.alamat,
-                            formData.penempatan,
-                            formData.email,
-                            formData.password // Kirim password jika diisi, backend harus handle jika kosong
-                        );
+                        await handleUpdateKaryawan({
+                            id: initialData.id,
+                            nama: formData.nama,
+                            nik: formData.nik,
+                            jk: formData.jk,
+                            divisi: formData.divisi,
+                            alamat: formData.alamat,
+                            penempatan: formData.penempatan,
+                            email: formData.email,
+                            password: formData.password,
+                            role: localStorage.getItem("userRole"),
+                        });
                     }
                 } else {
                     // proyek
                     if (typeof handleUpdateProject === "function") {
-                        await handleUpdateProject(
-                            initialData.project_id,
-                            formData.project_name,
-                            formData.deskripsi,
-                            formData.status
-                        );
+                        console.log(formData.nama_project);
+                        await handleUpdateProject({
+                            project_id: initialData.project_id,
+                            name: formData.nama_project,
+                            deskripsi: formData.deskripsi,
+                            pemberi_kerja: formData.pemberi_kerja,
+                            tanggal_dimulai_proyek: formatDateToYMD(
+                                formData.tanggal_dimulai_proyek
+                            ),
+                            tanggal_selesai_proyek: formatDateToYMD(
+                                formData.tanggal_selesai_proyek
+                            ),
+                            kategori: formData.kategori,
+                            nilai_kontrak: formData.nilai_kontrak,
+                            status: formData.status,
+                        });
                     }
                 }
             }
+
+            // Callback jika disediakan
             if (onConfirm) {
                 await onConfirm(formData);
             }
@@ -192,9 +227,10 @@ const Form = ({
                 `Gagal ${variant === "add" ? "menambahkan" : "memperbarui"} ${
                     itemType === "karyawan" ? "karyawan" : "proyek"
                 }. ${
+                    (console.error(err.response?.data?.message),
                     err.response?.data?.message ||
-                    err.message ||
-                    "Terjadi kesalahan"
+                        err.message ||
+                        "Terjadi kesalahan")
                 }`
             );
         }
@@ -371,21 +407,127 @@ const Form = ({
             {/* Nama Proyek */}
             <div>
                 <label
-                    htmlFor="project_name"
+                    htmlFor="nama_project"
                     className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
                     Nama Proyek
                 </label>
                 <input
                     type="text"
-                    id="project_name"
-                    name="project_name"
-                    value={formData.project_name}
+                    id="nama_project"
+                    name="nama_project"
+                    value={formData.nama_project}
                     onChange={handleChange}
                     required
                     className={commonInputClass}
                 />
             </div>
+            {/* Pemberi Kerja */}
+            <div>
+                <label
+                    htmlFor="pemberi_kerja"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Pemberi Kerja
+                </label>
+                <input
+                    type="text"
+                    id="pemberi_kerja"
+                    name="pemberi_kerja"
+                    value={formData.pemberi_kerja}
+                    onChange={handleChange}
+                    required
+                    className={commonInputClass}
+                />
+            </div>
+
+            {/* Tanggal Dimulai Proyek */}
+            <div>
+                <label
+                    htmlFor="tanggal_dimulai_proyek"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Tanggal Dimulai Proyek
+                </label>
+                <input
+                    type="date"
+                    id="tanggal_dimulai_proyek"
+                    name="tanggal_dimulai_proyek"
+                    value={formData.tanggal_dimulai_proyek || ""}
+                    onChange={(e) =>
+                        setFormData({
+                            ...formData,
+                            tanggal_dimulai_proyek: e.target.value || null,
+                        })
+                    }
+                    placeholder="Pilih tanggal mulai"
+                    className={commonInputClass}
+                />
+            </div>
+
+            {/* Tanggal Selesai Proyek */}
+            <div>
+                <label
+                    htmlFor="tanggal_selesai_proyek"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Tanggal Selesai Proyek
+                </label>
+                <input
+                    type="date"
+                    id="tanggal_selesai_proyek"
+                    name="tanggal_selesai_proyek"
+                    value={formData.tanggal_selesai_proyek || ""}
+                    onChange={(e) =>
+                        setFormData({
+                            ...formData,
+                            tanggal_selesai_proyek: e.target.value || null,
+                        })
+                    }
+                    placeholder="Pilih tanggal selesai"
+                    className={commonInputClass}
+                />
+            </div>
+
+            {/* Kategori */}
+            <div>
+                <label
+                    htmlFor="kategori"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Kategori
+                </label>
+                <input
+                    type="text"
+                    id="kategori"
+                    name="kategori"
+                    value={formData.kategori}
+                    onChange={handleChange}
+                    required
+                    className={commonInputClass}
+                />
+            </div>
+
+            {/* Nilai Kontrak */}
+            <div>
+                <label
+                    htmlFor="nilai_kontrak"
+                    className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                    Nilai Kontrak (Rp)
+                </label>
+                <input
+                    type="number"
+                    id="nilai_kontrak"
+                    name="nilai_kontrak"
+                    value={formData.nilai_kontrak}
+                    onChange={handleChange}
+                    min={0}
+                    step="any"
+                    className={commonInputClass}
+                />
+            </div>
+
             {/* Deskripsi */}
             <div>
                 <label
@@ -399,24 +541,25 @@ const Form = ({
                     name="deskripsi"
                     value={formData.deskripsi}
                     onChange={handleChange}
-                    rows="4"
-                    className={commonInputClass}
+                    rows="2"
+                    className={`${commonInputClass} h-40`}
                 ></textarea>
             </div>
         </>
     );
 
     return (
-        <div className="bg-white p-7 z-[100] rounded-xl shadow-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            <div className="flex justify-between items-start mb-6 pb-3 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-800">
+        <div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-5/6 max-w-3xl max-h-[80vh] overflow-y-auto z-[100]">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6 border-b pb-4 border-gray-200">
+                <h2 className="text-2xl font-semibold text-gray-800">
                     {currentConfig.title}
                 </h2>
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="p-1.5 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-100 transition-all duration-200"
-                    aria-label="Close form"
+                    className="p-2 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-100 transition"
+                    aria-label="Close"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -435,40 +578,43 @@ const Form = ({
                 </button>
             </div>
 
+            {/* Error Alert */}
             {error && (
-                <div className="mb-5 p-3.5 bg-red-50 border border-red-300 text-red-700 rounded-lg text-sm">
-                    <strong className="font-medium">Oops!</strong> {error}
+                <div className="mb-5 p-4 bg-red-50 border border-red-300 text-red-700 rounded-lg text-sm">
+                    <strong className="font-semibold">Oops!</strong> {error}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
                 {itemType === "karyawan"
                     ? renderKaryawanFields()
                     : renderProjectFields()}
 
-                <div className="flex justify-end items-center pt-6 mt-2 border-t border-gray-200 space-x-3">
+                {/* Footer Buttons */}
+                <div className="flex justify-end items-center gap-3 pt-6 border-t border-gray-200">
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="px-5 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 transition-colors duration-150"
+                        className="px-5 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 transition"
                     >
                         Batal
                     </button>
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white ${
+                        className={`px-5 py-2.5 rounded-lg text-sm font-medium text-white ${
                             currentConfig.confirmBtnClass
-                        } focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-white ${
+                        } focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-white transition ${
                             isLoading
                                 ? "opacity-60 cursor-not-allowed"
                                 : "hover:shadow-md"
-                        } transition-all duration-150`}
+                        }`}
                     >
                         {isLoading ? (
-                            <span className="flex items-center justify-center">
+                            <span className="flex items-center gap-2">
                                 <svg
-                                    className="animate-spin -ml-0.5 mr-2 h-4 w-4 text-white"
+                                    className="animate-spin h-4 w-4 text-white"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
                                     viewBox="0 0 24 24"
@@ -480,12 +626,12 @@ const Form = ({
                                         r="10"
                                         stroke="currentColor"
                                         strokeWidth="4"
-                                    ></circle>
+                                    />
                                     <path
                                         className="opacity-75"
                                         fill="currentColor"
                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
+                                    />
                                 </svg>
                                 Memproses...
                             </span>
