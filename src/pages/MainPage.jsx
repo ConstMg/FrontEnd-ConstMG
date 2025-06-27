@@ -13,13 +13,11 @@ import Map from "../components/Map";
 import OurClients from "../components/OurClients";
 import WhyChooseUs from "../components/WhyChooseUs";
 import Header from "../components/Header";
-// import { ToastContainer } from "react-toastify";
 
 const MainPage = () => {
     return (
         <div className="mainPage">
             <Provider>
-                
                 <Navbar />
                 <Header />
                 <Home />
