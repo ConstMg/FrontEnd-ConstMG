@@ -67,7 +67,6 @@ const EditableField = ({ icon, value, name, onSave, isEditable }) => {
                             name === "recent_project_desc" ||
                             name === "visi" ||
                             name === "misi"
-
                                 ? 8
                                 : 4
                         }
@@ -75,7 +74,7 @@ const EditableField = ({ icon, value, name, onSave, isEditable }) => {
                         onChange={(e) => setTempValue(e.target.value)}
                     />
                 ) : (
-                    <div className="text-sm font-medium overflow-y-auto h-full py-4 break-words break-all whitespace-pre-line md:text-base">
+                    <div className="text-sm font-medium overflow-y-auto h-full py-4 break-words whitespace-pre-line md:text-base">
                         {value}
                     </div>
                 )}
