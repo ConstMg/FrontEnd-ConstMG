@@ -19,22 +19,17 @@ export function useImages() {
         try {
             const response = await fetchImagesProjects(project_name, limit);
             // Memastikan response.data adalah array, atau default ke array kosong
-            console.log("Response from fetchImagesProjects:", response);
 
             const imageDataArray =
                 response && Array.isArray(response.data) ? response.data : [];
 
             if (project_name.trim() === "") {
-                // console.log(`Response (all projects images): ${response?.message}`);
                 const allImages = imageDataArray.flatMap(
                     (project) => project.images || []
                 );
                 setImagesData(allImages);
                 // Simpan array gambar ke imagesData
             } else {
-                // console.log(
-                //     `Response (project "${project_name}" images): ${response?.message}`
-                // );
                 setImagesProjectData(imageDataArray); // Simpan array gambar spesifik proyek
             }
             return imageDataArray; // Kembalikan data yang diambil untuk penggunaan langsung jika perlu
@@ -53,15 +48,11 @@ export function useImages() {
         try {
             const response = await fetchImagesProjects(project_name, limit);
             if (project_name.trim() === "") {
-                console.log(`Response (all): ${response.message}`);
                 const allImages = imageDataArray.flatMap(
                     (project) => project.images || []
                 );
                 setImagesData(allImages);
             } else {
-                console.log(
-                    `Response (project "${project_name}"): ${response.message}`
-                );
                 setImagesProjectData(response);
             }
         } catch (err) {
@@ -76,7 +67,6 @@ export function useImages() {
         setError(null); // reset error sebelumnya
         try {
             const response = await fetcImagesAbout();
-            console.log(`Response (all): ${response.message}`);
             setimagesAboutData(response.data);
         } catch (err) {
             setError("Gagal mengambil data gambar");

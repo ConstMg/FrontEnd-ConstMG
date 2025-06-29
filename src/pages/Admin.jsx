@@ -73,7 +73,6 @@ const Admin = () => {
         const isLoggedIn = localStorage.getItem("isLoggedIn");
         
         if (!isLoggedIn || userRole !== "admin") {
-            console.log("Unauthorized access: Redirecting to main page");
             navigate("/main");
         }
     }, [navigate]);

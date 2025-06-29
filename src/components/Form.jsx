@@ -197,7 +197,7 @@ const Form = ({
                 } else {
                     // proyek
                     if (typeof handleUpdateProject === "function") {
-                        console.log(formData.nama_project);
+                        
                         await handleUpdateProject({
                             project_id: initialData.project_id,
                             name: formData.nama_project,

@@ -116,6 +116,16 @@ function Navbar({
         });
     }
 
+    const shouldHideNavbar = (pathname) => {
+    // Cek daftar path yang sudah ditetapkan
+    if (hideMainSiteMidNavOn.includes(pathname)) return true;
+    
+    // Cek jika pathname dimulai dengan /project/ (untuk detail)
+    if (pathname.startsWith('/project/')) return true;
+    
+    return false;
+}
+
     return (
         <>
             {/* Main Navbar */}
@@ -144,7 +154,7 @@ function Navbar({
 
                 {/* Middle Section: Desktop Navigation or Admin Title */}
                 <div className="mid-section flex-grow hidden md:flex justify-center items-center">
-                    {!hideMainSiteMidNavOn.includes(location.pathname) &&
+                    {!shouldHideNavbar(location.pathname) &&
                         !isAdminPage && (
                             <ul className="flex flex-row justify-center items-center gap-6 text-sm lg:text-base font-medium text-gray-600">
                                 {mainSiteNavItems.map((item) =>
@@ -491,7 +501,8 @@ function Navbar({
                                     ))}
                                 {/* Login/Logout & Dashboard for Admin in Main Mobile Menu */}
                                 <li className="border-t ">
-                                    {location.pathname !== "/login" &&
+                                    <ul>
+                                        {location.pathname !== "/login" &&
                                         location.pathname === "/main" &&
                                         (isLoggedIn ? (
                                             renderNavByRole()?.map((item) => (
@@ -532,6 +543,8 @@ function Navbar({
                                                 Login
                                             </NavLink>
                                         ))}
+                                    </ul>
+                                    
 
                                     {location.pathname === "/presensi" &&
                                         renderNavByRole()?.map((item) => (

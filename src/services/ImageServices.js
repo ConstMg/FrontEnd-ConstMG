@@ -11,13 +11,8 @@ export const fetchImagesProjects = async (project_name, limit) => {
     const queryString = params.toString();
 
     if (queryString) endpoint += `?${queryString}`;
-    console.log(endpoint);
 
     return await apiClient(endpoint, "GET");
-    // return apiClient(
-    //     `cloudinary/images?project_name=${project_name}&limit=${limit}`,
-    //     "GET"
-    // );
 };
 
 export const fetcImagesAbout = async () => {

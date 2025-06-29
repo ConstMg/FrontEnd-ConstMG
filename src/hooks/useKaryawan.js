@@ -34,7 +34,6 @@ export function useKaryawan() {
         try {
             // Teruskan SELURUH objek formData ke fungsi presensi
             const response = await presensi(formData);
-            console.log(response)
             toast.update(toastId, {
                 render: response.message || "Presensi berhasil!",
                 type: "success",
@@ -45,7 +44,6 @@ export function useKaryawan() {
             return response;
         } catch (error) {
             setError(error);
-            console.log(error);
             toast.update(toastId, {
                 render: error.message || "Terjadi kesalahan saat presensi.",
                 type: "error",
@@ -137,10 +135,8 @@ export function useKaryawan() {
                 autoClose: 2000,
             });
 
-            console.log("Data karyawan berhasil ditambahkan:", response.data);
             return true;
         } catch (error) {
-            console.log("DETAIL ERROR:", error);
 
             let errorMessage = "Gagal menambahkan data karyawan";
 
@@ -221,11 +217,8 @@ export function useKaryawan() {
                 )
             );
             const currentUserID = localStorage.getItem("userId");
-            console.log(response);
-            console.log(currentUserID);
             if (String(response.data.id) === currentUserID) {
                 localStorage.setItem("userRole", role);
-                console.log("User role updated in localStorage:", role);
             }
             toast.update(toastId, {
                 render: "Role karyawan berhasil diupdate",
@@ -290,7 +283,6 @@ export function useKaryawan() {
 
         try {
             const response = await getRiwayatPresensi(nama);
-            console.log("Riwayat presensi:", response);
             return response;
         } catch (error) {
             setError(error);
