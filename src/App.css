@@ -19,17 +19,17 @@
 
 #root {
     min-height: 100vh;
-    background: linear-gradient(to right, #ffedd5, #fed7aa, #fde68a);
+    background: linear-gradient(to right, #ffffff, #999999);
 }
 
 body {
     overflow-x: hidden;
-    background: linear-gradient(to right, #ffedd5, #fed7aa, #fde68a);
-    background: linear-gradient(to right, #ffedd5, #fed7aa, #fde68a);
-    font-family: sans-serif; /* <-- INI LANGKAH SELANJUTNYA */
+    background: linear-gradient(to right, #ffffff, #999999);
+    font-family: sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
 
 .scrollbar-hide {
     scrollbar-width: none; /* Firefox */
