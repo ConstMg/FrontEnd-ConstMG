@@ -1,4 +1,3 @@
-# .github/workflows/deploy.yml
 name: Build & Deploy to cPanel via FTP
 
 on:
