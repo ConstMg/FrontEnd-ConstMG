@@ -78,6 +78,7 @@ export function useAuth() {
                 });
             }
             
+            
             localStorage.clear();
             setIsLoggedIn(false);
             setTimeout(() => {
