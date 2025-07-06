@@ -32,4 +32,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ secrets.FTP_PATH }}
           local-dir: dist/
-          dangerous-clean-slate: true
+          # dangerous-clean-slate: true
