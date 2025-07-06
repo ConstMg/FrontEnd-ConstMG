@@ -77,6 +77,7 @@ export function useAuth() {
                     autoClose: 3000,
                 });
             }
+            
 
             localStorage.clear();
             setIsLoggedIn(false);
