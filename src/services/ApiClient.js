@@ -10,10 +10,9 @@ export const apiClient = async (endpoint, method = "GET", body = null) => {
     const options = {
         credentials: "include",
         method,
-        // ▼▼▼ PERUBAHAN 1: Header dibuat dinamis ▼▼▼
+
         headers: {
             Accept: "application/json",
-            // 'Content-Type' akan ditambahkan secara kondisional di bawah
         },
     };
 
@@ -24,12 +23,8 @@ export const apiClient = async (endpoint, method = "GET", body = null) => {
         }
     }
 
-    // ▼▼▼ PERUBAHAN 2: Logika inti untuk membedakan FormData dan JSON ▼▼▼
     if (body) {
         if (body instanceof FormData) {
-            // Jika body adalah FormData:
-            // 1. JANGAN atur Content-Type, biarkan browser yang menanganinya.
-            // 2. Langsung teruskan body tanpa JSON.stringify.
             options.body = body;
         } else {
             // Jika body adalah objek biasa, perlakukan sebagai JSON (seperti sebelumnya).
@@ -37,7 +32,6 @@ export const apiClient = async (endpoint, method = "GET", body = null) => {
             options.body = JSON.stringify(body);
         }
     }
-    // ▲▲▲ AKHIR DARI PERUBAHAN 2 ▲▲▲
 
     try {
         const response = await fetch(url, options);

@@ -2,7 +2,7 @@
     "name": "const-mg",
     "private": true,
     "version": "0.1.0",
-    "homepage": "https://frontend.constmg.murgung.id",
+    "homepage": "https://constmg.murgung.id",
     "type": "module",
     "scripts": {
         "dev": "vite",

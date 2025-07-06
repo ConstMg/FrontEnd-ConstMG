@@ -39,7 +39,6 @@ const ImageSelectorModal = ({ isOpen, onClose, onConfirmSelection }) => {
     }
 
     const projectImages = Array.isArray(imagesData) ? imagesData : [];
-    console.log("projectImages:", projectImages);
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[1050] p-4">

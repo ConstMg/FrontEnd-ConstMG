@@ -55,7 +55,6 @@ const About = () => {
     const handleImageSelectionConfirm = async (selectedPublicIds) => {
         if (selectedPublicIds && selectedPublicIds.length > 0) {
             await addImagesAbout(selectedPublicIds); // addImagesAbout sudah mengharapkan array publicIds
-            // getImagesAbout(); // addImagesAbout di useCtx sudah memanggil getImagesAbout
         }
         setShowImageSelectorModal(false);
     };
@@ -132,7 +131,6 @@ const About = () => {
                                             key={img.public_id || i} // Gunakan ID unik jika ada, fallback ke index
                                             className="relative group md:w-auto"
                                             data-aos="zoom-in"
-                                            // data-aos-delay={i * 100}
                                         >
                                             <div
                                                 onClick={() =>

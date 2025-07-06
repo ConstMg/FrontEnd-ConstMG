@@ -74,7 +74,6 @@ export function useProject() {
     const handleUpdateProject = async (project) => {
         setLoading(true);
         const toastId = toast.loading("Memperbarui project...");
-        console.log(`use Project : ${project}`);
         try {
             const response = await updateProject(project);
 
@@ -173,7 +172,6 @@ export function useProject() {
 
         try {
             const response = await getProjectImageUrl("", limit);
-            console.log("Project with images:", response.data);
             return response.data;
         } catch (error) {
             setError(error);
@@ -187,7 +185,6 @@ export function useProject() {
 
         try {
             const response = await getProjectImageUrl(name, limit);
-            console.log("Project with images:", response.data);
             return response.data;
         } catch (error) {
             setError(error);

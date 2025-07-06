@@ -46,11 +46,6 @@ const PresensiKaryawan = () => {
             formData.append("gambar", compressedFile);
         }
 
-        // Debug log
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
-        }
-
         try {
             const response = await handlePresensiMasuk(formData);
             setMessage(response.message);
@@ -70,7 +65,6 @@ const PresensiKaryawan = () => {
         try {
             const compressed = await compressImage(file);
             setCompressedFile(compressed); // simpan file hasil kompres
-            console.log("File berhasil dikompres:", compressed);
         } catch (error) {
             console.error("Gagal kompres gambar:", error);
         }
@@ -309,25 +303,29 @@ const PresensiKaryawan = () => {
                                 <option value="Alpa">Alpa</option>
                             </select>
 
-                            {/* ▼▼▼ TAMBAHKAN BLOK KODE INI ▼▼▼ */}
                             {(statusPresensi === "Izin" ||
                                 statusPresensi === "Sakit") && (
-                                <input
-                                    type="file"
-                                    onChange={handleFileChange}
-                                    required={
-                                        statusPresensi === "Izin" ||
-                                        statusPresensi === "Sakit"
-                                    }
-                                    className="w-full text-sm text-gray-500
+                                <div className="w-full flex flex-col items-start border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                                    <div className="text-sm mb-2 ">
+                                        Upload bukti {statusPresensi} dengan format png/jpg/gif
+                                    </div>
+                                    <input
+                                        type="file"
+                                        accept="image/png, image/gif, image/jpeg"
+                                        onChange={handleFileChange}
+                                        required={
+                                            statusPresensi === "Izin" ||
+                                            statusPresensi === "Sakit"
+                                        }
+                                        className="w-full text-sm text-gray-500
                    file:mr-4 file:py-2 file:px-4
                    file:rounded-md file:border-0
                    file:text-sm file:font-semibold
                    file:bg-yellow-50 file:text-yellow-700
-                   hover:file:bg-yellow-100"
-                                />
+                   hover:file:bg-yellow-100 "
+                                    />{" "}
+                                </div>
                             )}
-                            {/* ▲▲▲ AKHIR DARI BLOK KODE ▲▲▲ */}
 
                             <input
                                 type="text"

@@ -14,8 +14,6 @@ const Home = () => {
 
     const handleSave = (fieldName, newValue) => {
         const updated = { ...profileData, [fieldName]: newValue };
-        // Jika headline adalah array, pastikan kita mengubahnya menjadi array
-        console.log("handleSave called with:", updated);
         updateProfileData(updated);
     };
 
@@ -86,7 +84,6 @@ const Home = () => {
                         name="headline"
                         onSave={(name, value) => {
                             const newHeadline = value.split("\n");
-                            console.log("New Headline:", newHeadline);
                             handleSave(name, newHeadline);
                         }}
                         isEditable={isEditable}

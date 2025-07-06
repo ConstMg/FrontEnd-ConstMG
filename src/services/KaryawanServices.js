@@ -12,7 +12,6 @@ export const addKaryawan = async (karyawan) => {
 
 export const updateKaryawan = async (karyawan) => {
     const { id } = karyawan;
-    console.log(id);
     return await apiClient(`admin/karyawan/${id}`, "PUT", karyawan);
 };
 

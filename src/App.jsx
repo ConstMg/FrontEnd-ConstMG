@@ -1,12 +1,9 @@
-// App.jsx
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Contact from "./components/Contact";
 import Admin from "./pages/Admin";
 import MainPage from "./pages/MainPage";
 import Presensi from "./pages/Presensi";
 import Project from "./pages/ProjectGallery";
-
 import ProjectDetail from "./pages/ProjectDetail";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,14 +16,8 @@ function App() {
             <ToastContainer
                 position="top-right"
                 autoClose={1000}
-                // hideProgressBar={false}
-                // newestOnTop={false}
-                // closeOnClick={true}
-                // rtl={false}
-                // draggable={true}
                 theme="colored"
             />
-
             <Routes>
                 <Route path="/" element={<RedirectToPage />} />
                 <Route path="/main" element={<MainPage />} />
@@ -38,7 +29,6 @@ function App() {
                     path="/project/:projectName"
                     element={<ProjectDetail />}
                 />
-                {/* <Route path="/contact" element={<Contact />} /> */}
             </Routes>
         </>
     );

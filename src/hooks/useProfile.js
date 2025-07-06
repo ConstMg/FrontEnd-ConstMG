@@ -40,15 +40,12 @@ export function useProfile() {
         setError(null);
         setUpdateMessage("");
         try {
-            console.log(updatedData);
             const response = await updateProfile(updatedData);
-            console.log(response);
             setProfileData(response.data); // Asumsi response.data berisi profil yang diperbarui
             setUpdateMessage(response.message || "Profil berhasil diperbarui");
         } catch (err) {
             console.error("Error updating profile:", err);
             const errorMessage = err.message || "Gagal memperbarui profil";
-            console.log(errorMessage);
             setError(errorMessage);
             setUpdateMessage(""); // Reset message if error
         } finally {

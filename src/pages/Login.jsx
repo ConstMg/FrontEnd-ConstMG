@@ -45,7 +45,7 @@ const Login = () => {
     return (
         <>
             <Navbar />
-            <div className="mt-30 m-4 bg-gradient-to-r from-orange-100 via-orange-200 to-amber-200 flex justify-center ">
+            <div className="mt-30 m-4 flex justify-center ">
                 <div className="bg-white/50 shadow-2xl rounded-3xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-screen">
                     {/* Image Section */}
                     <motion.div

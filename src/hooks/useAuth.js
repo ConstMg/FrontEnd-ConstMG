@@ -20,7 +20,6 @@ export function useAuth() {
         setIsLoading(true);
         try {
             const data = await loginUser(email, password);
-            // console.log(data);
             if (data.message) {
                 toast.success(data.message);
             } else {

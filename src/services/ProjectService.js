@@ -29,7 +29,6 @@ export const getProjectImageUrl = async (project_name = null, limit = null) => {
     const queryString = params.toString();
 
     if (queryString) endpoint += `?${queryString}`;
-    console.log(endpoint);
 
     return await apiClient(endpoint, "GET");
 };
