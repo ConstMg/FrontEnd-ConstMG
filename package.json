@@ -9,7 +9,7 @@
         "build": "vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "postbuild": "copy .htaccess.temp dist\\.htaccess"
+        "postbuild": "cp .htaccess.temp dist/.htaccess"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.7.2",
