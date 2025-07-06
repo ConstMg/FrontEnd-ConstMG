@@ -14,7 +14,7 @@ function App() {
     return (
         <>
             <ToastContainer
-                position="top-right"
+                position="bottom-right"
                 autoClose={1000}
                 theme="colored"
             />
