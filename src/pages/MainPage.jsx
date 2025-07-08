@@ -23,8 +23,8 @@ const MainPage = () => {
                 <Home />
                 <VisiMisi />
                 <OurClients />
-                <Project />
                 <About />
+                <Project />
                 <Services />
                 <WhyChooseUs />
                 <Contact />
