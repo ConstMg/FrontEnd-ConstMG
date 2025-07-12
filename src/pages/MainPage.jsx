@@ -16,7 +16,7 @@ import Header from "../components/Header";
 
 const MainPage = () => {
     return (
-        <div className="mainPage">
+        <div className="mainPage pt-20">
             <Provider>
                 <Navbar />
                 <Header />

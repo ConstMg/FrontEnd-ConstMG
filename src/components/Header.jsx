@@ -17,7 +17,7 @@ const Header = () => {
 
     return (
         // Container utama header
-        <header className="bg-black text-white py-5 px-4 mt-20 sm:px-10">
+        <header className="bg-black text-white py-5 px-4 sm:px-10 ">
             {/* Konten yang diatur di tengah dengan lebar maksimum */}
             <div className=" max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
                 {/* Bagian Kiri: Info Kontak */}
@@ -62,15 +62,18 @@ const Header = () => {
                     >
                         <FaInstagram />
                     </a>
-                    {/* <a
-                        href="https://tiktok.com"
+                    <a
+                        href={`https://wa.me/${profileData?.nomor_hp?.replace(
+                            /\D/g,
+                            ""
+                        )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="TikTok"
+                        aria-label="WhatsApp"
                         className="text-xl hover:text-gray-400 hover:scale-110 transition-all duration-300"
                     >
-                        <IoLogoTiktok />
-                    </a> */}
+                        <FaPhoneAlt />
+                    </a>
                 </div>
             </div>
         </header>

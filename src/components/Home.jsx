@@ -90,24 +90,15 @@ const Home = () => {
                         className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-amber-400 font-bold leading-tight"
                     />
                 ) : (
-                    <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-amber-400 font-bold leading-tight">
+                    <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-amber-400 font-bold leading-tight">
                         <Typewriter
-                            // options={{
-                            //     strings: [
-                            //         profileData?.headline,
-                            //         "Kami fokus untuk anda.",
-                            //         "Interior Design",
-                            //     ],
-                            //     autoStart: true,
-                            //     loop: true,
-                            // }}
                             options={{
-                                strings: profileData.headline, // langsung pakai array dari backend
+                                strings: profileData.headline, // array dari backend
                                 autoStart: true,
                                 loop: true,
                             }}
                         />
-                    </p>
+                    </div>
                 )}
 
                 <EditableField
