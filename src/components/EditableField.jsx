@@ -38,7 +38,7 @@ const EditableField = ({ icon, value, name, onSave, isEditable }) => {
 
     return (
         <div
-            className={`w-full flex items-center rounded-lg gap-3 ${
+            className={` flex items-center rounded-lg gap-3 ${
                 isEditable ? "border" : ""
             }`}
         >
@@ -54,7 +54,7 @@ const EditableField = ({ icon, value, name, onSave, isEditable }) => {
             <div
                 className={`flex-1 ${
                     isLinkField
-                        ? "cursor-pointer hover:underline text-blue-700"
+                        ? "cursor-pointer hover:underline text-blue-700 break-all whitespace-pre-wrap"
                         : ""
                 }`}
                 onClick={isLinkField ? handleOpenLink : undefined}
