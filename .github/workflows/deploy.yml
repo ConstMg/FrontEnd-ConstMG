@@ -23,6 +23,8 @@ jobs:
 
             - name: Build Project
               run: npm run build
+              env:
+                  VITE_BASE_URL_API: ${{ secrets.VITE_BASE_URL_API }}
 
             - name: Deploy via FTP
               uses: SamKirkland/FTP-Deploy-Action@v4.3.4
