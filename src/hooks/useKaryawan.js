@@ -280,21 +280,15 @@ export function useKaryawan() {
         }
     };
 
-   const handleUpdateKaryawanStatus = async (id, status) => {
+    const handleUpdateKaryawanStatus = async (id, status) => {
         const loggedInUserIdString = localStorage.getItem("userId");
-    
-        // Konversi string ke angka (integer basis 10)
-        const loggedInUserId = parseInt(loggedInUserIdString, 10); 
+        const loggedInUserId = parseInt(loggedInUserIdString, 10);
 
-        console.log(id, loggedInUserId, status); // Sekarang keduanya harusnya angka
-
-        // Gunakan perbandingan ketat (===)
         if (id === loggedInUserId && status === '0') {
             toast.error("Anda tidak dapat menonaktifkan akun Anda sendiri.");
             return; 
         }
 
-        // Proses hanya akan berlanjut jika bukan upaya menonaktifkan akun sendiri.
         setLoading(true);
         const toastId = toast.loading("Mengupdate status karyawan...");
         
@@ -307,7 +301,6 @@ export function useKaryawan() {
                 )
             );
             
-            // 2. Blok `if` untuk logout otomatis dihapus karena sudah dicegah di awal.
             toast.update(toastId, {
                 render: "Status karyawan berhasil diupdate",
                 type: "success",

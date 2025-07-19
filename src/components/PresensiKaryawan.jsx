@@ -113,7 +113,7 @@ const PresensiKaryawan = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center pt-20 bg-gray-100">
-            {/* <ToastContainer position="bottom-right" autoClose={3000} /> */}
+      
             <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-6xl flex flex-col lg:flex-row gap-6 items-center">
                 {/* Map Section */}
                 <div className="w-full lg:w-1/2 md:w-7/8 rounded-xl overflow-hidden">
