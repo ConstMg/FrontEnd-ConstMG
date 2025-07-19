@@ -32,7 +32,7 @@ const DataTable = ({
     const [showProjectImages, setShowProjectImages] = useState(false);
 
     const { handleDeleteProject } = useProject();
-    const { handleDeleteKaryawan, handleUpdateKaryawanRole } = useKaryawan();
+    const { handleDeleteKaryawan, handleUpdateKaryawanRole,handleUpdateKaryawanStatus } = useKaryawan();
     library.add(faCircleInfo);
 
     // Function to show delete confirmation
@@ -142,6 +142,7 @@ const DataTable = ({
                             <th className="py-2 px-2 text-left">Email</th>
                             {/* <th className="py-2 px-2 text-left">Password</th> */}
                             <th className="py-2 px-2 text-left">Role</th>
+                            <th className="py-2 px-2 text-left">Status</th>
                             <th className="py-2 px-2 text-left">Actions</th>
                         </tr>
                     </thead>
@@ -248,36 +249,87 @@ const DataTable = ({
                                             </option>
                                         </select>
                                     </td>
+                                     <td className="py-2 px-2 border-b">
+                                        <select
+                                            value={karyawan.status}
+                                            onChange={async (e) => {
+                                                const newStatus = e.target.value;
+                                                try {
+                                                    console.log(karyawan.status)
+                                                    e.target.disabled = true;
+                                                    e.target.classList.add(
+                                                        "opacity-50"
+                                                    );
+
+                                                    await handleUpdateKaryawanStatus(
+                                                        karyawan.id,
+                                                        newStatus
+                                                    );
+
+                                                    if (refreshData) {
+                                                        await refreshData();
+                                                    }
+
+                                                    e.target.classList.remove(
+                                                        "opacity-50"
+                                                    );
+                                                    e.target.classList.add(
+                                                        "bg-green-200"
+                                                    );
+                                                    setTimeout(() => {
+                                                        e.target.classList.remove(
+                                                            "bg-green-200"
+                                                        );
+                                                    }, 1000);
+                                                } catch (error) {
+                                                    console.error(
+                                                        "Failed to update status:",
+                                                        error
+                                                    );
+                                                    e.target.classList.remove(
+                                                        "opacity-50"
+                                                    );
+                                                    e.target.classList.add(
+                                                        "bg-red-200"
+                                                    );
+                                                    setTimeout(() => {
+                                                        e.target.classList.remove(
+                                                            "bg-red-200"
+                                                        );
+                                                    }, 1000);
+                                                } finally {
+                                                    e.target.disabled = false;
+                                                }
+                                            }}
+                                            className={`py-1 px-2 rounded-full ${
+                                                karyawan.status
+                                                    ? "bg-green-100 text-green-800 border border-green-300"
+                                                    : "bg-red-100 text-red-800 border border-red-300"
+                                            }`}
+                                        >
+                                           <option
+                                                value="1"
+                                                className="py-1 px-2 rounded-full bg-green-100 text-green-800 border border-green-300"
+                                            >
+                                                Aktif
+                                            </option>
+
+                                            <option
+                                                value="0"
+                                                className="py-1 px-2 rounded-full bg-red-100 text-red-800 border border-red-300"
+                                            >
+                                                Non-Aktif
+                                            </option>
+                                        </select>
+                                    </td>
                                     <td className="py-2 px-2 border-b">
-                                        <div className="flex gap-3 items-center">
+                                        {/* Tambahkan justify-center di sini */}
+                                        <div className="flex justify-center items-center gap-3">
                                             <img
                                                 src={editIcon}
                                                 alt="Edit"
                                                 className="cursor-pointer w-5 h-5 hover:scale-110"
-                                                onClick={() =>
-                                                    handleEdit(karyawan)
-                                                }
-                                            />
-                                            <img
-                                                src={deleteIcon}
-                                                alt="Delete"
-                                                className={`cursor-pointer w-5 h-5 ${
-                                                    deleting &&
-                                                    deleteId === karyawan.id
-                                                        ? "opacity-50"
-                                                        : "hover:scale-110"
-                                                }`}
-                                                onClick={() =>
-                                                    confirmDelete(
-                                                        karyawan.id,
-                                                        "karyawan",
-                                                        karyawan.nama
-                                                    )
-                                                }
-                                                disabled={
-                                                    deleting &&
-                                                    deleteId === karyawan.id
-                                                }
+                                                onClick={() => handleEdit(karyawan)}
                                             />
                                         </div>
                                     </td>

@@ -15,6 +15,11 @@ export const updateKaryawan = async (karyawan) => {
     return await apiClient(`admin/karyawan/${id}`, "PUT", karyawan);
 };
 
+export const updateKaryawanStatus = async (id, status) => {
+
+    return await apiClient(`admin/karyawan/status/${id}`, "PATCH", { status });
+};
+
 export const setRoleKaryawan = async (nama, role) => {
     return await apiClient(`admin/update-role`, "PATCH", {
         nama,

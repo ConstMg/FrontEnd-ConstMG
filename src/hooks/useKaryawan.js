@@ -4,6 +4,7 @@ import {
     deleteKaryawan,
     addKaryawan,
     updateKaryawan,
+    updateKaryawanStatus,
     setRoleKaryawan,
     getPresensiKaryawan,
     getPresensiKaryawanByDate,
@@ -65,7 +66,7 @@ export function useKaryawan() {
             const data = Array.isArray(response)
                 ? response
                 : response.data || [];
-
+            // console.log("Data Karyawan:", data[0].status);
             setKaryawanData(data);
 
             return data;
@@ -242,6 +243,56 @@ export function useKaryawan() {
         }
     };
 
+   const handleUpdateKaryawanStatus = async (id, status) => {
+        const loggedInUserIdString = localStorage.getItem("userId");
+    
+        // Konversi string ke angka (integer basis 10)
+        const loggedInUserId = parseInt(loggedInUserIdString, 10); 
+
+        console.log(id, loggedInUserId, status); // Sekarang keduanya harusnya angka
+
+        // Gunakan perbandingan ketat (===)
+        if (id === loggedInUserId && status === '0') {
+            toast.error("Anda tidak dapat menonaktifkan akun Anda sendiri.");
+            return; 
+        }
+
+        // Proses hanya akan berlanjut jika bukan upaya menonaktifkan akun sendiri.
+        setLoading(true);
+        const toastId = toast.loading("Mengupdate status karyawan...");
+        
+        try {
+            await updateKaryawanStatus(id, status);
+
+            setKaryawanData((prevData) =>
+                prevData.map((karyawan) =>
+                    karyawan.id === id ? { ...karyawan, status } : karyawan
+                )
+            );
+            
+            // 2. Blok `if` untuk logout otomatis dihapus karena sudah dicegah di awal.
+            toast.update(toastId, {
+                render: "Status karyawan berhasil diupdate",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+            });
+
+            return true;
+        } catch (error) {
+            setError(error);
+            toast.update(toastId, {
+                render: error.message || "Gagal mengupdate status karyawan",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+            });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const fetchPresensiAllKaryawan = useCallback(async () => {
         setLoading(true);
 
@@ -305,6 +356,7 @@ export function useKaryawan() {
         handleUpdateKaryawanRole,
         fetchPresensiAllKaryawan,
         fetchPresensiByDate,
+        handleUpdateKaryawanStatus,
         fetchRiwayatPresensi,
     };
 }
