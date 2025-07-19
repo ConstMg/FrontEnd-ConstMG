@@ -9,6 +9,7 @@ import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import RedirectToPage from "./components/RedirectToPage";
+import EditProfile from "./components/EditProfile";
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                     path="/project/:projectName"
                     element={<ProjectDetail />}
                 />
+                <Route path="/edit-profile" element={<EditProfile />} />
             </Routes>
         </>
     );

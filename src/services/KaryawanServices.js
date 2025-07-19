@@ -26,6 +26,13 @@ export const setRoleKaryawan = async (nama, role) => {
         role,
     });
 };
+export const getMeData = async () => {
+    return await apiClient(`me`, "GET");
+};
+
+export const updateMeData = async (data) => {
+    return await apiClient(`me/update`, "PUT", data);
+}
 
 export const getKaryawan = async () => {
     return await apiClient(`admin/karyawan`, "GET");

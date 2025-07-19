@@ -8,7 +8,9 @@ import {
     setRoleKaryawan,
     getPresensiKaryawan,
     getPresensiKaryawanByDate,
+    getMeData,
     getRiwayatPresensi,
+    updateMeData,
 } from "../services/KaryawanServices";
 import { useState, useCallback } from "react";
 import "react-toastify/dist/ReactToastify.css";
@@ -85,6 +87,41 @@ export function useKaryawan() {
             setLoading(false);
         }
     }, []);
+
+    const fetchMeData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const response = await getMeData();
+            saveUserToLocalStorage(response);
+            return response;
+        } catch (error) {
+            setError(error);
+            toast.error(error.message || "Gagal memuat data profil");
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+     const updateDataMe = useCallback(async (data) => {
+        setLoading(true);
+        try {
+            // 1. Panggil fungsi API yang sebenarnya, bukan memanggil diri sendiri
+            const response = await updateMeData(data); 
+            
+            saveUserToLocalStorage(response);
+            toast.success("Data profil berhasil diperbarui");
+            return response;
+        } catch (error) {
+            setError(error);
+            toast.error(error.message || "Gagal memperbarui data profil");
+            return null;
+        } finally {
+            // 2. Pastikan loading selalu dihentikan
+            setLoading(false); 
+        }
+    }, []); // Dependency array kosong jika tidak ada dependensi
+
 
     const handleDeleteKaryawan = async (id) => {
         setLoading(true);
@@ -358,5 +395,8 @@ export function useKaryawan() {
         fetchPresensiByDate,
         handleUpdateKaryawanStatus,
         fetchRiwayatPresensi,
+        fetchMeData,
+        updateDataMe,
+       
     };
 }

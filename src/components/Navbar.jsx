@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { faUserEdit } from "@fortawesome/free-solid-svg-icons";
+import EditProfile from "./EditProfile";
+
 import {
     faBars,
     faXmark,
@@ -55,6 +58,12 @@ function Navbar({
     const handleLogout = () => {
         closeAllSidebars();
         logout();
+      
+    };
+
+    const handleEditProfile = () => {
+        closeAllSidebars();
+        navigate("/edit-profile"); // Arahkan ke halaman edit profil  
       
     };
 
@@ -244,6 +253,16 @@ function Navbar({
                                                 Karyawan
                                             </NavLink>
                                         )}
+                                     <button
+                                            onClick={handleEditProfile}
+                                            className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-blue-600 hover:bg-blue-50 hover:font-semibold"
+                                            >
+                                            <FontAwesomeIcon
+                                                icon={faUserEdit} // import faUserEdit dari FontAwesome
+                                                className="w-5 h-5"
+                                            />
+                                            Edit Profile
+                                    </button>
 
                                     <button
                                         onClick={handleLogout}
@@ -405,6 +424,16 @@ function Navbar({
                                         />
                                         Lakukan Presensi
                                     </button>
+                                     <button
+                                                onClick={handleEditProfile}
+                                                className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-blue-600 hover:bg-blue-50 hover:font-semibold"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faUserEdit} // import faUserEdit dari FontAwesome
+                                                    className="w-5 h-5"
+                                                />
+                                                Edit Profile
+                                            </button>
                                     <button
                                         onClick={handleLogout}
                                         className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
@@ -571,16 +600,30 @@ function Navbar({
                                             </li>
                                         ))}
                                     {isLoggedIn && (
-                                        <button
-                                            onClick={handleLogout}
-                                            className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faSignOutAlt}
-                                                className="w-5 h-5"
-                                            />
-                                            Logout
-                                        </button>
+                                        
+                                        <>
+                                            <button
+                                                onClick={handleEditProfile}
+                                                className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-blue-600 hover:bg-blue-50 hover:font-semibold"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faUserEdit} // import faUserEdit dari FontAwesome
+                                                    className="w-5 h-5"
+                                                />
+                                                Edit Profile
+                                            </button>
+
+                                            <button
+                                                onClick={handleLogout}
+                                                className="w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all text-red-600 hover:bg-red-50 hover:font-semibold"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faSignOutAlt}
+                                                    className="w-5 h-5"
+                                                />
+                                                Logout
+                                            </button>
+                                        </>
                                     )}
                                 </li>
 
