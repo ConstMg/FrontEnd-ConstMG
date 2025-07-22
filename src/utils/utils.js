@@ -1,22 +1,22 @@
-export const saveUserToLocalStorage = (data) => {
-    const isLogin = localStorage.getItem("isLoggedin");
+export const saveUserTosessionStorage = (data) => {
+    const isLogin = sessionStorage.getItem("isLoggedin");
     if (data.karyawan && !isLogin) {
-        localStorage.setItem("userEmail", data.karyawan.email);
-        localStorage.setItem("userRole", data.karyawan.role);
-        localStorage.setItem("userId", data.karyawan.id);
-        localStorage.setItem("userName", data.karyawan.nama);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("userEmail", data.karyawan.email);
+        sessionStorage.setItem("userRole", data.karyawan.role);
+        sessionStorage.setItem("userId", data.karyawan.id);
+        sessionStorage.setItem("userName", data.karyawan.nama);
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem("isLoggedIn", "true");
     } else if (data && isLogin) {
-        localStorage.setItem("userEmail", data.email);
-        localStorage.setItem("userRole", data.role);
-        localStorage.setItem("userId", data.id);
-        localStorage.setItem("userName", data.nama);
+        sessionStorage.setItem("userEmail", data.email);
+        sessionStorage.setItem("userRole", data.role);
+        sessionStorage.setItem("userId", data.id);
+        sessionStorage.setItem("userName", data.nama);
     } else {
-        localStorage.setItem("userEmail", data.email);
-        localStorage.setItem("userRole", data.role);
-        localStorage.setItem("userId", data.id);
-        localStorage.setItem("userName", data.nama);
+        sessionStorage.setItem("userEmail", data.email);
+        sessionStorage.setItem("userRole", data.role);
+        sessionStorage.setItem("userId", data.id);
+        sessionStorage.setItem("userName", data.nama);
     }
 };
 

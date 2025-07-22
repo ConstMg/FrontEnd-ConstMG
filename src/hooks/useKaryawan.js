@@ -15,7 +15,7 @@ import {
 import { useState, useCallback } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import { saveUserToLocalStorage } from "../utils/utils";
+import { saveUserTosessionStorage } from "../utils/utils";
 
 export function useKaryawan() {
     const [karyawanData, setKaryawanData] = useState([]);
@@ -63,7 +63,7 @@ export function useKaryawan() {
 
         try {
             const response = await getKaryawan(
-                localStorage.getItem("userRole")
+                sessionStorage.getItem("userRole")
             );
             const data = Array.isArray(response)
                 ? response
@@ -92,7 +92,7 @@ export function useKaryawan() {
         setLoading(true);
         try {
             const response = await getMeData();
-            saveUserToLocalStorage(response);
+            saveUserTosessionStorage(response);
             return response;
         } catch (error) {
             setError(error);
@@ -109,7 +109,7 @@ export function useKaryawan() {
             // 1. Panggil fungsi API yang sebenarnya, bukan memanggil diri sendiri
             const response = await updateMeData(data); 
             
-            saveUserToLocalStorage(response);
+            saveUserTosessionStorage(response);
             toast.success("Data profil berhasil diperbarui");
             return response;
         } catch (error) {
@@ -128,7 +128,7 @@ export function useKaryawan() {
         const toastId = toast.loading("Menghapus data karyawan...");
 
         try {
-            await deleteKaryawan(id, localStorage.getItem("userRole"));
+            await deleteKaryawan(id, sessionStorage.getItem("userRole"));
             setKaryawanData((prevData) =>
                 prevData.filter((karyawan) => karyawan.id !== id)
             );
@@ -161,7 +161,7 @@ export function useKaryawan() {
         try {
             const response = await addKaryawan({
                 ...karyawan,
-                role: localStorage.getItem("userRole"), // Inject role
+                role: sessionStorage.getItem("userRole"), // Inject role
             });
 
             setKaryawanData((prevData) => [...prevData, response.data]);
@@ -212,12 +212,12 @@ export function useKaryawan() {
                 prevData.map((k) => (k.id === karyawan.id ? response.data : k))
             );
 
-            // Cek apakah perlu update localStorage
+            // Cek apakah perlu update sessionStorage
             if (
                 response.data.role === karyawan.role &&
-                response.data.id == localStorage.getItem("userId")
+                response.data.id == sessionStorage.getItem("userId")
             ) {
-                saveUserToLocalStorage(response.data);
+                saveUserTosessionStorage(response.data);
             }
 
             toast.update(toastId, {
@@ -254,9 +254,9 @@ export function useKaryawan() {
                     karyawan.nama === nama ? { ...karyawan, role } : karyawan
                 )
             );
-            const currentUserID = localStorage.getItem("userId");
+            const currentUserID = sessionStorage.getItem("userId");
             if (String(response.data.id) === currentUserID) {
-                localStorage.setItem("userRole", role);
+                sessionStorage.setItem("userRole", role);
             }
             toast.update(toastId, {
                 render: "Role karyawan berhasil diupdate",
@@ -281,7 +281,7 @@ export function useKaryawan() {
     };
 
     const handleUpdateKaryawanStatus = async (id, status) => {
-        const loggedInUserIdString = localStorage.getItem("userId");
+        const loggedInUserIdString = sessionStorage.getItem("userId");
         const loggedInUserId = parseInt(loggedInUserIdString, 10);
 
         if (id === loggedInUserId && status === '0') {

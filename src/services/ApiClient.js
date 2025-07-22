@@ -5,7 +5,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL_API;
 
 const handleUnauthorized = () => {
     toast.error("Sesi kamu telah berakhir. Silakan login kembali.");
-    localStorage.clear();
+    sessionStorage.clear();
     if (window.location.pathname !== "/login") {
         history.push("/login");
     }
@@ -20,7 +20,7 @@ export const apiClient = async (endpoint, method = "GET", body = null) => {
     });
 
     if (!noAuthEndpoints.includes(endpoint)) {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         if (token) headers.set("Authorization", `Bearer ${token}`);
     }
 

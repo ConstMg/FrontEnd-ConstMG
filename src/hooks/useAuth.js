@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, logoutUser } from "../services/AuthServices";
-import { saveUserToLocalStorage } from "../utils/utils";
+import { saveUserTosessionStorage } from "../utils/utils";
 import { toast } from "react-toastify";
 
 export function useAuth() {
@@ -12,7 +12,7 @@ export function useAuth() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const loggedInStatus = localStorage.getItem("isLoggedIn");
+        const loggedInStatus = sessionStorage.getItem("isLoggedIn");
         setIsLoggedIn(JSON.parse(loggedInStatus) === true);
     }, []);
 
@@ -25,10 +25,10 @@ export function useAuth() {
             } else {
                 toast.error("Login gagal.");
             }
-            saveUserToLocalStorage(data);
+            saveUserTosessionStorage(data);
 
-            // Simpan status login di localStorage
-            localStorage.setItem("isLoggedIn", true);
+            // Simpan status login di sessionStorage
+            sessionStorage.setItem("isLoggedIn", true);
             setIsLoggedIn(true);
 
             setTimeout(() => {
@@ -49,12 +49,12 @@ export function useAuth() {
     const logout = async () => {
         const toastId = toast.loading("Mohon tunggu sebentar..."); // simpan toast ID
         setIsLoading(true);
-        const email = localStorage.getItem("userEmail");
+        const email = sessionStorage.getItem("userEmail");
 
         if (!email) {
-            // toast("Email not found in localStorage");
+            // toast("Email not found in sessionStorage");
             toast.update(toastId, {
-                render: "Email not found in localStorage",
+                render: "Email not found in sessionStorage",
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,
@@ -78,7 +78,7 @@ export function useAuth() {
                 });
             }
             
-            localStorage.clear();
+            sessionStorage.clear();
             setIsLoggedIn(false);
             setTimeout(() => {
                 navigate("/login");
@@ -94,7 +94,7 @@ export function useAuth() {
             }
 
             toast.update(toastId, {
-                render: errorMessage || "Email not found in localStorage",
+                render: errorMessage || "Email not found in sessionStorage",
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,

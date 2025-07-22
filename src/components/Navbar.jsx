@@ -44,7 +44,7 @@ function Navbar({
   const updatedArray = hideMainSiteMidNavOn.filter(
     (path) => path !== "/presensi"
   );
-  const userRole = localStorage.getItem("userRole"); // Sebaiknya gunakan dari useAuth jika ada
+  const userRole = sessionStorage.getItem("userRole"); // Sebaiknya gunakan dari useAuth jika ada
 
   const toggleMainMobileMenu = () => {
     setMainMobileMenuOpen(!mainMobileMenuOpen);
